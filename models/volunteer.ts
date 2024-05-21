@@ -19,7 +19,8 @@ const volunteerSchema = new Schema({
   },
   schedules: [{
     type: Schema.Types.ObjectId,
-    ref: "Schedule"
+    ref: "Schedule",
+    unique: true
   }],
   active: {
     type: Boolean,

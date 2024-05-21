@@ -1,0 +1,1 @@
+export const SOURCE_URL = process.env.SOURCE_URL || process.env.NEXT_PUBLIC_SOURCE_URL;

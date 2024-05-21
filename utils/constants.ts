@@ -67,3 +67,10 @@ export const common = {
   SECOND_SERVICE: "12 nn",
   THIRD_SERVICE: "3 pm"
 }
+
+export const serviceTime = {
+  [category.SATURDAY_SERVICE]: "17:00",
+  [common.FIRST_SERVICE]: "09:00",
+  [common.SECOND_SERVICE]: "12:00",
+  [common.THIRD_SERVICE]: "15:00"
+}

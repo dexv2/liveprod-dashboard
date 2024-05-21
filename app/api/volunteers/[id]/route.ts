@@ -8,19 +8,19 @@ interface RequestData {
   tier: string
 }
 
-export async function POST(request: any) {
+export async function PUT(request: any, { params }: any) {
   const requestData: RequestData = await request.json();
   await connectMongoDB();
   try {
-    await Volunteer.create(requestData);
-    return NextResponse.json({message: `${requestData.name} was added as ${requestData.segment} volunteer.`}, {status: 201});
+    await Volunteer.findByIdAndUpdate(params.id, requestData);
+    return NextResponse.json({message: `Volunteer info updated`}, {status: 200});
   } catch (error: any) {
     return NextResponse.json({message: error.message}, {status: 500});
   }
 }
 
-export async function GET() {
+export async function GET(request: any, { params }: any) {
   await connectMongoDB();
-  const volunteers = await Volunteer.find().select("-schedules -createdAt -updatedAt");
-  return NextResponse.json({data: volunteers}, {status: 200});
+  const volunteer = await Volunteer.findById(params.id).populate("schedules", "date role service");
+  return NextResponse.json({data: volunteer}, {status: 200});
 }

@@ -3,22 +3,8 @@ import { formatDate, getMonth } from "@/utils/helpers";
 import { redirect } from "next/navigation";
 import { Fragment } from "react";
 import VolunteerCell from "./VolunteerCell";
-
-const getSchedulesByRole = async (role: string) => {
-  try {
-    const res = await fetch(`http://localhost:3000/api/schedule/${role}`, {
-      cache: "no-store"
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to fetch schedules");
-    }
-
-    return await res.json();
-  } catch (error) {
-    console.log("Error loading schedules:", error);
-  }
-}
+import RoleDropdown from "./RoleDropdown";
+import { getSchedulesByRole } from "@/utils/apis/get";
 
 export default async function SchedulesByRole({role}: {role: string}) {
   if (!category.ROLES.includes(role)) {
@@ -37,20 +23,20 @@ export default async function SchedulesByRole({role}: {role: string}) {
       <table className="table-auto border w-3/5 bg-slate-300">
         <thead>
           <tr className="bg-slate-900 border border-slate-500">
-            <th className="text-slate-200 py-2 uppercase" colSpan={7}>{role}</th>
+            <RoleDropdown role={role} />
           </tr>
           <tr>
             <th className="border-l border-slate-500"></th>
             <th className="border-y border-slate-500"></th>
             { service?.[category.SATURDAY_SERVICE]?.length &&
               <Fragment>
-                <th className="border border-slate-500">SNS</th>
+                <th className="border border-slate-500 uppercase">{category.SATURDAY_SERVICE}</th>
                 <th className="border border-slate-500"></th>
               </Fragment>
             }
-            <th className="border border-slate-500">9 AM</th>
-            <th className="border border-slate-500">12 NN</th>
-            <th className="border border-slate-500">3 PM</th>
+            <th className="border border-slate-500 uppercase">{common.FIRST_SERVICE}</th>
+            <th className="border border-slate-500 uppercase">{common.SECOND_SERVICE}</th>
+            <th className="border border-slate-500 uppercase">{common.THIRD_SERVICE}</th>
           </tr>
         </thead>
         <tbody>

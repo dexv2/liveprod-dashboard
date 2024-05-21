@@ -3,16 +3,20 @@ import Schedule from "@/models/schedule";
 import { category } from "@/utils/constants";
 import { NextResponse } from "next/server";
 
-export async function GET(request: any, { params }: any) {
-  const { role } = params;
+export async function GET(request: any, { params }: { params: { from: Date, to: Date }}) {
+  console.log(params.from)
+  console.log(params.to)
   await connectMongoDB();
   const schedules = await Schedule.aggregate([
     {
-      $match: { 
-        role, 
-        service: { 
-          $in: category.REGULAR_SERVICES 
-        } 
+      $match: {
+        service: {
+          $in: category.REGULAR_SERVICES
+        },
+        date: {
+          $gte: new Date(`${params.from} 00:00`),
+          $lte: new Date(`${params.to} 23:59`)
+        }
       }
     },
     {
@@ -26,19 +30,16 @@ export async function GET(request: any, { params }: any) {
     {
       $group: {
         _id: "$service",
-        service: { 
-          $push: { 
+        service: {
+          $push: {
+            role: "$role",
             date: "$date", 
             volunteer: "$volunteer",
             id: "$_id"
-          } 
+          }
         }
       }
-    },
-    {
-      $sort: { date: 1 }
     }
-  ]
-  );
+  ])
   return NextResponse.json({data: schedules}, {status: 200});
 }

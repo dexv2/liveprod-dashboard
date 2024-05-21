@@ -10,9 +10,9 @@ export default function VolunteerCell(props: { service: any }) {
   };
 
   return (
-    <td onClick={openModal} className="border border-slate-500 bg-slate-100 hover:bg-slate-200 cursor-pointer">
+    <td onClick={openModal} className="border border-slate-500 bg-slate-100 hover:bg-slate-200 cursor-pointer min-w-20">
       <div className="overflow-hidden h-6">
-      {props.service?.volunteer?.[0]?.name}
+        {props.service?.volunteer?.[0]?.name}
       </div>
     </td>
   );

@@ -1,25 +1,30 @@
+import { getAllVolunteersPopulated, getScheduleById } from '@/utils/apis/get';
 import Select from './Select'
 
-const getAllVolunteers = async () => {
-  try {
-    const res = await fetch("http://localhost:3000/api/volunteers", {
-      cache: "no-store"
-    });
-
-    if (!res.ok) {
-      throw new Error("Failed to get volunteers");
-    }
-    
-    return await res.json();
-  } catch (error) {
-    console.log("Error loading volunteers", error);
-  }
-}
-
 export default async function AssignVolunteer({ scheduleId }: { scheduleId: string }) {
-  const res = await getAllVolunteers();
+  const volunteersRes = await getAllVolunteersPopulated();
+  const scheduleRes = await getScheduleById(scheduleId);
+
+  const volunteers = volunteersRes.data.map((volunteer: any) => {
+    const res = {
+      _id: volunteer._id,
+      name: volunteer.name,
+      available: true,
+      message: ""
+    };
+
+    for (let i = 0; i < volunteer?.schedules?.length || 0; i++) {
+      const volunteerSchedule = volunteer.schedules[i];
+      if (volunteerSchedule.date === scheduleRes.data.date && volunteerSchedule.service === scheduleRes.data.service) {
+        res.available = false;
+        res.message = `${volunteer.name} is already assigned to this service as ${volunteerSchedule.role}.`;
+        break;
+      }
+    }
+    return res;
+  });
 
   return (
-    <Select volunteers={res.data} scheduleId={scheduleId} />
+    <Select volunteers={volunteers} schedule={scheduleRes.data} />
   )
 }
