@@ -61,7 +61,7 @@ export default async function SCScheduleBySegment({increment}: {increment: numbe
 
                 return (
                   <tr key={i}>
-                    <td className="border border-slate-500 bg-slate-100 w-9 text-center h-8">{i}</td>
+                    <td className="border border-slate-500 bg-slate-100 w-9 text-center h-8">{i+1}</td>
                     <td className="border border-slate-500 bg-slate-100 px-1 w-64 uppercase">{role}</td>
                     <SCVolunteerCell service={sns} />
                     <SCVolunteerCell service={firstService} />

@@ -18,8 +18,8 @@ export function getSaturdaysAndSundays(year: number, month: number) {
   while (date.getMonth() === month) {
     // Saturday is represented by 6 in JavaScript
     if (date.getDay() === 6) {
-      saturdays.push(new Date(date).toLocaleDateString());
-      sundays.push(dateAdd(date, 1, "day").toLocaleDateString());
+      saturdays.push(new Date(date).toLocaleDateString("en-US", {timeZone: "Asia/Manila"}));
+      sundays.push(dateAdd(date, 1, "day").toLocaleDateString("en-US", {timeZone: "Asia/Manila"}));
     }
     date.setDate(date.getDate() + 1);
   }
@@ -29,9 +29,7 @@ export function getSaturdaysAndSundays(year: number, month: number) {
 
 export function getNextService(increment: number = 0) {
   const num = Math.abs(increment) * 7;
-  let date = new Date();
-  // let date = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}));
-  // console.log("timezone:", date.toLocaleString());
+  let date = newDate();
   if (increment > 0) {
     date = dateAdd(date, num, "day");
   } else if (increment < 0) {
@@ -97,11 +95,15 @@ export function createSundayMonthPayload(year: number, month: number) {
 }
 
 export function getMonth(date: string) {
-  return new Date(date).toLocaleDateString('en-US', { month: 'long' });
+  return new Date(date).toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Manila' });
 }
 
 export function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-US", {month: "short", day: "2-digit"});
+  return new Date(date).toLocaleDateString("en-US", {month: "short", day: "2-digit", timeZone: "Asia/Manila"});
+}
+
+export function newDate() {
+  return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Manila"}));
 }
 
 export function getLinkedList(arr: string[]): Node | null {

@@ -1,5 +1,6 @@
 "use client";
 
+import { newDate } from "@/utils/helpers";
 import moment from "moment";
 import { useState } from "react";
 import { Calendar, View, Views, momentLocalizer } from "react-big-calendar";
@@ -8,7 +9,7 @@ const localizer = momentLocalizer(moment);
 
 export default function CpCalendarSchedule({ events, length }: { events: any, length: number }) {
   const [view, setView] = useState<View>(Views.AGENDA);
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(newDate());
 
   return (
     <div>
@@ -21,7 +22,7 @@ export default function CpCalendarSchedule({ events, length }: { events: any, le
         popup
         onView={(_view) => {
           if (_view === Views.AGENDA) {
-            setDate(new Date())
+            setDate(newDate())
           }
           setView(_view)
         }}

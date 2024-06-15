@@ -11,7 +11,7 @@ interface RequestData {
 
 export async function POST(request: any) {
   const requestData: RequestData = await request.json();
-  requestData.date = new Date(requestData.date).toLocaleDateString();
+  requestData.date = new Date(requestData.date).toLocaleDateString("en-US", {timeZone: "Asia/Manila"});
   await connectMongoDB();
   try {
     await Schedule.create({...requestData, dateServiceRole: requestData.date.concat(requestData.service, requestData.role)});

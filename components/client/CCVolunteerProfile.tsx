@@ -6,6 +6,7 @@ import GCSelect from "@/components/global/GCSelect";
 import { putUpdateVolunteer } from "@/utils/apis/put";
 import { category, serviceTime } from "@/utils/constants";
 import { diff } from "@/utils/dates";
+import { newDate } from "@/utils/helpers";
 import { redirect, useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 import { GoDotFill } from "react-icons/go";
@@ -70,13 +71,13 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
       router.refresh();
     }
     const from = (date: string, service: string): Date => {
-      return new Date(`${new Date(date).toLocaleDateString()} ${serviceTime[service]}`);
+      return new Date(`${new Date(date).toLocaleDateString("en-US", {timeZone: "Asia/Manila"})} ${serviceTime[service]}`);
     }
     const to = (from: Date): Date => {
       return new Date(from.setHours(from.getHours() + 2));
     }
     const schedule: any[] = [];
-    let lastSchedule = new Date().getTime();
+    let lastSchedule = newDate().getTime();
 
     for (let i = 0; i < volunteer?.schedules?.length; i++) {
       const sched = volunteer.schedules[i];
@@ -93,7 +94,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
       });
     }
 
-    const length = diff(new Date(), new Date(lastSchedule), "day");
+    const length = diff(newDate(), new Date(lastSchedule), "day");
     const statusColor = (status: string) => {
       if (status === "active") return "text-green-600"
       if (status === "trainee") return "text-emerald-600"
