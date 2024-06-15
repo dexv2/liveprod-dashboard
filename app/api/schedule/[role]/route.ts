@@ -20,7 +20,7 @@ export async function GET(request: any, { params }: any) {
           $in: category.REGULAR_SERVICES
         },
         date: {
-          $gte: new Date(`${nextService.saturday} 00:00`)
+          $gte: new Date(`${nextService.saturday}T00:00:00.000+08:00`)
         },
       }
     },

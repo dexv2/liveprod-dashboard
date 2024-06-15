@@ -12,8 +12,8 @@ export async function GET(request: any, { params }: { params: { from: Date, to: 
           $in: category.REGULAR_SERVICES
         },
         date: {
-          $gte: new Date(`${params.from} 00:00`),
-          $lte: new Date(`${params.to} 23:59`)
+          $gte: new Date(`${params.from}T00:00:00.000+08:00`),
+          $lte: new Date(`${params.to}T23:59:00.000+08:00`)
         }
       }
     },
