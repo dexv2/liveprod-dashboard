@@ -92,13 +92,13 @@ const MONTHS = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
 //   return dates.milliseconds(date, dates.milliseconds(time))
 // }
 
-// export function eqTime(dateA, dateB) {
-//   return (
-//     dates.hours(dateA) === dates.hours(dateB) &&
-//     dates.minutes(dateA) === dates.minutes(dateB) &&
-//     dates.seconds(dateA) === dates.seconds(dateB)
-//   )
-// }
+export function eqTime(dateA: Date, dateB: Date) {
+  return (
+    dates.hours(dateA) === dates.hours(dateB) &&
+    dates.minutes(dateA) === dates.minutes(dateB) &&
+    dates.seconds(dateA) === dates.seconds(dateB)
+  )
+}
 
 // export function isJustDate(date) {
 //   return (
