@@ -1,7 +1,9 @@
-export default function Login() {
+import SCLogin from "@/components/server/SCLogin";
+
+export default async function Login({searchParams}: {searchParams: {error: string}}) {
+  const errorAttempt = parseInt(searchParams?.error || "0");
+
   return (
-    <div>
-      <h1>Login</h1>
-    </div>
-  );
+    <SCLogin errorAttempt={errorAttempt} />
+  )
 }

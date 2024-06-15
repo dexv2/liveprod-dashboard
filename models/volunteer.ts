@@ -2,14 +2,23 @@ import { category } from "@/utils/constants";
 import mongoose, { Schema } from "mongoose";
 
 const volunteerSchema = new Schema({
+  nickName: String,
+  firstName: {
+    type: String,
+    required: true
+  },
+  lastName: {
+    type: String,
+    required: true
+  },
   name: {
     type: String,
     required: true,
     unique: true
   },
-  tier: {
+  status: {
     type: String,
-    enum: category.TIERS,
+    enum: category.STATUS,
     required: true
   },
   segment: {

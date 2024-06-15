@@ -1,15 +1,14 @@
-import AssignVolunteer from "@/components/AssignVolunteer";
-import { AssignVolunteerModal as Modal } from "./modal";
-import { NextPageContext } from "next";
+import { AssignVolunteerModal } from "./modal";
+import { Suspense } from "react";
+import GCLoading from "@/components/global/GCLoading";
+import SCAssignVolunteer from "@/components/server/SCAssignVolunteer";
 
-// AssignVolunteer.getInitialProps = async (ctx: NextPageContext) => {
-//   return {test: "test"};
-// }
-
-export default function Page({ params }: { params: { id: string }}) {
+export default function AssignVolunteer({ params }: { params: { id: string }}) {
   return (
-    <Modal>
-      <AssignVolunteer scheduleId={params.id} />
-    </Modal>
+    <AssignVolunteerModal>
+      <Suspense fallback={<GCLoading />}>
+        <SCAssignVolunteer id={params.id} />
+      </Suspense>
+    </AssignVolunteerModal>
   );
 }

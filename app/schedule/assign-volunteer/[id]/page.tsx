@@ -1,5 +1,5 @@
-import AssignVolunteer from "@/components/AssignVolunteer";
+import { redirect } from "next/navigation";
 
-export default function Page({ params }: { params: { id: string }}) {
-  return <AssignVolunteer scheduleId={params.id} />
+export default function Page() {
+  redirect("/schedule/role/foh/foh%20assistant/broadcast%20mix");
 }

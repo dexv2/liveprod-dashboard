@@ -1,6 +1,7 @@
 import connectMongoDB from "@/libs/mongodb";
 import Volunteer from "@/models/volunteer";
 import { NextResponse } from "next/server";
+import "@/models/schedule";
 
 export async function GET() {
   await connectMongoDB();

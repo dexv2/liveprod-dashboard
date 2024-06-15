@@ -13,13 +13,14 @@ export const putScheduleRemoveAssignee = async (scheduleId: string) => {
 }
 
 interface VolunteerData {
-  name?: string
+  firstName?: string
+  lastName?: string
+  nickName?: string
   segment?: string
-  tier?: string
-  active?: boolean
+  status?: string
 }
 
-export const updateVolunteer = async (id: string, body: VolunteerData) => {
+export const putUpdateVolunteer = async (id: string, body: VolunteerData) => {
   try {
     const res = await fetch(`${SOURCE_URL}/api/volunteers/${id}`, {
       method: "PUT",

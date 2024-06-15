@@ -1,9 +1,9 @@
-import { Modal } from "@/components/Modal";
+import GCModal from "@/components/global/GCModal";
 
 export function AssignVolunteerModal(props: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <Modal title="Select a Volunteer">
+  return <GCModal title="Select Volunteer" maxHeight="max-h-[550px]">
     {props.children}
-  </Modal>
+  </GCModal>
 }

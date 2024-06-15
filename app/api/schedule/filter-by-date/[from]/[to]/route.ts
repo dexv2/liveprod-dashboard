@@ -4,8 +4,6 @@ import { category } from "@/utils/constants";
 import { NextResponse } from "next/server";
 
 export async function GET(request: any, { params }: { params: { from: Date, to: Date }}) {
-  console.log(params.from)
-  console.log(params.to)
   await connectMongoDB();
   const schedules = await Schedule.aggregate([
     {
@@ -41,5 +39,5 @@ export async function GET(request: any, { params }: { params: { from: Date, to: 
       }
     }
   ])
-  return NextResponse.json({data: schedules}, {status: 200});
+  return NextResponse.json({data: schedules, from: params.from, to: params.to}, {status: 200});
 }
