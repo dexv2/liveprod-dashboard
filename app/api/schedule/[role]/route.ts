@@ -7,6 +7,7 @@ import { NextResponse } from "next/server";
 export async function GET(request: any, { params }: any) {
   const { role } = params;
   const nextService = getNextService();
+  console.log({nextService})
   await connectMongoDB();
   const schedules = await Schedule.aggregate([
     {

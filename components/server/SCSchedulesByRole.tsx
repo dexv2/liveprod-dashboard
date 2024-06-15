@@ -17,8 +17,8 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
     const schedule = res.data[i];
     service[schedule._id] = schedule.service;
   }
-  console.log({schedule: JSON.stringify(res.data)});
-  console.log({service: JSON.stringify(service)});
+  // console.log({schedule: JSON.stringify(res.data)});
+  // console.log({service: JSON.stringify(service)});
 
   return (
     <Fragment>

@@ -30,6 +30,8 @@ export function getSaturdaysAndSundays(year: number, month: number) {
 export function getNextService(increment: number = 0) {
   const num = Math.abs(increment) * 7;
   let date = new Date();
+  // let date = new Date(new Date().toLocaleString("en-US", {timeZone: "America/New_York"}));
+  // console.log("timezone:", date.toLocaleString());
   if (increment > 0) {
     date = dateAdd(date, num, "day");
   } else if (increment < 0) {
