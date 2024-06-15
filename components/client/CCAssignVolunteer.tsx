@@ -34,10 +34,13 @@ export default function CCAssignVolunteer({ volunteers, schedule }: {volunteers:
 
   const sortedVolunteers = volunteers
     .sort((person) => person.role ? -1 : 1)
-    .map((person) => ({
+    .map((person) => {
+      console.log(person.name, person.role, schedule.role);
+      console.log(person.role === schedule.role);
+      return {
         ...person,
         role: person.role === schedule.role ? "Assigned Volunteer" : person.role
-    }));
+    }});
 
   const filteredPeople =
     query === ''
