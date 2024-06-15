@@ -17,6 +17,8 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
     const schedule = res.data[i];
     service[schedule._id] = schedule.service;
   }
+  console.log({schedule: JSON.stringify(res.data)});
+  console.log({service: JSON.stringify(service)});
 
   return (
     <Fragment>
@@ -43,6 +45,7 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
             const sns = service?.[category.SATURDAY_SERVICE];
             const secondService = service[common.SECOND_SERVICE][i];
             const thirdService = service[common.THIRD_SERVICE][i];
+            console.log({sns: sns[i], firstService})
 
             return (
               <tr key={i}>
