@@ -1,6 +1,6 @@
 import CCAssignVolunteer from "@/components/client/CCAssignVolunteer";
 import { getAllVolunteersPopulated, getScheduleById } from '@/utils/apis/get';
-import { eq, eqTime } from "@/utils/dates";
+import { eq } from "@/utils/dates";
 
 export default async function SCAssignVolunteer({ id }: { id: string }) {
   const volunteersRes = await getAllVolunteersPopulated();
@@ -18,7 +18,6 @@ export default async function SCAssignVolunteer({ id }: { id: string }) {
 
     for (let i = 0; i < volunteer?.schedules?.length || 0; i++) {
       const volunteerSchedule = volunteer.schedules[i];
-      console.log(volunteer.name, eq(new Date(volunteerSchedule.date), new Date(scheduleRes.data.date)), volunteerSchedule.service, scheduleRes.data.service, volunteerSchedule.date, scheduleRes.data.date)
       if (eq(new Date(volunteerSchedule.date), new Date(scheduleRes.data.date)) && volunteerSchedule.service === scheduleRes.data.service) {
         res.available = false;
         res.message = `${volunteer.name} is already assigned to this service as ${volunteerSchedule.role.toUpperCase()}. Override schedule?`;
