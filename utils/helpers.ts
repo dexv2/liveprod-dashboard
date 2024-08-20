@@ -2,13 +2,6 @@ import moment from "moment";
 import { Node } from "./classes";
 import { category } from "./constants";
 import { add as dateAdd, subtract as dateSub } from "date-arithmetic";
-import { auth } from '@/auth';
-
-export async function checkAuth() {
-  const session = await auth();
-  const authenticated = !!session?.user;
-  return authenticated;
-}
 
 export function getSaturdaysAndSundays(year: number, month: number) {
   const saturdays = [];
@@ -63,8 +56,8 @@ export function createSnsMonthPayload(year: number, month: number) {
       payload.push({
         date,
         role,
-        service: category.SATURDAY_SERVICE,
-        dateServiceRole: date.concat(category.SATURDAY_SERVICE, role)
+        service: category.SATURDAY_SERVICE[0],
+        dateServiceRole: date.concat(category.SATURDAY_SERVICE[0], role)
       });
     }
   }

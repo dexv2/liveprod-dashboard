@@ -95,7 +95,7 @@ export default function CCAssignVolunteer({ volunteers, schedule }: {volunteers:
           <div>{schedule.role}</div>
         </div>
         <div className="flex justify-between gap-2">
-          <GCInputSearch onChange={(event) => setQuery(event.target.value)} />
+          <GCInputSearch onChange={(event) => setQuery(event.target.value)} autofocus />
           { schedule?.volunteer &&
             <button
               id="remove-assignee"

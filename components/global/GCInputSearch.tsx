@@ -2,7 +2,7 @@ import { ChangeEventHandler } from "react";
 import { CiSearch } from "react-icons/ci";
 
 export default function GCInputSearch(
-  { onChange }: { onChange: ChangeEventHandler<HTMLInputElement> | undefined }
+  { onChange, autofocus }: { onChange: ChangeEventHandler<HTMLInputElement> | undefined, autofocus?: boolean }
 ) {
   return (
     <label htmlFor="search" className="relative text-gray-400 focus-within:text-gray-600 block w-full">
@@ -12,6 +12,7 @@ export default function GCInputSearch(
         placeholder="Search volunteer name..."
         className="border border-slate-400 bg-slate-50 rounded-xl pl-10 pr-2 focus:outline-none w-full h-10"
         onChange={onChange}
+        autoFocus={autofocus}
       />
     </label>
   )

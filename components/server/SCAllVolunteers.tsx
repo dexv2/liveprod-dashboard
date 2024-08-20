@@ -1,6 +1,6 @@
 import dynamic from 'next/dynamic';
 import { getAllVolunteers } from '@/utils/apis/get';
-import { checkAuth } from '@/utils/helpers';
+import { checkAuth } from '@/utils/helpersServer';
 const CCAllVolunteers = dynamic(() => import('@/components/client/CCAllVolunteers'), {ssr: false});
 
 export default async function SCAllVolunteers() {

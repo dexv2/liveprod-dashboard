@@ -27,9 +27,9 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
           </tr>
           <tr>
             <th className="border border-slate-500 w-20"></th>
-            { service?.[category.SATURDAY_SERVICE]?.length &&
+            { service?.[category.SATURDAY_SERVICE[0]]?.length &&
               <Fragment>
-                <th className="border border-slate-500 uppercase">{category.SATURDAY_SERVICE}</th>
+                <th className="border border-slate-500 uppercase">{category.SATURDAY_SERVICE[0]}</th>
                 <th className="border border-slate-500 w-20"></th>
               </Fragment>
             }
@@ -40,7 +40,7 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
         </thead>
         <tbody>
           { service[common.FIRST_SERVICE].slice(0, 18).map((firstService: any, i: number) => {
-            const sns = service?.[category.SATURDAY_SERVICE];
+            const sns = service?.[category.SATURDAY_SERVICE[0]];
             const secondService = service[common.SECOND_SERVICE][i];
             const thirdService = service[common.THIRD_SERVICE][i];
 

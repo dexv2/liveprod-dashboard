@@ -1,7 +1,7 @@
 "use client";
 
 import { Session } from "next-auth";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -36,7 +36,11 @@ export default function Navbar({ session }: { session: Session | null }) {
         { isAuthenticated && <Link className="text-white p-2" href={"/schedule/role/foh/foh%20assistant/broadcast%20mix"}>Schedules</Link> }
         <Link className="text-white p-2" href={"/schedule/segment/audio"}>Upcoming</Link>
         <Link className="text-white p-2" href={"/volunteer/all"}>Volunteers</Link>
-        { !isAuthenticated && <button onClick={() => signIn()} className="text-white p-2">Login</button> }
+        { !isAuthenticated ?
+          <button onClick={() => signIn()} className="text-white p-2">Login</button>
+          :
+          <button onClick={() => signOut({redirect: true, callbackUrl: "/login"})} className="text-white p-2">Logout</button>
+        }
       </div>
     </nav>
   )

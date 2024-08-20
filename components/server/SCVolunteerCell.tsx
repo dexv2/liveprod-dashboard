@@ -1,8 +1,8 @@
-import { checkAuth } from "@/utils/helpers";
-import VolunteerCell from "@/components/client/CCVolunteerCell";
+import { checkAuth } from "@/utils/helpersServer";
+import CCVolunteerCell from "@/components/client/CCVolunteerCell";
 
 export default async function SCVolunteerCell(props: { service: any }) {
   const isAuthenticated = await checkAuth();
 
-  return <VolunteerCell service={props.service} isAuthenticated={isAuthenticated} />;
+  return <CCVolunteerCell service={props.service} isAuthenticated={isAuthenticated} />;
 }

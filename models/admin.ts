@@ -1,14 +1,21 @@
 import mongoose, { Schema } from "mongoose";
 
 const adminSchema = new Schema({
-  password: String,
+  password: {
+    type: String,
+    required: true
+  },
   username: {
+    required: true,
     type: String,
     unique: true
   },
-  superAdmin: {
-    type: Boolean,
-    default: false
+  tier: {
+    required: true,
+    type: Number,
+    min: 1,
+    max: 5,
+    default: 1
   },
   registeredBy: {
     type: Schema.Types.ObjectId,

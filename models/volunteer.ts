@@ -26,6 +26,10 @@ const volunteerSchema = new Schema({
     enum: category.SEGMENTS,
     required: true
   },
+  roles: [{
+    type: String,
+    enum: category.ROLES,
+  }],
   schedules: [{
     type: Schema.Types.ObjectId,
     ref: "Schedule",

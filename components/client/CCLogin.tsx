@@ -1,16 +1,32 @@
 "use client";
 
-import { Fragment, useEffect } from "react";
+import { useEffect, useState } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import { toast } from "react-toastify";
 
-export default function CCLogin({ error }: { error: number }) {
+interface Login {
+  (username: FormDataEntryValue | null, password: FormDataEntryValue | null): Promise<void>;
+}
+
+export default function CCLogin({ error, login }: { error: number, login: Login }) {
+  const [ loading, setLoading ] = useState(false);
+
   useEffect(() => {
-    if (error) toast.error('Invalid username or password!');
+    if (error) {
+      toast.error('Invalid username or password!');
+      setLoading(false);
+    }
   }, [error])
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setLoading(true);
+    const formData = new FormData(e.currentTarget);
+    await login(formData.get("username"), formData.get("password"));
+  }
+
   return (
-    <Fragment>
+    <form onSubmit={handleSubmit}>
       <div className="flex flex-col justify-center h-[calc(100svh_-_16rem)]">
         <div className="flex justify-center">
           <div className="w-1/3 rounded-xl border border-slate-100 shadow-md">
@@ -25,11 +41,16 @@ export default function CCLogin({ error }: { error: number }) {
                 <GCInputTextWithLabel label="username" />
                 <GCInputTextWithLabel label="password" type="password" />
               </div>
-              <button className="bg-sky-600 text-white p-2 rounded-sm">Login</button>
+              <button className="bg-sky-600 text-white p-2 rounded-sm">
+                <div className="flex gap-2 justify-center items-center">
+                  { loading && <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" /> }
+                  <p>Login</p>
+                </div>
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </Fragment>
+    </form>
   )
 }

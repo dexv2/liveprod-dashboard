@@ -17,7 +17,7 @@ export async function PUT(request: any, { params }: any) {
   try {
     await connectMongoDB();
     const volunteer = await Volunteer.findById(params.id);
-    volunteer.name = `${requestData.firstName} ${requestData.lastName}`;
+    volunteer.name = `${requestData?.firstName || volunteer.firstName} ${requestData?.lastName || volunteer.lastName}`;
 
     Object.assign(volunteer, requestData);
     await volunteer.save();

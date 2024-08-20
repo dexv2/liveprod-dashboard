@@ -98,7 +98,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
   if (isAdmin) {
     columns.push({
       name: "Actions",
-      selector: (row: Data) => <RiDeleteBinLine onClick={() => deleteVol(row._id, row.name)} size={18} /> as any,
+      selector: (row: Data) => <RiDeleteBinLine className="text-rose-600" onClick={() => deleteVol(row._id, row.name)} size={18} /> as any,
       sortable: false,
       button: true,
     })
@@ -170,6 +170,11 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
                     color: "#334155"
                   }
                 },
+                rows: {
+                  style: {
+                    minHeight: "2.8rem"
+                  }
+                }
               }}
             />
           </div>

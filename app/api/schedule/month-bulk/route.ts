@@ -22,9 +22,10 @@ export async function POST() {
     const sns = createSnsMonthPayload(nextSchedYear, nextSchedMonth);
     const sundayService = createSundayMonthPayload(nextSchedYear, nextSchedMonth);
 
-    await Schedule.insertMany(sns.concat(sundayService));
+    const allServices = sns.concat(sundayService);
+    await Schedule.insertMany(allServices);
 
-    return NextResponse.json({message: "Month schedule added"}, {status: 201});
+    return NextResponse.json({message: "Month schedule added", data: allServices}, {status: 201});
   } catch (error: any) {
     return NextResponse.json({message: error.message}, {status: 500});
   }

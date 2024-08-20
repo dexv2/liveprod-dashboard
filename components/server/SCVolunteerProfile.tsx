@@ -1,6 +1,6 @@
 import CCVolunteerProfile from "@/components/client/CCVolunteerProfile";
 import { getVolunteerById } from "@/utils/apis/get";
-import { checkAuth } from "@/utils/helpers";
+import { checkAuth } from "@/utils/helpersServer";
 import { redirect } from "next/navigation";
 
 export default async function SCVolunteerProfile({ id }: { id: string }) {

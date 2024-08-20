@@ -11,10 +11,14 @@ export default function CCRoleDropdown({role} : {role: string}) {
     const newRole = encodeURI(e.target.value);
     if (encodeURI(role) === params.role1 && !params?.role2) {
       router.push(`/schedule/role/${newRole}`);
+    } else if (encodeURI(role) === params.role1 && !!params?.role2 && !!params?.role3) {
+      router.push(`/schedule/role/${newRole}/${params.role2}/${params.role3}`);
     } else if (encodeURI(role) === params.role1 && !!params?.role2) {
       router.push(`/schedule/role/${newRole}/${params.role2}`);
-    } else if (encodeURI(role) === params.role2) {
+    } else if (encodeURI(role) === params.role2 && !params?.role3) {
       router.push(`/schedule/role/${params.role1}/${newRole}`);
+    } else if (encodeURI(role) === params.role2 && !!params?.role3) {
+      router.push(`/schedule/role/${params.role1}/${newRole}/${params.role3}`);
     } else if (encodeURI(role) === params.role3) {
       router.push(`/schedule/role/${params.role1}/${params.role2}/${newRole}`);
     }
