@@ -51,9 +51,9 @@ export default async function CCScheduleBySegment({ schedule }: { schedule: Sche
             const thirdService = convertedData?.[common.THIRD_SERVICE]?.[role]
 
             return (
-              <tr key={i}>
-                <td className="border border-slate-500 bg-slate-100 w-9 text-center h-7">{i+1}</td>
-                <td className="border border-slate-500 bg-slate-100 px-1 w-52 uppercase">{role.replace("broadcast", "bc")}</td>
+              <tr key={i} className="bg-slate-100">
+                <td className="border border-slate-500 w-9 text-center h-7">{i+1}</td>
+                <td className="border border-slate-500 px-1 w-52 uppercase">{role.replace("broadcast", "bc")}</td>
                 <SCVolunteerCell service={sns} />
                 <SCVolunteerCell service={firstService} />
                 <SCVolunteerCell service={secondService} />

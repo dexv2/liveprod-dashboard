@@ -5,7 +5,7 @@ import { signIn, signOut } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 
 export default function Navbar({ session }: { session: Session | null }) {
   const pathname = usePathname();
@@ -18,8 +18,18 @@ export default function Navbar({ session }: { session: Session | null }) {
     const url = `${pathname}`
     const prevPath = newPath;
     setNewPath(url);
+
     if (prevPath.startsWith("/schedule/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login")) {
       router.refresh();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname])
+
+  useLayoutEffect(() => {
+    if (pathname === "/") {
+      document.body.classList.add("bg-slate-900");
+    } else {
+      document.body.classList.remove("bg-slate-900");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])

@@ -5,6 +5,7 @@ import { Fragment } from "react";
 import SCVolunteerCell from "@/components/server/SCVolunteerCell";
 import RoleDropdown from "@/components/client/CCRoleDropdown";
 import { getSchedulesByRole } from "@/utils/apis/get";
+import CCSchedulesByRole from "../client/CCScheduleByRole";
 
 export default async function SCSchedulesByRole({role}: {role: string}) {
   if (!category.ROLES.includes(role)) {
@@ -19,48 +20,29 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
   }
 
   return (
-    <Fragment>
-      <table className="table-auto border w-full bg-slate-300 text-sm">
-        <thead>
-          <tr className="bg-slate-900 border border-slate-500">
-            <RoleDropdown role={role} />
-          </tr>
-          <tr>
-            <th className="border border-slate-500 w-20"></th>
-            { service?.[category.SATURDAY_SERVICE[0]]?.length &&
-              <Fragment>
-                <th className="border border-slate-500 uppercase">{category.SATURDAY_SERVICE[0]}</th>
-                <th className="border border-slate-500 w-20"></th>
-              </Fragment>
-            }
-            <th className="border border-slate-500 uppercase">{common.FIRST_SERVICE}</th>
-            <th className="border border-slate-500 uppercase">{common.SECOND_SERVICE}</th>
-            <th className="border border-slate-500 uppercase">{common.THIRD_SERVICE}</th>
-          </tr>
-        </thead>
-        <tbody>
-          { service[common.FIRST_SERVICE].slice(0, 18).map((firstService: any, i: number) => {
-            const sns = service?.[category.SATURDAY_SERVICE[0]];
-            const secondService = service[common.SECOND_SERVICE][i];
-            const thirdService = service[common.THIRD_SERVICE][i];
+    <CCSchedulesByRole role={role} service={service}>
+      <tbody>
+        { service[common.FIRST_SERVICE].map((firstService: any, i: number) => {
+          const sns = service?.[category.SATURDAY_SERVICE[0]];
+          const secondService = service[common.SECOND_SERVICE][i];
+          const thirdService = service[common.THIRD_SERVICE][i];
 
-            return (
-              <tr key={i}>
-                { sns?.length &&
-                  <Fragment>
-                    <td className="border border-slate-500 bg-slate-100 w-20">{formatDate(sns[i].date)}</td>
-                    <SCVolunteerCell service={sns?.[i]} />
-                  </Fragment>
-                }
-                <td className="border border-slate-500 bg-slate-100 w-20">{formatDate(firstService.date)}</td>
-                <SCVolunteerCell service={firstService} />
-                <SCVolunteerCell service={secondService} />
-                <SCVolunteerCell service={thirdService} />
-              </tr>
-            )})
-          }
-        </tbody>
-      </table>
-    </Fragment>
+          return (
+            <tr key={i} className="bg-slate-100 odd:bg-slate-200 snap-start">
+              { sns?.length &&
+                <Fragment>
+                  <td className="border border-slate-300 w-20 text-center">{formatDate(sns[i].date)}</td>
+                  <SCVolunteerCell service={sns?.[i]} />
+                </Fragment>
+              }
+              <td className="border border-slate-300 w-20 text-center">{formatDate(firstService.date)}</td>
+              <SCVolunteerCell service={firstService} />
+              <SCVolunteerCell service={secondService} />
+              <SCVolunteerCell service={thirdService} />
+            </tr>
+          )})
+        }
+      </tbody>
+    </CCSchedulesByRole>
   );
 }

@@ -8,9 +8,9 @@ import { category, serviceTime } from "@/utils/constants";
 import { diff } from "@/utils/dates";
 import { newDate } from "@/utils/helpers";
 import { redirect, useRouter } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { GoDotFill } from "react-icons/go";
-import { IoPersonCircleSharp, IoSaveSharp } from "react-icons/io5";
+import { IoCloseCircle, IoPersonCircleSharp, IoSaveSharp } from "react-icons/io5";
 
 interface Volunteer {
   _id: string
@@ -21,6 +21,7 @@ interface Volunteer {
   status: string
   segment: string
   schedules: Schedule[]
+  roles: string[]
 }
 
 interface Schedule {
@@ -37,25 +38,37 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
   const [ nickName, setNickName ] = useState<string>(volunteer?.nickName || "");
   const [ segment, setSegment ] = useState<string>(volunteer.segment);
   const [ status, setStatus ] = useState<string>(volunteer.status);
+  const [ role, setRole ] = useState<string | undefined>(undefined);
+  const [ roles, setRoles ] = useState<string[]>(volunteer.roles);
 
   const hasChanges = useMemo(() => (
     firstName !== volunteer.firstName ||
     lastName !== volunteer.lastName ||
     nickName !== (volunteer?.nickName || "") ||
     status !== volunteer.status ||
-    segment !== volunteer.segment
+    segment !== volunteer.segment ||
+    JSON.stringify(roles) !== JSON.stringify(volunteer.roles)
   ), [
     firstName,
     lastName,
     nickName,
     segment,
     status,
+    roles,
     volunteer.firstName,
     volunteer.lastName,
     volunteer.nickName,
     volunteer.segment,
-    volunteer.status
+    volunteer.status,
+    volunteer.roles
   ]);
+
+  useEffect(() => {
+    if (!role) return;
+    const rolesSet = new Set(roles.concat(role));
+    setRoles(Array.from(rolesSet));
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [role])
 
   const resetValues = () => {
     setFirstName(volunteer.firstName)
@@ -67,7 +80,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
 
   try {
     const updateVolunteerInfo = async () => {
-      await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status });
+      await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status, roles });
       router.refresh();
     }
     const from = (date: string, service: string): Date => {
@@ -138,7 +151,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
               </h2>
             </div>
             <div className="bg-slate-300 h-px" />
-            <div className="px-5 pb-5 pt-14">
+            <div className="px-5 pb-5 pt-12">
               <div className="flex justify-start gap-3">
                 <IoPersonCircleSharp size={100} />
                 <div className="flex flex-col px-2 pb-2 pt-4 justify-start">
@@ -158,13 +171,40 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
                     <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setLastName(e.target.value)} label="last name" value={lastName} />
                   </div>
                   <div className="flex justify-between gap-5">
-                    <div className="flex justify-between gap-5 w-full">
-                      <GCSelect disabled={!isAuthenticated} onChange={(e) => setSegment(e.target.value)} label="segment" value={segment} options={category.SEGMENTS} />
-                      <GCSelect disabled={!isAuthenticated} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
+                    <div className="flex flex-col justify-start gap-5 w-full">
+                      <div className="flex justify-between gap-5 w-full">
+                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setSegment(e.target.value)} label="segment" value={segment} options={category.SEGMENTS} />
+                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
+                      </div>
+                      <div className="flex justify-between gap-5 w-full">
+                        <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
+                        <GCInputTextWithLabel disabled label="id" value={volunteer._id} />
+                      </div>
                     </div>
-                    <div className="flex justify-between gap-5 w-full">
-                      <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
-                      <GCInputTextWithLabel disabled label="id" value={volunteer._id} />
+                    <div className="flex flex-col justify-between gap-0 w-full">
+                      <GCSelect disabled={!isAuthenticated} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase />
+                      <div className="flex flex-col gap-0.5 w-full">
+                        <div className="bg-zinc-50 p-3 border border-slate-100 rounded-b-sm min-h-24">
+                          <div className="flex flex-wrap justify-start gap-2 break-normal">
+                            { roles.map((volunteerRole, i) => (
+                                <div key={i} className="uppercase border border-slate-500 py-1.5 px-3 rounded-full">
+                                  <div className="flex gap-0">
+                                    {/* Non-breakable space is char 160 */}
+                                    <div>{volunteerRole.replaceAll(" ", String.fromCharCode(160))}</div>
+                                    <div className="relative">
+                                      {isAuthenticated && 
+                                        <div className="absolute -top-3 left-0 opacity-0 hover:opacity-100">
+                                          <IoCloseCircle size={20} className="cursor-pointer" onClick={() => setRoles(roles.filter(r => r != volunteerRole))} />
+                                        </div>
+                                      }
+                                    </div>
+                                  </div>
+                                </div>
+                              ))
+                            }
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
