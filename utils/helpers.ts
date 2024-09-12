@@ -95,6 +95,10 @@ export function formatDate(date: string) {
   return new Date(date).toLocaleDateString("en-US", {month: "short", day: "2-digit", timeZone: "Asia/Manila"});
 }
 
+export function formatDateLong(date: string) {
+  return new Date(date).toLocaleDateString("en-US", {month: "long", day: "2-digit", timeZone: "Asia/Manila"});
+}
+
 export function newDate() {
   return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Manila"}));
 }

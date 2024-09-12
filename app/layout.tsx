@@ -21,7 +21,7 @@ export default async function RootLayout(props: Readonly<{
 
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-slate-900`}>
+      <body className={`${inter.className} h-svh background-gradient`}>
         <div className="mx-auto p-4">
           <GCNavbar session={session} />
           <div className="mt-8">

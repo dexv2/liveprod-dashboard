@@ -12,4 +12,11 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .background-gradient {
+    background-image: linear-gradient(to top left, var(--tw-gradient-stops));
+    --tw-gradient-from: #475569 var(--tw-gradient-from-position);
+    --tw-gradient-stops: var(--tw-gradient-from), #164e63 var(--tw-gradient-via-position), var(--tw-gradient-to);
+    --tw-gradient-to: #0f172a var(--tw-gradient-to-position);
+  }
 }

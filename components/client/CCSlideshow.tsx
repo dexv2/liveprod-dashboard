@@ -21,7 +21,7 @@ export default function CCSlideshow() {
     (itemsRef.current[active] as any).style.zIndex = 1;
     (itemsRef.current[active] as any).style.filter = `none`;
     (itemsRef.current[active] as any).style.opacity = 1;
-    (itemsRef.current[active] as any).style.boxShadow = `0px 30px 40px -25px rgba(100, 100, 120, 1)`;
+    (itemsRef.current[active] as any).style.boxShadow = `0px 30px 40px -25px rgba(103, 209, 191, 1)`;
     for (let i = 1; i <= upperhand; i++) {
       stt++;
       const nextValue = getNextValue(active + i);

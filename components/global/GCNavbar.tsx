@@ -27,15 +27,15 @@ export default function Navbar({ session }: { session: Session | null }) {
 
   useLayoutEffect(() => {
     if (pathname === "/") {
-      document.body.classList.add("bg-slate-900");
+      document.body.classList.add("background-gradient");
     } else {
-      document.body.classList.remove("bg-slate-900");
+      document.body.classList.remove("background-gradient");
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
 
   return (
-    <nav className="flex justify-between items-center bg-slate-900 px-5 py-5 rounded-md">
+    <nav className={`${pathname === "/" ? "bg-opacity-0": "bg-opacity-100"} flex justify-between items-center bg-slate-900 px-5 py-5 rounded-md transition-opacity delay-1000`}>
       <Link href={"/"}>
         <div className="flex gap-1 items-center">
           <Image src="/ccf-logo.png" width={45} height={45} alt="logo" />
