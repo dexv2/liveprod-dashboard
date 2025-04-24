@@ -129,10 +129,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
     <div className="flex justify-center">
       <div className="w-full">
         <div className="flex flex-col gap-7 text-slate-700 px-32">
-          <div className="flex justify-between">
-            <h1 className="text-2xl">
-              Volunteers List
-            </h1>
+          <div className="flex justify-end">
             <div className="flex gap-3 justify-end w-1/2">
               <div className="w-1/2">
                 <GCInputSearch onChange={(event) => setQuery(event.target.value)} />
@@ -148,7 +145,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
               }
             </div>
           </div>
-          <div className={`${isAdmin && !!filteredVolunteers.length ? "border border-slate-200" : ""} py-1 rounded-md`}>
+          <div className={`${isAdmin && !!filteredVolunteers.length ? "border border-slate-200" : ""} rounded-md`}>
             <DataTable
               columns={columns}
               data={filteredVolunteers}
@@ -167,7 +164,8 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
               customStyles={{
                 headCells: {
                   style: {
-                    color: "#334155"
+                    color: "white",
+                    backgroundColor: "#1e293b"
                   }
                 },
                 rows: {

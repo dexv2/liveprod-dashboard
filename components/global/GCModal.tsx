@@ -22,11 +22,11 @@ export default function GCModal({ children, title, maxHeight }: { children: Reac
   return createPortal(
     <div className="absolute bg-[rgba(0,0,0,0.7)] flex justify-center items-center z-[1000] inset-0">
       <dialog ref={dialogRef} className={`${maxHeight} w-4/5 max-w-[450px] h-auto relative flex justify-between flex-col rounded-xl focus:outline-none"`} onClose={onDismiss}>
-        <div className="flex justify-between">
-          <p className="h-12 bg-transparent flex items-center justify-center font-medium text-xl text-slate-700 pl-4">
+        <div className="flex justify-between bg-slate-900 py-1">
+          <p className="h-12 flex items-center justify-center font-medium text-xl text-white pl-4">
             {title}
           </p>
-          <button onClick={onDismiss} className="w-12 h-12 bg-transparent cursor-pointer flex items-center text-slate-700 justify-center font-medium text-2xl rounded-xl hover:bg-slate-200 focus:outline-none">
+          <button onClick={onDismiss} className="w-12 h-12 cursor-pointer flex items-center text-white justify-center font-medium text-2xl rounded-xl hover:bg-slate-700 focus:outline-none">
             <AiOutlineClose />
           </button>
         </div>

@@ -39,5 +39,5 @@ export async function GET(request: any, { params }: { params: { from: Date, to: 
       }
     }
   ])
-  return NextResponse.json({data: schedules, from: params.from, to: params.to}, {status: 200});
+  return NextResponse.json({data: schedules, saturday: params.from, sunday: params.to}, {status: 200});
 }

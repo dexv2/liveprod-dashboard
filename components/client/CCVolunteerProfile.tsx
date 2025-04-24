@@ -123,10 +123,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
 
     return (
       <div className="px-32 text-slate-700">
-        <div className="flex justify-between pb-7">
-          <h1 className="text-2xl">
-            Volunteer Profile
-          </h1>
+        <div className="flex justify-end pb-7">
           <div className={`flex gap-2 justify-end ${!hasChanges && "hidden"}`}>
             <button onClick={resetValues} className="border border-slate-400 px-3 rounded-md">
               Cancel
@@ -144,9 +141,9 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
           </div>
         </div>
         <div className="flex flex-col gap-7">
-          <div className="w-full rounded-lg border border-slate-100 shadow-md">
-            <div className="flex justify-start py-5 pl-6 bg-slate-50">
-              <h2 className="font-semibold text-lg">
+          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+              <h2 className="font-semibold text-lg text-white">
                 Basic Info
               </h2>
             </div>
@@ -211,9 +208,9 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
               </div>
             </div>
           </div>
-          <div className="w-full rounded-lg border border-slate-100 shadow-md">
-            <div className="flex justify-start py-5 pl-6 bg-slate-50">
-              <h2 className="font-semibold text-lg">
+          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+              <h2 className="font-semibold text-lg text-white">
                 Schedule
               </h2>
             </div>

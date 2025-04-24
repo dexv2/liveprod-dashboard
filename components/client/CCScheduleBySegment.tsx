@@ -1,17 +1,18 @@
 import SCVolunteerCell from "@/components/server/SCVolunteerCell";
-import { category, common } from "@/utils/constants";
-import { formatDate, formatDateLong } from "@/utils/helpers";
+import { category, saturday, service, sunday } from "@/utils/constants";
+import { formatDateLong } from "@/utils/helpers";
+import { Fragment, useMemo } from 'react';
 
 interface Schedule {
-  from: string
-  to: string
+  saturday: string
+  sunday: string
   data: any
 }
 
-export default async function CCScheduleBySegment({ schedule }: { schedule: Schedule }) {
+export default function CCScheduleBySegment({ schedule, dayService }: { schedule: Schedule, dayService: string }) {
   const convertData = (data: any) => {
     const convertedData: any = {};
-    data.forEach((item: any) => {
+    data?.forEach((item: any) => {
       convertedData[item._id] = {};
       item.service.forEach((service: any) => {
         convertedData[item._id][service.role] = service;
@@ -20,57 +21,80 @@ export default async function CCScheduleBySegment({ schedule }: { schedule: Sche
     return convertedData;
   };
 
-  const convertedData: any = convertData(schedule.data);
+  const convertedData: any = convertData(schedule?.data);
+
+  const roles = useMemo(() => (
+    dayService === service.SATURDAY ? category.SNS_ROLES : category.ROLES
+  ), [dayService])
 
   return (
-    <div className="flex items-center justify-center w-full">
-      <table className="table-auto border border-slate-500 w-full bg-gradient-to-br from-slate-200 to-gray-50">
-        <thead>
-          <tr>
-            <th className="border-l border-slate-500 "></th>
-            <th className=""></th>
-            <th rowSpan={2} className="text-slate-200 border-l border-slate-500 bg-gradient-to-tr from-slate-400 to-slate-600">
-              <div className="flex flex-col justify-between">
-                <div>{formatDate(schedule.from)}</div>
-                <div className="uppercase">{category.SATURDAY_SERVICE[0]}</div>
-              </div>
-            </th>
-            <th rowSpan={2} colSpan={3} className="border-l border-slate-500 bg-gradient-to-tl from-emerald-400 via-teal-400 to-cyan-600">
-              <div className="flex flex-col justify-between">
-                <div>{formatDateLong(schedule.to)}</div>
-                <div className="flex justify-around">
-                  <div>{common.FIRST_SERVICE}</div>
-                  <div>{common.SECOND_SERVICE}</div>
-                  <div>{common.THIRD_SERVICE}</div>
-                </div>
-              </div>
-            </th>
-          </tr>
-          <tr>
-            <th className="border-l border-slate-500 "></th>
-            <th className=""></th>
-          </tr>
-        </thead>
-        <tbody>
-          { category.ROLES.map((role, i) => {
-            const sns = convertedData?.[category.SATURDAY_SERVICE[0]]?.[role]
-            const firstService = convertedData?.[common.FIRST_SERVICE]?.[role]
-            const secondService = convertedData?.[common.SECOND_SERVICE]?.[role]
-            const thirdService = convertedData?.[common.THIRD_SERVICE]?.[role]
+    <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
+      <div className="flex items-center justify-center w-full">
+        <table className="table-auto w-full">
+          <thead>
+            { dayService === service.SATURDAY ?
+              <Fragment>
+                <tr>
+                  <th colSpan={4} className="text-white bg-slate-800 border border-slate-800 uppercase py-2">{formatDateLong(schedule.saturday)}</th>
+                </tr>
+                <tr className='h-0.5'></tr>
+                <tr className='uppercase bg-slate-300 border-t border-x border-slate-300'>
+                  <th colSpan={2}>{service.SATURDAY}</th>
+                  <th>{saturday.FIRST_SERVICE}</th>
+                  <th>{saturday.SECOND_SERVICE}</th>
+                </tr>
+              </Fragment> :
+              <Fragment>
+                <tr>
+                  <th colSpan={6} className="text-white bg-slate-800 border border-slate-800 uppercase py-2">{formatDateLong(schedule.sunday)}</th>
+                </tr>
+                <tr className='h-0.5'></tr>
+                <tr className='uppercase bg-slate-300 border-t border-x border-slate-300'>
+                  <th colSpan={2}>{service.SUNDAY}</th>
+                  <th>{sunday.FIRST_SERVICE}</th>
+                  <th>{sunday.SECOND_SERVICE}</th>
+                  <th>{sunday.THIRD_SERVICE}</th>
+                  <th>{sunday.FOURTH_SERVICE}</th>
+                </tr>
+              </Fragment>
+            }
+          </thead>
+          <tbody className='[&>tr.last-in-group]:border-b [&>tr.last-in-group]:border-b-black [&>tr.first-in-group]:border-t [&>tr.first-in-group]:border-t-black'>
+            { roles.map((role, i) => {
+              const snsFirst = convertedData?.[category.SATURDAY_SERVICES[0]]?.[role]
+              const snsSecond = convertedData?.[category.SATURDAY_SERVICES[1]]?.[role]
+              const firstService = convertedData?.[category.SUNDAY_SERVICES[0]]?.[role]
+              const secondService = convertedData?.[category.SUNDAY_SERVICES[1]]?.[role]
+              const thirdService = convertedData?.[category.SUNDAY_SERVICES[2]]?.[role]
+              const fourthService = convertedData?.[category.SUNDAY_SERVICES[3]]?.[role]
+              const regexFirst = /^(foh)$/i;
+              const regexLast = /^(foh observer 2|broadcast mix observer|audio volunteer 2|monitor mix observer|nxtgen observer)$/i;
+              const isFirstInGroup = regexFirst.test(role)
+              const isLastInGroup = regexLast.test(role)
 
-            return (
-              <tr key={i} className="">
-                <td className="border border-slate-500 w-9 text-center h-7">{i+1}</td>
-                <td className="border border-slate-500 px-1 w-52 uppercase">{role.replace("broadcast", "bc")}</td>
-                <SCVolunteerCell service={sns} />
-                <SCVolunteerCell service={firstService} />
-                <SCVolunteerCell service={secondService} />
-                <SCVolunteerCell service={thirdService} />
-              </tr>
-            )})
-          }
-        </tbody>
-      </table>
+              return (
+                <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
+                  <td className="w-9 text-center h-6 text-xs">{i+1}</td>
+                  {/* str.replace(/\d+/g, "") removes numbers in name */}
+                  <td className="px-1 w-52 uppercase text-sm">{role.replace("broadcast", "bc").replace(/\d+/g, "")}</td>
+                  { dayService === service.SATURDAY ?
+                    <>
+                      <SCVolunteerCell service={snsFirst} />
+                      <SCVolunteerCell service={snsSecond} />
+                    </> :
+                    <>
+                      <SCVolunteerCell service={firstService} />
+                      <SCVolunteerCell service={secondService} />
+                      <SCVolunteerCell service={thirdService} />
+                      <SCVolunteerCell service={fourthService} />
+                    </>
+                  }
+                </tr>
+              )})
+            }
+          </tbody>
+        </table>
+      </div>
     </div>
   )
 }

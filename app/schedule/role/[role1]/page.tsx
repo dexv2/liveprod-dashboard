@@ -1,28 +1,24 @@
 import SCSchedulesByRole from "@/components/server/SCSchedulesByRole";
-import { category } from "@/utils/constants";
-import { getLinkedList, linkedListGoToData } from "@/utils/helpers";
-import Link from "next/link";
+import { roleFilter } from '@/utils/constants';
+import { chunkArray } from '@/utils/helpers';
 import { Fragment } from "react";
-import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 
-export default function FirstRoleDisplay({ params }: {params: { role1: string }}) {
-  let roledetails = getLinkedList(category.ROLES);
-  if (roledetails) {
-    roledetails = linkedListGoToData(roledetails, decodeURI(params.role1));
-  }
+export default function ScheduleByRole({params}: {params: {role1: string}}) {
+  const roles = roleFilter.find((role) => role.value === decodeURI(params.role1))?.roles || [];
+  const columns = chunkArray(roles, 2);
 
   return (
     <Fragment>
-      <div className="relative">
-        <SCSchedulesByRole role={decodeURI(params.role1)} />
-        <div className="flex gap-4 w-full justify-end absolute -bottom-9 pr-3">
-          <Link className="hover:bg-slate-800 hover:text-slate-50 rounded-full" href={`/schedule/role/${roledetails?.prev?.data}`}>
-            <BsArrowLeftCircle size={27} />
-          </Link>
-          <Link className="hover:bg-slate-800 hover:text-slate-50 rounded-full" href={`/schedule/role/${roledetails?.next?.data}`}>
-            <BsArrowRightCircle size={27} />
-          </Link>
-        </div>
+      <div className='flex flex-col gap-3'>
+        { columns.map((column, index) => (
+          <div key={index} className="flex gap-3 justify-center">
+            { column.map((role, idx) => (
+              <div key={idx} className={`${column.length === 1 ? "w-1/2": "w-full"} rounded-t-xl rounded-b-lg h-50 overflow-hidden`}>
+                <SCSchedulesByRole role={role} />
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
     </Fragment>
   );
