@@ -19,6 +19,7 @@ interface VolunteerData {
   segment?: string
   status?: string
   roles?: string[]
+  gender?: string
 }
 
 export const putUpdateVolunteer = async (id: string, body: VolunteerData) => {

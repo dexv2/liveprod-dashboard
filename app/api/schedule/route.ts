@@ -15,7 +15,7 @@ export async function POST(request: any) {
   await connectMongoDB();
   try {
     await Schedule.create({...requestData, dateServiceRole: requestData.date.concat(requestData.service, requestData.role)});
-    return NextResponse.json({message: `${requestData.date} ${requestData.service} schedule added for ${requestData.role} addedd.`}, {status: 201});
+    return NextResponse.json({message: `${requestData.date} ${requestData.service} schedule added for ${requestData.role} added.`}, {status: 201});
   } catch (error: any) {
     return NextResponse.json({message: error.message}, {status: 500});
   }

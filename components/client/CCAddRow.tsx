@@ -17,7 +17,7 @@ export default function CCAddRow({toggleLoading}: {toggleLoading: () => void}) {
     onClick={createMonthSchedule}
     className="text-white px-2 py-1 bg-slate-700 rounded-md mt-2"
   >
-    Add More Dates
+    Add Date Rows
   </button>
   )
 }

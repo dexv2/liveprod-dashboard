@@ -38,7 +38,11 @@ const volunteerSchema = new Schema({
   active: {
     type: Boolean,
     default: true
-  }
+  },
+  gender: {
+    type: String,
+    enum: category.GENDER,
+  },
 }, { timestamps: true, strict: true });
 
 const Volunteer = mongoose.models.Volunteer || mongoose.model("Volunteer", volunteerSchema);

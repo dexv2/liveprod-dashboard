@@ -14,10 +14,10 @@ export default function CCVolunteerCell({ service, isAuthenticated }: { service:
   return (
     <td onClick={handleClick} className={`${isAuthenticated && !!service?.id ? "hover:bg-slate-300 cursor-pointer" : ""} border-x border-x-slate-300 min-w-20`}>
       { !!service?.id ?
-        <div className="overflow-hidden h-6">
+        <div className="overflow-hidden h-[1.4rem]">
           {service?.volunteer?.[0]?.firstName}
         </div> :
-        <div className="flex justify-center h-6">
+        <div className="flex justify-center h-[1.4rem]">
           <MdOutlineLockPerson size={22} />
         </div>
       }

@@ -20,6 +20,7 @@ interface Data {
   nickName: string
   status: string
   segment: string
+  gender: string
   active: boolean
 }
 
@@ -80,12 +81,17 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
     },
     {
       name: "Nickname",
-      selector: (row: Data) => row.nickName || "N/A",
+      selector: (row: Data) => row.nickName || "--",
       sortable: true,
     },
     {
       name: "Segment",
       selector: (row: Data) => row.segment,
+      sortable: true,
+    },
+    {
+      name: "Gender",
+      selector: (row: Data) => row.gender,
       sortable: true,
     },
     {

@@ -11,11 +11,13 @@ export default function GCModal({ children, title, maxHeight }: { children: Reac
 
   useEffect(() => {
     if (!dialogRef.current?.open) {
+      document.body.style.overflow = 'hidden';
       dialogRef.current?.showModal();
     }
   }, []);
 
   function onDismiss() {
+    document.body.style.overflow = '';
     router.back();
   }
 

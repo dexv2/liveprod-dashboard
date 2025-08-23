@@ -68,7 +68,7 @@ export default function CCScheduleBySegment({ schedule, dayService }: { schedule
               const thirdService = convertedData?.[category.SUNDAY_SERVICES[2]]?.[role]
               const fourthService = convertedData?.[category.SUNDAY_SERVICES[3]]?.[role]
               const regexFirst = /^(foh)$/i;
-              const regexLast = /^(foh observer 2|broadcast mix observer|audio volunteer 2|monitor mix observer|nxtgen observer)$/i;
+              const regexLast = /^(foh observer|broadcast mix observer|audio volunteer 2|monitor mix observer|nxtgen observer)$/i;
               const isFirstInGroup = regexFirst.test(role)
               const isLastInGroup = regexLast.test(role)
 

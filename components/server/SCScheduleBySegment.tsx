@@ -1,28 +1,20 @@
-import { getFilteredSchedule } from "@/utils/apis/get";
+import { getSchduleByDateRange } from "@/utils/apis/get";
 import { getNextService } from "@/utils/helpers";
-import { checkAuth } from "@/utils/helpersServer";
 import Link from "next/link";
-import { redirect } from "next/navigation";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import CCScheduleBySegment from "../client/CCScheduleBySegment";
 import GCTabLInk from '../global/tabs/GCTabLink';
 
 export default async function SCScheduleBySegment({increment, service}: {increment: number, service: string}) {
-  const isAdmin = await checkAuth();
-  if (!isAdmin && increment !== 0) redirect("/schedule/segment/audio/sunday");
-
   const serviceDate = getNextService(increment);
   const nextServiceDate = getNextService(increment+1);
-  const schedule1 = await getFilteredSchedule(serviceDate.saturday, serviceDate.sunday);
-  const schedule2 = await getFilteredSchedule(nextServiceDate.saturday, nextServiceDate.sunday);
+  const schedule1 = await getSchduleByDateRange(serviceDate.saturday, serviceDate.sunday);
+  const schedule2 = await getSchduleByDateRange(nextServiceDate.saturday, nextServiceDate.sunday);
 
   return (
     <div className="flex justify-center">
-      <div className="flex flex-col w-full gap-4 text-slate-700">
-        <div className='flex items-center justify-between'>
-          <h1 className="text-2xl">
-            
-          </h1>
+      <div className="flex flex-col w-full gap-2 text-slate-700">
+        <div className='flex items-center justify-end'>
           <GCTabLInk
             links={[
               `/schedule/segment/audio/saturday?increment=${increment}`,
@@ -39,18 +31,24 @@ export default async function SCScheduleBySegment({increment, service}: {increme
             <CCScheduleBySegment schedule={schedule2} dayService={service} />
           </div>
         </div>
-        { isAdmin &&
-          <div className='absolute right-3.5 bottom-2'>
-            <div className="flex gap-3 w-full justify-end">
-              <Link className="text-slate-600 hover:bg-slate-600 hover:text-slate-50 rounded-full" href={`/schedule/segment/audio/${service}?increment=${increment-1}`}>
-                <BsArrowLeftCircle size={27} />
+        <div className='absolute bottom-4 left-0 w-full px-4'>
+          <div className=''>
+            <div className="flex justify-between">
+              <Link className="text-slate-600 hover:underline" href={`/schedule/segment/audio/${service}?increment=${increment-1}`}>
+                <div className='flex gap-2 items-center'>
+                  <BsArrowLeftCircle size={22} />
+                  <p>Prev Week</p>
+                </div>
               </Link>
-              <Link className="text-slate-600 hover:bg-slate-600 hover:text-slate-50 rounded-full" href={`/schedule/segment/audio/${service}?increment=${increment+1}`}>
-                <BsArrowRightCircle size={27} />
+              <Link className="text-slate-600 hover:underline" href={`/schedule/segment/audio/${service}?increment=${increment+1}`}>
+                <div className='flex gap-2 items-center'>
+                <p>Next Week</p>
+                <BsArrowRightCircle size={22} />
+                </div>
               </Link>
             </div>
           </div>
-        }
+        </div>
       </div>
     </div>
   )

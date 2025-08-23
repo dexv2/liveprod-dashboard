@@ -22,6 +22,7 @@ interface Volunteer {
   segment: string
   schedules: Schedule[]
   roles: string[]
+  gender: string
 }
 
 interface Schedule {
@@ -40,6 +41,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
   const [ status, setStatus ] = useState<string>(volunteer.status);
   const [ role, setRole ] = useState<string | undefined>(undefined);
   const [ roles, setRoles ] = useState<string[]>(volunteer.roles);
+  const [ gender, setGender ] = useState<string>(volunteer.gender);
 
   const hasChanges = useMemo(() => (
     firstName !== volunteer.firstName ||
@@ -47,6 +49,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
     nickName !== (volunteer?.nickName || "") ||
     status !== volunteer.status ||
     segment !== volunteer.segment ||
+    gender !== volunteer.gender ||
     JSON.stringify(roles) !== JSON.stringify(volunteer.roles)
   ), [
     firstName,
@@ -55,12 +58,14 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
     segment,
     status,
     roles,
+    gender,
     volunteer.firstName,
     volunteer.lastName,
     volunteer.nickName,
     volunteer.segment,
     volunteer.status,
-    volunteer.roles
+    volunteer.roles,
+    volunteer.gender
   ]);
 
   useEffect(() => {
@@ -80,7 +85,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
 
   try {
     const updateVolunteerInfo = async () => {
-      await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status, roles });
+      await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status, roles, gender });
       router.refresh();
     }
     const from = (date: string, service: string): Date => {
@@ -123,12 +128,12 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
 
     return (
       <div className="px-32 text-slate-700">
-        <div className="flex justify-end pb-7">
-          <div className={`flex gap-2 justify-end ${!hasChanges && "hidden"}`}>
-            <button onClick={resetValues} className="border border-slate-400 px-3 rounded-md">
+        <div className="flex justify-end pb-3">
+          <div className={`flex gap-2 justify-end ${!hasChanges && "opacity-0"}`}>
+            <button disabled={!hasChanges} onClick={resetValues} className="border border-slate-400 px-3 rounded-md py-0.5">
               Cancel
             </button>
-            <button className="bg-sky-600 text-white pl-3.5 pr-4 rounded-md">
+            <button disabled={!hasChanges} className="bg-sky-700 text-white pl-3.5 pr-4 rounded-md py-0.5">
               <div className="flex gap-1.5 justify-center">
                 <div className="flex flex-col justify-center">
                   <IoSaveSharp size={17} />
@@ -175,7 +180,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated }: { vol
                       </div>
                       <div className="flex justify-between gap-5 w-full">
                         <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
-                        <GCInputTextWithLabel disabled label="id" value={volunteer._id} />
+                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
                       </div>
                     </div>
                     <div className="flex flex-col justify-between gap-0 w-full">

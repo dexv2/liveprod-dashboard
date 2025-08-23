@@ -153,6 +153,20 @@ export async function sleep(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+/**
+ * 
+ * @description This function takes an array and splits it into smaller arrays of a specified size.
+ * For example, if the input array is ['foh', 'foh assistant', 'foh trainee', 'foh observer'] and the size is 2,
+ * it will return [['foh', 'foh assistant'], ['foh trainee', 'foh observer']].
+ * If the size is larger than the length of the array, it will return the original array as a single chunk.
+ * 
+ * @param arr the array to chunk into smaller arrays
+ * @param size the size of each chunk
+ * 
+ * @returns a new array containing the chunks
+ * @example chunkArray(['foh', 'foh assistant', 'foh trainee', 'foh observer'], 2)
+ * // returns [['foh', 'foh assistant'], ['foh trainee', 'foh observer']]
+ */
 export const chunkArray = (arr: string[], size: number) => {
   return Array.from({ length: Math.ceil(arr.length / size) }, (_, i) =>
     arr.slice(i * size, i * size + size)
