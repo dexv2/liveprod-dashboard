@@ -26,3 +26,5 @@ Schedule Pages
 
 Volunteer Profile
 - Auto add roles assigned when assigning a role in schedules page
+
+Deployment set to `staging` branch.
