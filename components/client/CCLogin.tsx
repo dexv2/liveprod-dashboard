@@ -28,8 +28,8 @@ export default function CCLogin({ error, login }: { error: number, login: Login 
   return (
     <form onSubmit={handleSubmit}>
       <div className="flex flex-col justify-center h-[calc(100svh_-_16rem)]">
-        <div className="flex justify-center">
-          <div className="w-1/3 rounded-2xl border border-slate-100 shadow-md overflow-hidden">
+        <div className="flex justify-center px-4">
+          <div className="w-full max-w-md md:w-1/3 rounded-2xl border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
                 Admin Login

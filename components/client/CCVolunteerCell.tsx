@@ -18,13 +18,13 @@ export default function CCVolunteerCell({ service, isAuthenticated }: { service:
   };
 
   return (
-    <td onClick={handleClick} className={`${isAuthenticated && !!service?.id ? "hover:bg-slate-300 cursor-pointer" : ""} border-x border-x-slate-300 min-w-20`}>
+    <td onClick={handleClick} className={`${isAuthenticated && !!service?.id ? "hover:bg-slate-300 cursor-pointer" : ""} border-x border-x-slate-300 min-w-12 lg:min-w-20 px-0.5 lg:px-1`}>
       { !!service?.id ?
-        <div className="overflow-hidden h-[1.4rem] text-center">
+        <div className="overflow-hidden h-[1.2rem] lg:h-[1.4rem] text-center text-[8px] md:text-xs lg:text-sm">
           {service?.volunteer?.[0]?.firstName}
         </div> :
-        <div className="flex justify-center h-[1.4rem]">
-          <MdOutlineLockPerson size={22} />
+        <div className="flex justify-center h-[1.2rem] lg:h-[1.4rem]">
+          <MdOutlineLockPerson size={16} className="lg:w-[22px] lg:h-[22px]" />
         </div>
       }
     </td>

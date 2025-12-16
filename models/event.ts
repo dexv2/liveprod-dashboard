@@ -21,7 +21,7 @@ const eventSchema = new Schema({
   },
   venue: {
     type: String,
-    required: true
+    required: false
   },
   callTime: {
     type: String,
@@ -53,15 +53,23 @@ const eventSchema = new Schema({
     rfTech: { type: Boolean, default: false }
   },
   assignedVolunteers: {
-    foh: { type: Schema.Types.ObjectId, ref: "Volunteer" },
-    assistantFoh: { type: Schema.Types.ObjectId, ref: "Volunteer" },
-    bcMix: { type: Schema.Types.ObjectId, ref: "Volunteer" },
-    assistantBcMix: { type: Schema.Types.ObjectId, ref: "Volunteer" },
-    monMix: { type: Schema.Types.ObjectId, ref: "Volunteer" },
-    rfTech: { type: Schema.Types.ObjectId, ref: "Volunteer" }
+    foh: { type: Schema.Types.Mixed },
+    assistantFoh: { type: Schema.Types.Mixed },
+    bcMix: { type: Schema.Types.Mixed },
+    assistantBcMix: { type: Schema.Types.Mixed },
+    monMix: { type: Schema.Types.Mixed },
+    rfTech: { type: Schema.Types.Mixed }
+  },
+  googleCalendarEventId: {
+    type: String,
+    default: null
   }
 }, { timestamps: true });
 
-const Event = mongoose.models.Event || mongoose.model("Event", eventSchema);
+// Force schema refresh
+if (mongoose.models.Event) {
+  delete mongoose.models.Event;
+}
+const Event = mongoose.model("Event", eventSchema);
 
 export default Event;

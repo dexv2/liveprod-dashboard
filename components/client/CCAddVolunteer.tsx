@@ -32,8 +32,8 @@ export default function CCAddVolunteer() {
   return (
     <form onSubmit={(e) => addVolunteer(e)}>
       <div className="px-5 pt-7 pb-20">
-        <div className="flex flex-col gap-6">
-          <div className="flex gap-3">
+        <div className="flex flex-col gap-4 md:gap-6">
+          <div className="flex flex-col md:flex-row gap-3">
             <GCSelect onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
             <GCSelect onChange={(e) => setSegment(e.target.value)} label="segment" value={segment} options={category.SEGMENTS} />
           </div>

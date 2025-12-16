@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import GCSelect from "@/components/global/GCSelect";
+import GCTimePicker from "@/components/global/GCTimePicker";
 
 interface Event {
   _id?: string;
@@ -242,25 +243,22 @@ export default function CCEventsManager({ isAuthenticated }: { isAuthenticated: 
               label="Venue" 
               value={newEvent.venue} 
               onChange={(e) => setNewEvent({...newEvent, venue: e.target.value})}
-              options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex"]}
+              options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex", "Others"]}
             />
-            <GCSelect 
+            <GCTimePicker 
               label="Call Time" 
               value={newEvent.callTime} 
               onChange={(e) => setNewEvent({...newEvent, callTime: e.target.value})}
-              options={["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"]}
             />
-            <GCSelect 
+            <GCTimePicker 
               label="Start Time" 
               value={newEvent.startTime} 
               onChange={(e) => setNewEvent({...newEvent, startTime: e.target.value})}
-              options={["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"]}
             />
-            <GCSelect 
+            <GCTimePicker 
               label="End Time" 
               value={newEvent.endTime} 
               onChange={(e) => setNewEvent({...newEvent, endTime: e.target.value})}
-              options={["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"]}
             />
             <GCSelect 
               label="Praise and Worship" 
@@ -310,6 +308,7 @@ export default function CCEventsManager({ isAuthenticated }: { isAuthenticated: 
                     >
                       <option value="">-</option>
                       <option value="N/A">N/A</option>
+                      <option value="TBC">TBC</option>
                       {availableVolunteers.map(volunteer => (
                         <option key={volunteer._id} value={volunteer._id}>
                           {volunteer.name}
@@ -455,8 +454,10 @@ export default function CCEventsManager({ isAuthenticated }: { isAuthenticated: 
                         const assignedVolunteer = event.assignedVolunteers?.[role as keyof typeof event.assignedVolunteers];
                         console.log('Event:', event.eventName, 'Role:', role, 'Assigned:', assignedVolunteer);
                         const volunteerName = assignedVolunteer 
-                          ? volunteers.find(v => v._id === assignedVolunteer)?.name || 'Unknown'
-                          : 'Not assigned';
+                          ? (assignedVolunteer === 'N/A' || assignedVolunteer === 'TBC') 
+                            ? assignedVolunteer 
+                            : volunteers.find(v => v._id === assignedVolunteer)?.name || 'Unknown'
+                          : 'N/A';
                         
                         return (
                           <div key={role} className="border-b border-gray-200 pb-1 last:border-b-0">
@@ -545,25 +546,22 @@ export default function CCEventsManager({ isAuthenticated }: { isAuthenticated: 
                 label="Venue" 
                 value={editingEvent.venue} 
                 onChange={(e) => setEditingEvent({...editingEvent, venue: e.target.value})}
-                options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex"]}
+                options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex", "Others"]}
               />
-              <GCSelect 
+              <GCTimePicker 
                 label="Call Time" 
                 value={editingEvent.callTime} 
                 onChange={(e) => setEditingEvent({...editingEvent, callTime: e.target.value})}
-                options={["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"]}
               />
-              <GCSelect 
+              <GCTimePicker 
                 label="Start Time" 
                 value={editingEvent.startTime} 
                 onChange={(e) => setEditingEvent({...editingEvent, startTime: e.target.value})}
-                options={["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM"]}
               />
-              <GCSelect 
+              <GCTimePicker 
                 label="End Time" 
                 value={editingEvent.endTime} 
                 onChange={(e) => setEditingEvent({...editingEvent, endTime: e.target.value})}
-                options={["6:00 AM", "7:00 AM", "8:00 AM", "9:00 AM", "10:00 AM", "11:00 AM", "12:00 PM", "1:00 PM", "2:00 PM", "3:00 PM", "4:00 PM", "5:00 PM", "6:00 PM", "7:00 PM", "8:00 PM", "9:00 PM", "10:00 PM", "11:00 PM"]}
               />
               <GCSelect 
                 label="Praise and Worship" 
@@ -613,6 +611,7 @@ export default function CCEventsManager({ isAuthenticated }: { isAuthenticated: 
                       >
                         <option value="">-</option>
                         <option value="N/A">N/A</option>
+                        <option value="TBC">TBC</option>
                         {availableVolunteers.map(volunteer => (
                           <option key={volunteer._id} value={volunteer._id}>
                             {volunteer.name}

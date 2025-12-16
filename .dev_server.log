@@ -1,0 +1,87 @@
+
+> volunteers-dashboard@0.1.0 dev
+> next dev
+
+ ⚠ Port 3000 is in use, trying 3001 instead.
+ ⚠ Port 3001 is in use, trying 3002 instead.
+  ▲ Next.js 14.2.3
+  - Local:        http://localhost:3002
+  - Environments: .env.local, .env
+
+ ✓ Starting...
+ ✓ Ready in 1444ms
+ ○ Compiling /volunteer/id/[volunteerId] ...
+ ✓ Compiled /volunteer/id/[volunteerId] in 2.3s (809 modules)
+ ✓ Compiled in 79ms (288 modules)
+Connected to MongoDB
+Redirecting to profile: new ObjectId('6649b3496f844bfddb97280a')
+ GET /volunteer/id/A313273 200 in 4334ms
+Connected to MongoDB
+Redirecting to profile: new ObjectId('6638eae3eea1d02661f51e17')
+ GET /volunteer/id/A405975 200 in 69ms
+Connected to MongoDB
+Volunteer not found: NOTFOUND
+ GET /volunteer/id/NOTFOUND 200 in 61ms
+ ✓ Compiled in 788ms (288 modules)
+ ✓ Compiled in 273ms (288 modules)
+ ✓ Compiled in 1024ms (288 modules)
+ ✓ Compiled in 715ms (288 modules)
+ ✓ Compiled in 312ms (288 modules)
+ ✓ Compiled in 302ms (288 modules)
+ ✓ Compiled in 287ms (288 modules)
+ ✓ Compiled in 369ms (288 modules)
+ ✓ Compiled in 390ms (288 modules)
+ ✓ Compiled in 304ms (288 modules)
+ ✓ Compiled in 297ms (288 modules)
+ ✓ Compiled in 480ms (288 modules)
+ ✓ Compiled in 280ms (288 modules)
+ ✓ Compiled in 347ms (288 modules)
+ ✓ Compiled in 231ms (288 modules)
+ ✓ Compiled in 475ms (288 modules)
+ ✓ Compiled in 314ms (288 modules)
+ ✓ Compiled /volunteer/id/[volunteerId] in 340ms (486 modules)
+Connected to MongoDB
+Redirecting to profile: new ObjectId('6809a0e2f238dd5bc181bc6a')
+ GET /volunteer/id/A336575 200 in 587ms
+ ✓ Compiled in 947ms (288 modules)
+ ✓ Compiled in 503ms (288 modules)
+ ✓ Compiled in 525ms (288 modules)
+ ✓ Compiled in 355ms (288 modules)
+ ✓ Compiled in 216ms (288 modules)
+ ✓ Compiled in 280ms (288 modules)
+ ✓ Compiled in 258ms (288 modules)
+ ✓ Compiled in 243ms (288 modules)
+ ✓ Compiled in 234ms (288 modules)
+ ✓ Compiled in 727ms (288 modules)
+ ✓ Compiled in 1781ms (288 modules)
+ ✓ Compiled in 339ms (288 modules)
+ ✓ Compiled in 262ms (288 modules)
+ ✓ Compiled in 283ms (288 modules)
+ ✓ Compiled in 356ms (288 modules)
+ ✓ Compiled in 243ms (288 modules)
+ ✓ Compiled in 338ms (288 modules)
+ ✓ Compiled in 1849ms (288 modules)
+ ✓ Compiled in 341ms (288 modules)
+ ✓ Compiled in 231ms (288 modules)
+ ✓ Compiled in 274ms (288 modules)
+ ✓ Compiled in 1556ms (288 modules)
+ ✓ Compiled in 470ms (288 modules)
+ ✓ Compiled in 630ms (288 modules)
+ ✓ Compiled in 517ms (288 modules)
+ ✓ Compiled in 244ms (288 modules)
+ ✓ Compiled in 212ms (288 modules)
+ ✓ Compiled in 177ms (288 modules)
+ ✓ Compiled in 219ms (288 modules)
+ ✓ Compiled in 988ms (288 modules)
+ ✓ Compiled in 186ms (288 modules)
+ ✓ Compiled in 336ms (288 modules)
+ ✓ Compiled in 287ms (288 modules)
+ ✓ Compiled in 1133ms (288 modules)
+ ✓ Compiled in 163ms (288 modules)
+ ✓ Compiled in 163ms (288 modules)
+ ✓ Compiled in 165ms (288 modules)
+ ✓ Compiled in 85ms (288 modules)
+ ✓ Compiled in 87ms (288 modules)
+ ✓ Compiled in 171ms (288 modules)
+ ✓ Compiled in 178ms (288 modules)
+ ✓ Compiled in 145ms (288 modules)

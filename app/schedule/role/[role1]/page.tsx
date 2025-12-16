@@ -9,11 +9,11 @@ export default function ScheduleByRole({params}: {params: {role1: string}}) {
 
   return (
     <Fragment>
-      <div className='flex flex-col gap-3'>
+      <div className='flex flex-col gap-3 px-2 lg:px-0'>
         { columns.map((column, index) => (
-          <div key={index} className="flex gap-3 justify-center">
+          <div key={index} className="flex flex-col lg:flex-row gap-3 justify-center">
             { column.map((role, idx) => (
-              <div key={idx} className={`${column.length === 1 ? "w-1/2": "w-full"} rounded-t-xl rounded-b-lg h-50 overflow-hidden`}>
+              <div key={idx} className={`${column.length === 1 ? "w-full lg:w-1/2": "w-full"} rounded-t-xl rounded-b-lg h-50 overflow-hidden`}>
                 <SCSchedulesByRole role={role} />
               </div>
             ))}

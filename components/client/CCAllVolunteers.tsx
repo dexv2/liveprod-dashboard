@@ -11,6 +11,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { deleteVolunteer } from "@/utils/apis/delete";
 import { toast } from "react-toastify";
 import { sleep } from "@/utils/helpers";
+import { category } from "@/utils/constants";
 
 interface Data {
   _id: string
@@ -172,63 +173,47 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
   return (
     <div className="flex justify-center">
       <div className="w-full">
-        <div className="flex flex-col gap-7 text-slate-700 px-32 pt-8">
-          <div className="flex justify-between items-end mb-6">
+        <div className="flex flex-col gap-7 text-slate-700 px-4 md:px-16 lg:px-32 pt-8">
+          <div className="flex flex-col md:flex-row md:justify-between items-start md:items-end mb-6 gap-4">
             {isAdmin && (
-              <div className="flex gap-3 items-end">
-                <div className="min-w-[120px]">
-                  <label className="block text-sm font-medium mb-1">Gender</label>
+              <div className="flex flex-wrap gap-2 md:gap-3 items-end w-full md:w-auto">
+                <div className="min-w-[100px] md:min-w-[120px]">
+                  <label className="block text-xs md:text-sm font-medium mb-1">Gender</label>
                   <select 
                     value={genderFilter} 
                     onChange={(e) => setGenderFilter(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded h-10"
+                    className="w-full p-1 md:p-2 border border-gray-300 rounded h-8 md:h-10 text-sm"
                   >
                     <option value="">All Genders</option>
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
+                    {category.GENDER.map(gender => (
+                      <option key={gender} value={gender}>{gender.charAt(0).toUpperCase() + gender.slice(1)}</option>
+                    ))}
                   </select>
                 </div>
-                <div className="min-w-[120px]">
-                  <label className="block text-sm font-medium mb-1">Status</label>
+                <div className="min-w-[100px] md:min-w-[120px]">
+                  <label className="block text-xs md:text-sm font-medium mb-1">Status</label>
                   <select 
                     value={statusFilter} 
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded h-10"
+                    className="w-full p-1 md:p-2 border border-gray-300 rounded h-8 md:h-10 text-sm"
                   >
                     <option value="">All Status</option>
-                    <option value="active">Active</option>
-                    <option value="trainee">Trainee</option>
-                    <option value="observer">Observer</option>
-                    <option value="on leave">On Leave</option>
-                    <option value="inactive">Inactive</option>
+                    {category.STATUS.map(status => (
+                      <option key={status} value={status}>{status.charAt(0).toUpperCase() + status.slice(1)}</option>
+                    ))}
                   </select>
                 </div>
-                <div className="min-w-[180px]">
-                  <label className="block text-sm font-medium mb-1">Role</label>
+                <div className="min-w-[140px] md:min-w-[180px]">
+                  <label className="block text-xs md:text-sm font-medium mb-1">Role</label>
                   <select 
                     value={roleFilter} 
                     onChange={(e) => setRoleFilter(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded h-10"
+                    className="w-full p-1 md:p-2 border border-gray-300 rounded h-8 md:h-10 text-sm"
                   >
                     <option value="">All Roles</option>
-                    <option value="foh">FOH</option>
-                    <option value="foh assistant">FOH Assistant</option>
-                    <option value="foh trainee">FOH Trainee</option>
-                    <option value="foh assistant trainee">FOH Assistant Trainee</option>
-                    <option value="foh observer">FOH Observer</option>
-                    <option value="monitor mix">Monitor Mix</option>
-                    <option value="rf tech">RF Tech</option>
-                    <option value="monitor mix trainee">Monitor Mix Trainee</option>
-                    <option value="monitor mix observer">Monitor Mix Observer</option>
-                    <option value="broadcast mix">Broadcast Mix</option>
-                    <option value="broadcast mix assistant">Broadcast Mix Assistant</option>
-                    <option value="broadcast mix trainee">Broadcast Mix Trainee</option>
-                    <option value="broadcast mix assistant trainee">Broadcast Mix Assistant Trainee</option>
-                    <option value="broadcast mix observer">Broadcast Mix Observer</option>
-                    <option value="nxtgen">NXTGen</option>
-                    <option value="nxtgen trainee">NXTGen Trainee</option>
-                    <option value="nxtgen observer">NXTGen Observer</option>
-                    <option value="audio core team">Audio Core Team</option>
+                    {category.ROLES.map(role => (
+                      <option key={role} value={role}>{role.split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}</option>
+                    ))}
                   </select>
                 </div>
                 <button
@@ -238,31 +223,29 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
                     setRoleFilter('');
                     setQuery('');
                   }}
-                  className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 h-10 text-sm"
+                  className="px-2 md:px-3 py-1 md:py-2 bg-gray-500 text-white rounded hover:bg-gray-600 h-8 md:h-10 text-xs md:text-sm"
                 >
                   Reset
                 </button>
               </div>
             )}
-            <div className="flex gap-3 items-end">
+            <div className="flex flex-col md:flex-row gap-2 md:gap-3 items-stretch md:items-end w-full md:w-auto">
               {isAdmin ? (
-                <div className="w-64">
+                <div className="w-full md:w-64">
                   <GCInputSearch onChange={(event) => setQuery(event.target.value)} />
                 </div>
               ) : (
-                <div className="flex gap-2 items-end">
-                  <div className="w-80">
-                    <label className="block text-sm font-medium mb-1">Enter Volunteer ID</label>
+                <div className="flex flex-col md:flex-row gap-2 items-stretch md:items-end w-full">
+                  <div className="w-full md:w-80">
+                    <label className="block text-xs md:text-sm font-medium mb-1">Enter Volunteer ID</label>
                     <input
                       type="text"
                       placeholder="A123456 / S123456 / L123456"
-                      className="w-full p-2 border border-gray-300 rounded h-10"
+                      className="w-full p-2 border border-gray-300 rounded h-8 md:h-10 text-sm"
                       onKeyPress={(e) => {
                         if (e.key === 'Enter') {
                           const volunteerId = (e.target as HTMLInputElement).value.trim();
-                          console.log('Volunteer ID entered:', volunteerId);
                           if (volunteerId) {
-                            console.log('Navigating to:', `/volunteer/id/${volunteerId}`);
                             router.push(`/volunteer/id/${volunteerId}`);
                           }
                         }
@@ -273,13 +256,11 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
                     onClick={() => {
                       const input = document.querySelector('input[placeholder="A123456 / S123456 / L123456"]') as HTMLInputElement;
                       const volunteerId = input?.value.trim();
-                      console.log('Go button clicked, volunteer ID:', volunteerId);
                       if (volunteerId) {
-                        console.log('Navigating to:', `/volunteer/id/${volunteerId}`);
                         router.push(`/volunteer/id/${volunteerId}`);
                       }
                     }}
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 h-10"
+                    className="bg-blue-600 text-white px-3 md:px-4 py-2 rounded hover:bg-blue-700 h-8 md:h-10 text-sm"
                   >
                     Go
                   </button>
@@ -289,7 +270,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
                 <button
                   onClick={openModal}
                   id="add-volunteer"
-                  className="flex flex-col justify-center bg-sky-600 py-1 px-2 rounded-xl h-10"
+                  className="flex flex-col justify-center bg-sky-600 py-1 px-2 rounded-xl h-8 md:h-10"
                 >
                   <IoPersonAdd size={24} className="text-slate-50" />
                 </button>
@@ -302,6 +283,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
               data={filteredVolunteers}
               conditionalRowStyles={conditionalRowStyles}
               pagination={isAdmin}
+              responsive
               {...(isAdmin && {
                 paginationPerPage: 25,
                 paginationRowsPerPageOptions: [10, 25, 50, 100]

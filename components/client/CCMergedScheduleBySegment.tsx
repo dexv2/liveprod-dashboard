@@ -24,8 +24,8 @@ export default function CCMergedScheduleBySegment({ schedule, isAuthenticated }:
 
   return (
     <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
-      <div className="flex items-center justify-center w-full">
-        <table className="table-auto w-full">
+      <div className="w-full overflow-x-auto">
+        <table className="table-auto w-full min-w-[500px] xl:min-w-0">
           <thead>
             <tr>
               <th colSpan={7} className="text-white bg-slate-800 border border-slate-800 uppercase py-2">
@@ -33,13 +33,13 @@ export default function CCMergedScheduleBySegment({ schedule, isAuthenticated }:
               </th>
             </tr>
             <tr className='h-0.5'></tr>
-            <tr className='uppercase bg-slate-300 border-t border-x border-slate-300'>
-              <th colSpan={2}>Position</th>
-              <th>Sat {saturday.FIRST_SERVICE}</th>
-              <th>Sun {sunday.FIRST_SERVICE}</th>
-              <th>Sun {sunday.SECOND_SERVICE}</th>
-              <th>Sun {sunday.THIRD_SERVICE}</th>
-              <th>Sun {sunday.FOURTH_SERVICE}</th>
+            <tr className='uppercase bg-slate-300 border-t border-x border-slate-300 text-[10px] xl:text-sm'>
+              <th colSpan={2} className="px-0.5 xl:px-1 py-1">Position</th>
+              <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">Sat</span><span className="hidden xl:inline">Sat {saturday.FIRST_SERVICE}</span></th>
+              <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">9AM</span><span className="hidden xl:inline">Sun {sunday.FIRST_SERVICE}</span></th>
+              <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">12PM</span><span className="hidden xl:inline">Sun {sunday.SECOND_SERVICE}</span></th>
+              <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">3PM</span><span className="hidden xl:inline">Sun {sunday.THIRD_SERVICE}</span></th>
+              <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">6PM</span><span className="hidden xl:inline">Sun {sunday.FOURTH_SERVICE}</span></th>
             </tr>
           </thead>
           <tbody className='[&>tr.last-in-group]:border-b [&>tr.last-in-group]:border-b-black [&>tr.first-in-group]:border-t [&>tr.first-in-group]:border-t-black'>
@@ -56,8 +56,8 @@ export default function CCMergedScheduleBySegment({ schedule, isAuthenticated }:
 
               return (
                 <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
-                  <td className="w-9 text-center h-6 text-xs">{i+1}</td>
-                  <td className="px-1 uppercase w-52 text-sm">{role.replace("broadcast", "bc").replace(/\d+/g, "")}</td>
+                  <td className="w-4 xl:w-9 text-center h-4 xl:h-6 text-[10px] xl:text-xs">{i+1}</td>
+                  <td className="px-0.5 xl:px-1 uppercase w-20 xl:w-52 text-[10px] xl:text-sm">{role.replace("broadcast", "bc").replace("monitor", "mon").replace(/\d+/g, "")}</td>
                   <SCVolunteerCell service={satFirst} />
                   <SCVolunteerCell service={sunFirst} />
                   <SCVolunteerCell service={sunSecond} />

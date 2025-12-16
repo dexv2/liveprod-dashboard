@@ -1,10 +1,11 @@
 "use client";
 
 import CCCalendarSchedule from "@/components/client/CCCalendarSchedule";
+import CCVolunteerEvents from "@/components/client/CCVolunteerEvents";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import GCSelect from "@/components/global/GCSelect";
 import { putUpdateVolunteer } from "@/utils/apis/put";
-import { category, serviceTime } from "@/utils/constants";
+import { category, serviceTime, serviceCode } from "@/utils/constants";
 import { diff } from "@/utils/dates";
 import { newDate } from "@/utils/helpers";
 import { redirect, useRouter } from "next/navigation";
@@ -102,12 +103,9 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
 
   const updateVolunteerInfo = async () => {
     try {
-      console.log('Saving trainings:', trainings);
-      const result = await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status, roles, gender, phone, trainings });
-      console.log('Save result:', result);
+      await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status, roles, gender, phone, trainings });
       router.refresh();
     } catch (error) {
-      console.error('Error saving volunteer:', error);
       alert('Failed to save volunteer information');
     }
   }
@@ -152,7 +150,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
     }
 
     return (
-      <div className="px-32 text-slate-700">
+      <div className="px-4 md:px-16 lg:px-32 text-slate-700">
         <div className="flex justify-end pb-3">
           <div className={`flex gap-2 justify-end ${!hasChanges && "opacity-0"}`}>
             <button disabled={!hasChanges} onClick={resetValues} className="border border-slate-400 px-3 rounded-md py-0.5">
@@ -202,24 +200,24 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
               </div>
               <div className="px-3 pt-8 pb-5 text-sm">
                 <div className="flex flex-col gap-6">
-                  <div className="flex justify-between gap-5">
+                  <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5">
                     <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setFirstName(e.target.value)} label="first name" value={firstName} />
                     <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setLastName(e.target.value)} label="last name" value={lastName} />
                   </div>
-                  <div className="flex justify-between gap-5">
+                  <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5">
                     <div className="flex flex-col justify-start gap-5 w-full">
-                      <div className="flex justify-between gap-5 w-full">
+                      <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
                         <GCSelect disabled={!isAuthenticated} onChange={(e) => setSegment(e.target.value)} label="segment" value={segment} options={category.SEGMENTS} />
                         <GCSelect disabled={!isAuthenticated} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
                       </div>
-                      <div className="flex justify-between gap-5 w-full">
+                      <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
                         <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
                         <GCSelect disabled={!isAuthenticated} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
                       </div>
                       {isAdmin && (
-                        <div className="flex justify-between gap-5 w-full">
+                        <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
                           <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setPhone(e.target.value)} label="phone number" value={phone} />
-                          <div className="w-full"></div>
+                          <div className="w-full lg:block hidden"></div>
                         </div>
                       )}
                     </div>
@@ -256,6 +254,28 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
           <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
+                Schedule
+              </h2>
+            </div>
+            <div className="bg-slate-300 h-px" />
+            <div className="px-5 pb-5 pt-14">
+              <CCCalendarSchedule events={schedule} length={length} />
+            </div>
+          </div>
+          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+              <h2 className="font-semibold text-lg text-white">
+                Events
+              </h2>
+            </div>
+            <div className="bg-slate-300 h-px" />
+            <div className="px-5 pb-5 pt-12">
+              <CCVolunteerEvents volunteerId={volunteer._id} />
+            </div>
+          </div>
+          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+              <h2 className="font-semibold text-lg text-white">
                 Trainings Attended
               </h2>
             </div>
@@ -286,17 +306,6 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
                   <p className="text-gray-500 text-center py-8">No training records found.</p>
                 )}
               </div>
-            </div>
-          </div>
-          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
-            <div className="flex justify-start py-5 pl-6 bg-slate-800">
-              <h2 className="font-semibold text-lg text-white">
-                Schedule
-              </h2>
-            </div>
-            <div className="bg-slate-300 h-px" />
-            <div className="px-5 pb-5 pt-14">
-              <CCCalendarSchedule events={schedule} length={length} />
             </div>
           </div>
         </div>

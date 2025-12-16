@@ -15,6 +15,13 @@ export const metadata: Metadata = {
   description: "This is the scheduling dashboard for the live production team.",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default async function RootLayout(props: Readonly<{
   children: React.ReactNode;
 }>) {

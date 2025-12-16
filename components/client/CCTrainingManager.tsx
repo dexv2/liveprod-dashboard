@@ -8,6 +8,10 @@ interface Training {
   trainingName: string;
   description?: string;
   date: string;
+  startTime?: string;
+  endTime?: string;
+  venue?: string;
+  trainingType?: string;
   trainors: string[];
   volunteers: { _id: string; name: string }[];
   createdAt?: string;
@@ -25,6 +29,10 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
     trainingName: "",
     description: "",
     date: "",
+    startTime: "",
+    endTime: "",
+    venue: "",
+    trainingType: "",
     trainors: [""],
     volunteers: []
   });
@@ -109,6 +117,10 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
           trainingName: "",
           description: "",
           date: "",
+          startTime: "",
+          endTime: "",
+          venue: "",
+          trainingType: "",
           trainors: [""],
           volunteers: []
         });
@@ -139,6 +151,44 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
               value={newTraining.date}
               onChange={(e) => setNewTraining({...newTraining, date: e.target.value})}
             />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <GCInputTextWithLabel
+              label="Start Time"
+              type="time"
+              value={newTraining.startTime || ""}
+              onChange={(e) => setNewTraining({...newTraining, startTime: e.target.value})}
+            />
+            <GCInputTextWithLabel
+              label="End Time"
+              type="time"
+              value={newTraining.endTime || ""}
+              onChange={(e) => setNewTraining({...newTraining, endTime: e.target.value})}
+            />
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <GCInputTextWithLabel
+              label="Venue"
+              value={newTraining.venue || ""}
+              onChange={(e) => setNewTraining({...newTraining, venue: e.target.value})}
+            />
+            <div>
+              <label className="block text-sm font-medium mb-1">Training Type</label>
+              <select
+                value={newTraining.trainingType || ""}
+                onChange={(e) => setNewTraining({...newTraining, trainingType: e.target.value})}
+                className="w-full p-2 border border-gray-300 rounded"
+              >
+                <option value="">Select training type</option>
+                <option value="Technical">Technical</option>
+                <option value="Orientation">Orientation</option>
+                <option value="Refresher">Refresher</option>
+                <option value="Advanced">Advanced</option>
+                <option value="Workshop">Workshop</option>
+              </select>
+            </div>
           </div>
           
           <div className="mb-4">
@@ -183,7 +233,7 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
           <div className="mb-4">
             <label className="block text-sm font-medium mb-2">Select Volunteers:</label>
             <div className="max-h-40 overflow-y-auto border border-gray-300 rounded p-2">
-              {volunteers.map((volunteer) => (
+              {volunteers.sort((a, b) => a.name.localeCompare(b.name)).map((volunteer) => (
                 <label key={volunteer._id} className="flex items-center mb-2">
                   <input
                     type="checkbox"
@@ -214,12 +264,25 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
           <div className="space-y-4">
             {trainings.map((training) => (
               <div key={training._id} className="border border-gray-300 rounded p-4">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                   <div>
                     <h4 className="font-semibold text-lg">{training.trainingName}</h4>
                     <p className="text-gray-600">
                       {new Date(training.date).toLocaleDateString()}
                     </p>
+                    {training.startTime && training.endTime && (
+                      <p className="text-sm text-gray-600">
+                        {training.startTime} - {training.endTime}
+                      </p>
+                    )}
+                    {training.venue && (
+                      <p className="text-sm text-gray-600">📍 {training.venue}</p>
+                    )}
+                    {training.trainingType && (
+                      <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mt-1">
+                        {training.trainingType}
+                      </span>
+                    )}
                     {training.description && (
                       <p className="text-sm text-gray-500 mt-1">{training.description}</p>
                     )}
@@ -251,6 +314,14 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
                       ))}
                     </div>
                   </div>
+                  <div>
+                    <h5 className="font-medium mb-1">Total Attendees:</h5>
+                    <p className="text-lg font-semibold text-gray-700">
+                      {training.trainors.filter(t => t.trim() !== "").reduce((count, trainor) => {
+                        return count + trainor.split(';').filter(name => name.trim() !== "").length;
+                      }, 0) + training.volunteers.length}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}
@@ -275,6 +346,44 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
                 value={editingTraining.date}
                 onChange={(e) => setEditingTraining({...editingTraining, date: e.target.value})}
               />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <GCInputTextWithLabel
+                label="Start Time"
+                type="time"
+                value={editingTraining.startTime || ""}
+                onChange={(e) => setEditingTraining({...editingTraining, startTime: e.target.value})}
+              />
+              <GCInputTextWithLabel
+                label="End Time"
+                type="time"
+                value={editingTraining.endTime || ""}
+                onChange={(e) => setEditingTraining({...editingTraining, endTime: e.target.value})}
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-4 mb-4">
+              <GCInputTextWithLabel
+                label="Venue"
+                value={editingTraining.venue || ""}
+                onChange={(e) => setEditingTraining({...editingTraining, venue: e.target.value})}
+              />
+              <div>
+                <label className="block text-sm font-medium mb-1">Training Type</label>
+                <select
+                  value={editingTraining.trainingType || ""}
+                  onChange={(e) => setEditingTraining({...editingTraining, trainingType: e.target.value})}
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
+                  <option value="">Select training type</option>
+                  <option value="Technical">Technical</option>
+                  <option value="Orientation">Orientation</option>
+                  <option value="Refresher">Refresher</option>
+                  <option value="Advanced">Advanced</option>
+                  <option value="Workshop">Workshop</option>
+                </select>
+              </div>
             </div>
             
             <div className="mb-4">
@@ -323,7 +432,7 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Select Volunteers:</label>
               <div className="max-h-40 overflow-y-auto border border-gray-300 rounded p-2">
-                {volunteers.map((volunteer) => (
+                {volunteers.sort((a, b) => a.name.localeCompare(b.name)).map((volunteer) => (
                   <label key={volunteer._id} className="flex items-center mb-2">
                     <input
                       type="checkbox"

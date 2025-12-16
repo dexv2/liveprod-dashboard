@@ -50,13 +50,13 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
               <tr key={i} className="border border-slate-300 bg-slate-100 odd:bg-slate-200 snap-start">
                 { hasSaturday && (
                   <Fragment>
-                    <td className="w-20 text-center">
+                    <td className="w-12 lg:w-20 text-center text-[8px] md:text-xs lg:text-sm px-0.5 lg:px-1">
                       {snsFirst?.[i]?.date ? formatDate(snsFirst[i].date) : ''}
                     </td>
                     <SCVolunteerCell service={snsFirst?.[i]} />
                   </Fragment>
                 )}
-                <td className="border border-slate-300 w-20 text-center">
+                <td className="border border-slate-300 w-12 lg:w-20 text-center text-[8px] md:text-xs lg:text-sm px-0.5 lg:px-1">
                   {firstService?.date ? formatDate(firstService.date) : ''}
                 </td>
                 <SCVolunteerCell service={firstService} />
