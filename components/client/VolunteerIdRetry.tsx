@@ -15,7 +15,7 @@ export default function VolunteerIdRetry({ initialId }: { initialId?: string }) 
   return (
     <div className="max-w-xl mx-auto bg-white p-6 rounded-md shadow-sm">
       <p className="text-gray-700 mb-4">
-        If you mistyped the ID you can try again below. If the ID still isn't
+        If you mistyped the ID you can try again below. If the ID still isn&apos;t
         found, contact your site administrator for help.
       </p>
 

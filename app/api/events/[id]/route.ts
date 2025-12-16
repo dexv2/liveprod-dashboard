@@ -15,7 +15,7 @@ export async function PUT(request: NextRequest, { params }: any) {
     
     // Update all provided fields
     Object.keys(updateData).forEach(key => {
-      event[key] = updateData[key];
+      (event as any)[key] = updateData[key];
     });
     
     await event.save();
@@ -27,24 +27,24 @@ export async function PUT(request: NextRequest, { params }: any) {
           // Update existing Google Calendar event
           await updateGCalEvent(event.googleCalendarEventId, {
             eventName: event.eventName,
-            date: event.date,
+            date: event.date.toISOString().split('T')[0],
             startTime: event.startTime,
             endTime: event.endTime,
-            venue: event.venue,
-            otherDetails: event.otherDetails
+            venue: event.venue || '',
+            otherDetails: event.otherDetails || ''
           });
         } else {
           // Create new Google Calendar event
           const googleEventId = await createGCalEvent({
             eventName: event.eventName,
-            date: event.date,
+            date: event.date.toISOString().split('T')[0],
             startTime: event.startTime,
             endTime: event.endTime,
-            venue: event.venue,
-            otherDetails: event.otherDetails
+            venue: event.venue || '',
+            otherDetails: event.otherDetails || ''
           });
           
-          event.googleCalendarEventId = googleEventId;
+          (event as any).googleCalendarEventId = googleEventId;
           await event.save();
         }
       } catch (gcalError) {

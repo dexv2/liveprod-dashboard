@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
           otherDetails: eventData.otherDetails
         });
         
-        event.googleCalendarEventId = googleEventId;
+        (event as any).googleCalendarEventId = googleEventId;
         await event.save();
       } catch (gcalError) {
         console.error('Google Calendar sync error:', gcalError);

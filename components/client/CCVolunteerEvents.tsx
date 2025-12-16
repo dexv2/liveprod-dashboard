@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface Event {
   _id: string;
@@ -22,11 +22,7 @@ export default function CCVolunteerEvents({ volunteerId }: { volunteerId: string
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchVolunteerEvents();
-  }, [volunteerId]);
-
-  const fetchVolunteerEvents = async () => {
+  const fetchVolunteerEvents = useCallback(async () => {
     try {
       const response = await fetch('/api/events');
       const result = await response.json();
@@ -43,7 +39,11 @@ export default function CCVolunteerEvents({ volunteerId }: { volunteerId: string
     } finally {
       setLoading(false);
     }
-  };
+  }, [volunteerId]);
+
+  useEffect(() => {
+    fetchVolunteerEvents();
+  }, [fetchVolunteerEvents]);
 
   const getVolunteerRole = (event: Event) => {
     if (!event.assignedVolunteers) return 'Unknown';
