@@ -31,12 +31,12 @@ export default function GCTabLInk(props: Readonly<{
     if (isActive) {
       return "bg-slate-800";
     } else {
-      return "bg-slate-400";
+      return "bg-slate-500 bg-opacity-50";
     }
   }
 
   return (
-    <div className="flex gap-px">
+    <div className="flex gap-px border rounded-xl border-slate-500">
       {links.map((link, index) => (
         <Link
           key={index}

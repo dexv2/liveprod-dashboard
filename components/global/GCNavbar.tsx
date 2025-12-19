@@ -23,7 +23,7 @@ export default function Navbar({ session }: { session: Session | null }) {
     const prevPath = newPath;
     setNewPath(url);
 
-    if (prevPath.startsWith("/schedule/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login")) {
+    if (prevPath.startsWith("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login") || prevPath.startsWith("/add-event")) {
       router.refresh();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -36,14 +36,14 @@ export default function Navbar({ session }: { session: Session | null }) {
      */
     document.body.classList.toggle(
       "background-gradient",
-      /^\/$|^\/(?:assign-volunteer|login)/.test(pathname)
+      /^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname)
     );
   }, [pathname])
 
   const pageTitle = useMemo(() => {
     if (pathname.startsWith("/schedule/segment/")) return "Upcoming Schedule";
     if (pathname.startsWith("/schedule/role/")) return "Masterlist";
-    if (pathname.startsWith("/schedule/assign-volunteer")) return "Assign Volunteer";
+    if (pathname.startsWith("/schedule/assign-volunteer")) return "Masterlist";
     if (pathname.startsWith("/schedule/calendar")) return "Live Production Calendar";
     if (pathname.startsWith("/login")) return "Login Page";
     if (pathname.startsWith("/volunteer/all")) return "Volunteers List";
@@ -56,7 +56,7 @@ export default function Navbar({ session }: { session: Session | null }) {
   }, [pathname]);
 
   return (
-    <nav className={`${/^\/$|^\/(?:assign-volunteer|login)/.test(pathname) ? "bg-opacity-0 mb-4": "bg-opacity-100 mb-8"} flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
+    <nav className={`${/^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname) ? "bg-opacity-0 mb-4": "bg-opacity-100 mb-8"} flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
       <Link href={"/"}>
         <div className="flex gap-1 items-center">
           <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px] md:h-[45px]" alt="logo" />
@@ -131,7 +131,7 @@ export default function Navbar({ session }: { session: Session | null }) {
           }
         </div>
       )}
-      { !/^\/$|\/(assign-volunteer|login)/.test(pathname) && <div className="hidden md:block absolute left-0 bottom-0 bg-slate-950 translate-y-full py-1.5 pl-10 pr-44 opacity-90 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
+      { !/^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname) && <div className="hidden md:block absolute left-0 bottom-0 bg-slate-950 translate-y-full py-1.5 pl-10 pr-44 opacity-90 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
         <h1 className="text-lg lg:text-xl capitalize text-white">
           {pageTitle}
         </h1>

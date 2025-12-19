@@ -52,8 +52,8 @@ export default async function SCScheduleBySegment({increment, service}: {increme
               </Link>
               <Link className="text-slate-200 hover:underline" href={`/?increment=${increment+1}&service=regular`}>
                 <div className='flex gap-1 md:gap-2 items-center'>
-                <p className="text-sm md:text-base">Next Week</p>
-                <BsArrowRightCircle size={18} className="md:w-[22px] md:h-[22px]" />
+                  <p className="text-sm md:text-base">Next Week</p>
+                  <BsArrowRightCircle size={18} className="md:w-[22px] md:h-[22px]" />
                 </div>
               </Link>
             </div>

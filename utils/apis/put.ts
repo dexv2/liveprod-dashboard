@@ -41,5 +41,29 @@ export const putUpdateVolunteer = async (id: string, body: VolunteerData) => {
     return await res.json();
   } catch (error) {
     console.log("Error updating volunteer", error);
+    throw error;
   }
 }
+
+export const putUpdateEvent = async (id: string, body: any) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/events/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to update event");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error updating event", error);
+    throw error;
+  }
+}
+
+

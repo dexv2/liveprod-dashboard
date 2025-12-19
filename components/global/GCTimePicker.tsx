@@ -12,14 +12,28 @@ export default function GCTimePicker({ label, value, onChange }: TimePickerProps
   
   const parseTime = (timeStr: string) => {
     if (!timeStr) return { hour: '', minute: '', period: '' };
-    
-    // Try to parse as complete time string first
-    const match = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
-    if (match) {
-      return { hour: match[1], minute: match[2], period: match[3].toUpperCase() };
+
+    // Try to parse 24-hour format (HH:mm or H:mm)
+    const match24h = timeStr.match(/^(\d{1,2}):(\d{2})$/);
+    if (match24h) {
+      let hour24 = parseInt(match24h[1], 10);
+      const minute = match24h[2];
+      
+      // Convert 24-hour to 12-hour format
+      const period = hour24 >= 12 ? 'PM' : 'AM';
+      let hour12 = hour24 % 12;
+      if (hour12 === 0) hour12 = 12; // Handle midnight (0) and noon (12)
+      
+      return { hour: hour12.toString(), minute, period };
     }
     
-    // Try to parse as partial JSON state
+    // Try to parse 12-hour format with AM/PM (e.g., "7:00 PM")
+    const match12h = timeStr.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+    if (match12h) {
+      return { hour: match12h[1], minute: match12h[2], period: match12h[3].toUpperCase() };
+    }
+    
+    // Try to parse as JSON state (for partial selections)
     try {
       const parsed = JSON.parse(timeStr);
       if (parsed && typeof parsed === 'object') {

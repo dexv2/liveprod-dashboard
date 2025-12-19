@@ -3,6 +3,21 @@ import Event from "@/models/event";
 import { NextRequest, NextResponse } from "next/server";
 import { createGCalEvent, updateGCalEvent } from "@/utils/gcal";
 
+export async function GET(request: NextRequest, { params }: any) {
+  try {
+    await connectMongoDB();
+    
+    const event = await Event.findById(params.id);
+    if (!event) {
+      return NextResponse.json({ message: "Event not found" }, { status: 404 });
+    }
+    
+    return NextResponse.json({ event }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
 export async function PUT(request: NextRequest, { params }: any) {
   try {
     const updateData = await request.json();
@@ -58,3 +73,4 @@ export async function PUT(request: NextRequest, { params }: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
+
