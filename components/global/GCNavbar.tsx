@@ -30,15 +30,17 @@ export default function Navbar({ session }: { session: Session | null }) {
   }, [pathname])
 
   useEffect(() => {
-    if (pathname === "/") {
-      document.body.classList.add("background-gradient");
-    } else {
-      document.body.classList.remove("background-gradient");
-    }
+    /**
+     * Toggles the 'background-gradient' CSS class on the document body based on the current pathname.
+     * The gradient is applied when the user is on the home page ("/"), assign-volunteer page, or login page.
+     */
+    document.body.classList.toggle(
+      "background-gradient",
+      /^\/$|^\/(?:assign-volunteer|login)/.test(pathname)
+    );
   }, [pathname])
 
   const pageTitle = useMemo(() => {
-    if (pathname === "/") return "Upcoming Schedule";
     if (pathname.startsWith("/schedule/segment/")) return "Upcoming Schedule";
     if (pathname.startsWith("/schedule/role/")) return "Masterlist";
     if (pathname.startsWith("/schedule/assign-volunteer")) return "Assign Volunteer";
@@ -54,7 +56,7 @@ export default function Navbar({ session }: { session: Session | null }) {
   }, [pathname]);
 
   return (
-    <nav className={`${pathname === "/" ? "bg-opacity-0": "bg-opacity-100"} flex justify-between items-center bg-slate-900 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
+    <nav className={`${/^\/$|^\/(?:assign-volunteer|login)/.test(pathname) ? "bg-opacity-0 mb-4": "bg-opacity-100 mb-8"} flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
       <Link href={"/"}>
         <div className="flex gap-1 items-center">
           <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px] md:h-[45px]" alt="logo" />
@@ -73,7 +75,7 @@ export default function Navbar({ session }: { session: Session | null }) {
 
       {/* Desktop menu */}
       <div className="hidden md:flex justify-between">
-        <Link className="text-white p-2" href={"/schedule/segment/audio/regular"}>Upcoming</Link>
+        {/* <Link className="text-white p-2" href={"/schedule/segment/audio/regular"}>Upcoming</Link> */}
         <Link className="text-white p-2" href={"/schedule/calendar"}>Calendar</Link>
         <div className="relative">
           <button 
@@ -129,11 +131,11 @@ export default function Navbar({ session }: { session: Session | null }) {
           }
         </div>
       )}
-      <div className="hidden md:block absolute left-0 bottom-0 bg-slate-900 translate-y-full py-1.5 pl-10 pr-44 opacity-75 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
+      { !/^\/$|\/(assign-volunteer|login)/.test(pathname) && <div className="hidden md:block absolute left-0 bottom-0 bg-slate-950 translate-y-full py-1.5 pl-10 pr-44 opacity-90 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
         <h1 className="text-lg lg:text-xl capitalize text-white">
           {pageTitle}
         </h1>
-      </div>
+      </div>}
     </nav>
   )
 }

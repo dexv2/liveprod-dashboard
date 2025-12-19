@@ -1,11 +1,12 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { MdOutlineLockPerson } from "react-icons/md";
 import { useEffect, useState } from "react";
 
 export default function CCVolunteerCell({ service, isAuthenticated }: { service: any, isAuthenticated: boolean }) {
   const router = useRouter();
+  const pathname = usePathname();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -14,7 +15,8 @@ export default function CCVolunteerCell({ service, isAuthenticated }: { service:
 
   const handleClick = () => {
     if (!mounted || !isAuthenticated || !service?.id) return;
-    router.push(`/schedule/assign-volunteer/${service?.id}`);
+    const page = pathname !== '/' ? '/schedule' : '';
+    router.push(`${page}/assign-volunteer/${service?.id}`, { scroll: false });
   };
 
   return (

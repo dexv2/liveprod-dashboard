@@ -4,8 +4,8 @@ import { Suspense } from 'react';
 
 export default function AllVolunteers() {
 	return (
-    <Suspense fallback={<GCLoading />}>
+    // <Suspense fallback={<GCLoading />}>
       <SCAllVolunteers />
-    </Suspense>
+    // </Suspense>
 	)
 }
