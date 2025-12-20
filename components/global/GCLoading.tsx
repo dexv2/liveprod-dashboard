@@ -1,12 +1,7 @@
-import Image from 'next/image'
-
 export default function GCLoading() {
   return (
-    <div className="flex justify-center items-center h-[500px]">
-      <div className="animate-spin rounded-full h-24 w-24 border-y-2 border-gray-900"></div>
+    <div className="fixed inset-0 flex justify-center items-center bg-[rgba(0,0,0,0.5)] z-[9999]">
+      <div className="animate-spin [animation-duration:1.5s] rounded-full h-24 w-24 border-t-4 border-white"></div>
     </div>
-    // <div className="flex justify-center items-center absolute inset-0">
-    //   <Image unoptimized src="/cute-smiley.gif" alt="loading" width={200} height={200} />
-    // </div>
   )
 }

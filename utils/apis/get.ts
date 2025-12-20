@@ -123,3 +123,38 @@ export const getVolunteerById = async (id: string) => {
     console.log("Error loading volunteer", error);
   }
 }
+
+// ------------------------------------ EVENTS ------------------------------------
+
+export const getAllEvents = async () => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/events`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to get events");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error loading events", error);
+    return { data: [], error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export const getEventById = async (id: string) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/events/${id}`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to get event");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error loading event", error);
+  }
+}

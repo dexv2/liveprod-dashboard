@@ -1,7 +1,11 @@
 import dynamic from 'next/dynamic';
 import { getAllVolunteers } from '@/utils/apis/get';
 import { checkAdminAuth } from '@/utils/helpersServer';
-const CCAllVolunteers = dynamic(() => import('@/components/client/CCAllVolunteers'), {ssr: false});
+import GCLoading from '../global/GCLoading';
+const CCAllVolunteers = dynamic(() => import('@/components/client/CCAllVolunteers'), {
+  ssr: false,
+  loading: () => <GCLoading />
+});
 
 export default async function SCAllVolunteers() {
   const volunteers = await getAllVolunteers();

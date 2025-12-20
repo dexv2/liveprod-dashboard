@@ -15,18 +15,27 @@ export const metadata: Metadata = {
   description: "This is the scheduling dashboard for the live production team.",
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+};
+
 export default async function RootLayout(props: Readonly<{
+  modal: React.ReactNode;
   children: React.ReactNode;
 }>) {
   const session = await auth();
 
   return (
     <html lang="en">
-      <body className={`${inter.className} h-svh background-gradient`}>
+      <body className={`${inter.className} background-gradient min-h-screen`}>
         <SessionWrapper session={session}>
           <div className="mx-auto p-4">
             <GCNavbar session={session} />
-            <div className="mt-8">
+            <div className="">
+              {props.modal}
               {props.children}
             </div>
             <div id="modal-root" />

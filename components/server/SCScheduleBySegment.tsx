@@ -12,21 +12,17 @@ export default async function SCScheduleBySegment({increment, service}: {increme
   const isAuthenticated = (session?.user as any)?.isAdmin;
   const serviceDate1 = getNextService(increment);
   const serviceDate2 = getNextService(increment+1);
-  const serviceDate3 = getNextService(increment+2);
-  const serviceDate4 = getNextService(increment+3);
   const schedule1 = await getSchduleByDateRange(serviceDate1.saturday, serviceDate1.sunday);
   const schedule2 = await getSchduleByDateRange(serviceDate2.saturday, serviceDate2.sunday);
-  const schedule3 = await getSchduleByDateRange(serviceDate3.saturday, serviceDate3.sunday);
-  const schedule4 = await getSchduleByDateRange(serviceDate4.saturday, serviceDate4.sunday);
 
   return (
-    <div className="flex justify-center">
-      <div className="flex flex-col w-full gap-2 text-slate-700">
+    <div className="flex justify-center px-1 md:px-4">
+      <div className="flex flex-col w-full gap-4 text-slate-700">
         <div className='flex items-center justify-end mb-6'>
           <GCTabLInk
             links={[
-              `/schedule/segment/audio/regular?increment=${increment}`,
-              `/schedule/segment/audio/events?increment=${increment}`
+              `/?increment=${increment}&service=regular`,
+              `/?increment=${increment}&service=events`
             ]}
             name={["regular", "events"]}
             labels={["Regular Service", "Events"]}
@@ -39,29 +35,27 @@ export default async function SCScheduleBySegment({increment, service}: {increme
               <CCScheduleBySegment schedule={{saturday: '', sunday: '', data: []}} dayService={service} isAuthenticated={isAuthenticated} isCompact={false} />
             </div>
           ) : (
-            <div className="flex gap-2 w-full mt-[0.5px]">
+            <div className="flex flex-col xl:flex-row gap-2 xl:gap-4 w-full mt-[0.5px]">
               <CCMergedScheduleBySegment schedule={schedule1} isAuthenticated={isAuthenticated} />
               <CCMergedScheduleBySegment schedule={schedule2} isAuthenticated={isAuthenticated} />
             </div>
           )}
         </div>
         {service !== 'events' && (
-          <div className='absolute bottom-4 left-0 w-full px-4'>
-            <div className=''>
-              <div className="flex justify-between">
-                <Link className="text-slate-600 hover:underline" href={`/schedule/segment/audio/regular?increment=${increment-1}`}>
-                  <div className='flex gap-2 items-center'>
-                    <BsArrowLeftCircle size={22} />
-                    <p>Prev Week</p>
-                  </div>
-                </Link>
-                <Link className="text-slate-600 hover:underline" href={`/schedule/segment/audio/regular?increment=${increment+1}`}>
-                  <div className='flex gap-2 items-center'>
-                  <p>Next Week</p>
-                  <BsArrowRightCircle size={22} />
-                  </div>
-                </Link>
-              </div>
+          <div className='mt-4 mb-8'>
+            <div className="flex justify-between px-2">
+              <Link className="text-slate-200 hover:underline" href={`/?increment=${increment-1}&service=regular`}>
+                <div className='flex gap-1 md:gap-2 items-center'>
+                  <BsArrowLeftCircle size={18} className="md:w-[22px] md:h-[22px]" />
+                  <p className="text-sm md:text-base">Prev Week</p>
+                </div>
+              </Link>
+              <Link className="text-slate-200 hover:underline" href={`/?increment=${increment+1}&service=regular`}>
+                <div className='flex gap-1 md:gap-2 items-center'>
+                  <p className="text-sm md:text-base">Next Week</p>
+                  <BsArrowRightCircle size={18} className="md:w-[22px] md:h-[22px]" />
+                </div>
+              </Link>
             </div>
           </div>
         )}

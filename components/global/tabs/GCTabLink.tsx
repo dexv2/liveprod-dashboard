@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 
 export default function GCTabLInk(props: Readonly<{
   links: string[];
@@ -12,6 +12,7 @@ export default function GCTabLInk(props: Readonly<{
 }>) {
   const { links, labels, isSinglePath = false } = props;
   const params = useParams<{role1: string, service: string, segment: string}>();
+  const service = useSearchParams()?.get('service') || 'regular';
   let numPaths = 1;
 
   const getBackgroundByNumber = (pathNum: number) => {
@@ -25,17 +26,17 @@ export default function GCTabLInk(props: Readonly<{
   const getBackgroundByName = (name?: string) => {
     // Check both service and the last part of the URL path
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-    const isActive = name === params?.service || currentPath.includes(`/${name}`);
-    
+    const isActive = name === params?.service || name === service || currentPath.includes(`/${name}`);
+
     if (isActive) {
-      return "bg-slate-700";
+      return "bg-slate-800";
     } else {
-      return "bg-slate-400";
+      return "bg-slate-500 bg-opacity-50";
     }
   }
 
   return (
-    <div className="flex gap-px">
+    <div className="flex gap-px border rounded-xl border-slate-500">
       {links.map((link, index) => (
         <Link
           key={index}

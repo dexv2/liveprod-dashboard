@@ -2,6 +2,47 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+  /* Improve touch targets */
+  button, a, input, select {
+    min-height: 44px;
+  }
+  
+  /* Better table scrolling on mobile */
+  .rdt_Table {
+    font-size: 14px;
+  }
+  
+  .rdt_TableHead {
+    font-size: 12px;
+  }
+  
+  /* Hide less important columns on mobile */
+  .rdt_TableCell:nth-child(n+4) {
+    display: none;
+  }
+  
+  .rdt_TableHeadRow > .rdt_TableCol:nth-child(n+4) {
+    display: none;
+  }
+  
+  /* Better form spacing on mobile */
+  .flex.gap-5 {
+    gap: 0.75rem;
+  }
+  
+  /* Responsive text sizing */
+  h1 { font-size: 1.5rem; }
+  h2 { font-size: 1.25rem; }
+  
+  /* Better modal sizing */
+  dialog {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
 @layer utilities {
   /* Chrome, Safari and Opera */
   .no-scrollbar::-webkit-scrollbar {
@@ -15,7 +56,7 @@
 
   .background-gradient {
     background-image: linear-gradient(to top left, var(--tw-gradient-stops));
-    --tw-gradient-from: #475569 var(--tw-gradient-from-position);
+    --tw-gradient-from: #1b2431 var(--tw-gradient-from-position);
     --tw-gradient-stops: var(--tw-gradient-from), #164e63 var(--tw-gradient-via-position), var(--tw-gradient-to);
     --tw-gradient-to: #0f172a var(--tw-gradient-to-position);
   }

@@ -16,28 +16,35 @@ export default function CCSlideshow() {
   }, [])
 
   const loadSlideshow = useCallback(() => {
+    if (!mounted) return;
+    
     let stt = 0;
     const upperhand = Math.ceil((slides.length - 1) / 2);
     const lowerhand = Math.floor((slides.length - 1) / 2);
+    const isMobile = window.innerWidth < 768;
+    const translateDistance = isMobile ? 80 : 140;
+    
     (itemsRef.current[active] as any).style.transform = `none`;
     (itemsRef.current[active] as any).style.zIndex = 1;
     (itemsRef.current[active] as any).style.filter = `none`;
     (itemsRef.current[active] as any).style.opacity = 1;
     (itemsRef.current[active] as any).style.boxShadow = `0px 30px 40px -25px rgba(103, 209, 191, 1)`;
+    
     for (let i = 1; i <= upperhand; i++) {
       stt++;
       const nextValue = getNextValue(active + i);
-      (itemsRef.current[nextValue] as any).style.transform = `translateX(${140 * stt}px) scale(${1 - 0.3*stt}) perspective(16px) rotateY(-0.35deg)`;
+      (itemsRef.current[nextValue] as any).style.transform = `translateX(${translateDistance * stt}px) scale(${1 - 0.3*stt}) perspective(16px) rotateY(-0.35deg)`;
       (itemsRef.current[nextValue] as any).style.zIndex = -stt;
       (itemsRef.current[nextValue] as any).style.filter = `blur(5px)`;
       (itemsRef.current[nextValue] as any).style.opacity = stt > 2 ? 0 : 0.6;
       (itemsRef.current[nextValue] as any).style.boxShadow = `0 0 #0000`;
     }
+    
     stt = 0;
     for (let i = 1; i <= lowerhand; i++) {
       stt++;
       const prevValue = getPrevValue(active - i);
-      (itemsRef.current[prevValue] as any).style.transform = `translateX(${-140 * stt}px) scale(${1 - 0.3*stt}) perspective(16px) rotateY(0.35deg)`;
+      (itemsRef.current[prevValue] as any).style.transform = `translateX(${-translateDistance * stt}px) scale(${1 - 0.3*stt}) perspective(16px) rotateY(0.35deg)`;
       (itemsRef.current[prevValue] as any).style.zIndex = -stt;
       (itemsRef.current[prevValue] as any).style.filter = `blur(5px)`;
       (itemsRef.current[prevValue] as any).style.opacity = stt > 2 ? 0 : 0.6;
@@ -50,6 +57,17 @@ export default function CCSlideshow() {
     if (mounted) {
       loadSlideshow();
     }
+  }, [loadSlideshow, mounted])
+
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const handleResize = () => {
+      loadSlideshow();
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [loadSlideshow, mounted])
 
   useEffect(() => {
@@ -85,16 +103,16 @@ export default function CCSlideshow() {
   }
 
   return (
-    <div onKeyDown={handleKeyDown} className="slider relative w-full h-[500px] overflow-hidden">
+    <div onKeyDown={handleKeyDown} className="slider relative w-full h-[300px] md:h-[400px] lg:h-[500px] overflow-hidden">
       {slides.map((slide, i) => (
         <div key={i} ref={el => {
           itemsRef.current[i] = el
-        }} className="item absolute w-[500px] h-[375px] text-justify rounded-xl top-0 left-[calc(50%_-_250px)] bg-white duration-700">
-          <Image src={`/${slide+1}.jpg`} alt={`${slide+1}.jpg`} layout="fill" objectFit="contain" className="rounded-xl" />
+        }} className="item absolute w-[280px] h-[210px] md:w-[400px] md:h-[300px] lg:w-[500px] lg:h-[375px] text-justify rounded-xl top-0 left-[calc(50%_-_140px)] md:left-[calc(50%_-_200px)] lg:left-[calc(50%_-_250px)] bg-white duration-700">
+          <Image src={`/${slide+1}.jpg`} alt={`${slide+1}.jpg`} fill style={{objectFit: "cover"}} className="rounded-xl" />
         </div>
       ))}
-      <button onClick={() => setActive(getPrevValue(active - 1))} id="prev" className="absolute bg-black bg-opacity-5 hover:bg-opacity-20 rounded-sm h-4/5 w-12 text-slate-500 text-opacity-50 hover:text-opacity-80 border-none text-2xl font-mono font-bold left-5 focus:outline-none">{"<"}</button>
-      <button onClick={() => setActive(getNextValue(active + 1))} id="next" className="absolute bg-black bg-opacity-5 hover:bg-opacity-20 rounded-sm h-4/5 w-12 text-slate-500 text-opacity-50 hover:text-opacity-80 border-none text-2xl font-mono font-bold right-5 focus:outline-none">{">"}</button>
+      <button onClick={() => setActive(getPrevValue(active - 1))} id="prev" className="absolute bg-black bg-opacity-5 hover:bg-opacity-20 rounded-sm h-3/5 md:h-4/5 w-8 md:w-12 text-slate-500 text-opacity-50 hover:text-opacity-80 border-none text-lg md:text-2xl font-mono font-bold left-2 md:left-5 focus:outline-none">{"<"}</button>
+      <button onClick={() => setActive(getNextValue(active + 1))} id="next" className="absolute bg-black bg-opacity-5 hover:bg-opacity-20 rounded-sm h-3/5 md:h-4/5 w-8 md:w-12 text-slate-500 text-opacity-50 hover:text-opacity-80 border-none text-lg md:text-2xl font-mono font-bold right-2 md:right-5 focus:outline-none">{">"}</button>
     </div>
   )
 }

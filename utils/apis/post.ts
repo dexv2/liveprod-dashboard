@@ -8,6 +8,36 @@ interface VolunteerData {
   status?: string
 }
 
+interface Event {
+  _id?: string;
+  status: string;
+  date: string;
+  day: string;
+  eventName: string;
+  venue: string;
+  callTime: string;
+  startTime: string;
+  endTime: string;
+  praiseAndWorship: boolean;
+  otherDetails: string;
+  volunteersNeeded: {
+    foh: boolean;
+    assistantFoh: boolean;
+    bcMix: boolean;
+    assistantBcMix: boolean;
+    monMix: boolean;
+    rfTech: boolean;
+  };
+  assignedVolunteers?: {
+    foh?: string;
+    assistantFoh?: string;
+    bcMix?: string;
+    assistantBcMix?: string;
+    monMix?: string;
+    rfTech?: string;
+  };
+}
+
 export const postAddVolunteer = async (body: VolunteerData) => {
   await fetch(`${SOURCE_URL}/api/volunteers`, {
     method: "POST",
@@ -42,5 +72,17 @@ export const getAdmin = async (username: string, password: string) => {
     return await res.json();
   } catch (error) {
     console.log("Error loading admin:", error);
+  }
+}
+
+export const postAddEvent = async (eventData: Event) => {
+  try {
+    await fetch('/api/events', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(eventData)
+    });
+  } catch (error) {
+    console.error('Error creating event:', error);
   }
 }

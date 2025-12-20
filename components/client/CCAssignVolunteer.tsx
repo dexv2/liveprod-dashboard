@@ -70,6 +70,7 @@ export default function CCAssignVolunteer(
   },[schedule.service])
 
   const sortedVolunteers = volunteers
+    .filter((person) => person.roles?.includes(schedule.role))
     .sort((person) => person.role ? -1 : 1)
     .map((person) => {
       return {
@@ -214,23 +215,29 @@ export default function CCAssignVolunteer(
         <div className="bg-slate-200 h-px mt-6" />
         <div className="">
           <div className="overflow-scroll h-72 py-1 no-scrollbar">
-            {filteredPeople.map((volunteer) => (
-              <div
-                key={volunteer._id}
-                onClick={() => validateAssigneeSchedule(volunteer)}
-                className={`flex justify-between px-2 py-1.5 cursor-pointer hover:bg-slate-200 ${volunteer.available ? "text-slate-700" : "text-rose-600"}`}
-              >
-                <div className="flex justify-start gap-2">
-                  <IoPersonCircleOutline size={24} />
-                  <div>{volunteer.name}</div>
-                </div>
-                { volunteer.role &&
-                  <div className="flex flex-col justify-center border border-sky-600 bg-sky-50 px-1 rounded-md">
-                    <p className="uppercase text-xs text-sky-600">{volunteer.role.replace(/\d+/g, "")}</p>
-                  </div>
-                }
+            {filteredPeople.length === 0 ? (
+              <div className="text-center py-4 text-gray-500">
+                No volunteers found with the role: {schedule.role}
               </div>
-            ))}
+            ) : (
+              filteredPeople.map((volunteer) => (
+                <div
+                  key={volunteer._id}
+                  onClick={() => validateAssigneeSchedule(volunteer)}
+                  className={`flex justify-between px-2 py-1.5 cursor-pointer hover:bg-slate-200 ${volunteer.available ? "text-slate-700" : "text-rose-600"}`}
+                >
+                  <div className="flex justify-start gap-2">
+                    <IoPersonCircleOutline size={24} />
+                    <div>{volunteer.name}</div>
+                  </div>
+                  { volunteer.role &&
+                    <div className="flex flex-col justify-center border border-sky-600 bg-sky-50 px-1 rounded-md">
+                      <p className="uppercase text-xs text-sky-600">{volunteer.role.replace(/\d+/g, "")}</p>
+                    </div>
+                  }
+                </div>
+              ))
+            )}
           </div>
         </div>
         <div className="bg-slate-200 h-px" />

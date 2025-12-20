@@ -1,8 +1,9 @@
 import SCVolunteerCell from "@/components/server/SCVolunteerCell";
-import CCEventsManager from "@/components/client/CCEventsManager";
+import SCEventsManager from "@/components/server/SCEventsManager";
 import { category, saturday, service, sunday } from "@/utils/constants";
 import { formatDateLong } from "@/utils/helpers";
-import { Fragment, useMemo } from 'react';
+import { Fragment, Suspense, useMemo } from 'react';
+import GCLoading from '../global/GCLoading';
 
 interface Schedule {
   saturday: string
@@ -18,7 +19,10 @@ export default function CCScheduleBySegment({ schedule, dayService, isAuthentica
   if (dayService === 'events') {
     return (
       <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
-        <CCEventsManager isAuthenticated={false} />
+        
+        <Suspense fallback={<GCLoading />}>
+          <SCEventsManager isAuthenticated={isAuthenticated || false} />
+        </Suspense>
       </div>
     );
   }

@@ -1,5 +1,7 @@
-import CCEventsManager from "@/components/client/CCEventsManager";
+import SCEventsManager from "@/components/server/SCEventsManager";
 import { auth } from "@/auth";
+import { Suspense } from 'react';
+import GCLoading from '@/components/global/GCLoading';
 
 export default async function EventsPage() {
   const session = await auth();
@@ -7,7 +9,9 @@ export default async function EventsPage() {
 
   return (
     <div className="w-full">
-      <CCEventsManager isAuthenticated={isAuthenticated || false} />
+      <Suspense fallback={<GCLoading />}>
+        <SCEventsManager isAuthenticated={isAuthenticated || false} />
+      </Suspense>
     </div>
   );
 }
