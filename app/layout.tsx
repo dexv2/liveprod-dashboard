@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import GCNavbar from "@/components/global/GCNavbar";
 import SessionWrapper from "@/components/global/SessionWrapper";
+import DeviceProvider from "@/components/global/DeviceProvider";
 import { auth } from "@/auth";
 import { Bounce, ToastContainer } from "react-toastify";
 
@@ -32,27 +33,29 @@ export default async function RootLayout(props: Readonly<{
     <html lang="en">
       <body className={`${inter.className} background-gradient min-h-screen`}>
         <SessionWrapper session={session}>
-          <div className="mx-auto p-4">
-            <GCNavbar session={session} />
-            <div className="">
-              {props.modal}
-              {props.children}
+          <DeviceProvider>
+            <div className="mx-auto p-4">
+              <GCNavbar session={session} />
+              <div className="">
+                {props.modal}
+                {props.children}
+              </div>
+              <div id="modal-root" />
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                theme="colored"
+                transition={Bounce}
+              />
             </div>
-            <div id="modal-root" />
-            <ToastContainer
-              position="top-right"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="colored"
-              transition={Bounce}
-            />
-          </div>
+          </DeviceProvider>
         </SessionWrapper>
       </body>
     </html>
