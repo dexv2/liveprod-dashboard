@@ -5,9 +5,9 @@
 /* Mobile-specific styles */
 @media (max-width: 768px) {
   /* Improve touch targets */
-  button, a, input, select {
+  /* button, a, input, select {
     min-height: 44px;
-  }
+  } */
   
   /* Better table scrolling on mobile */
   .rdt_Table {
