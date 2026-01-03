@@ -18,9 +18,9 @@ export default function CCSchedulesByRole({ role, service, hasSaturday }: { role
                 <Fragment>
                   <th className="sticky top-px bg-slate-300 border border-slate-300 w-12 lg:w-20 px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm">SNS</th>
                   <th className="sticky top-px bg-slate-300 border border-slate-300 uppercase px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm">5PM</th>
-                  <th className="sticky top-px bg-slate-300 border border-slate-300 w-12 lg:w-20 px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm">SUN</th>
                 </Fragment>
               ) : null }
+              <th className="sticky top-px bg-slate-300 border border-slate-300 w-12 lg:w-20 px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm">SUN</th>
               <th className="sticky top-px bg-slate-300 border border-slate-300 uppercase py-0.5 px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm"><span className="lg:hidden">9AM</span><span className="hidden lg:inline">{sunday.FIRST_SERVICE}</span></th>
               <th className="sticky top-px bg-slate-300 border border-slate-300 uppercase px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm"><span className="lg:hidden">12PM</span><span className="hidden lg:inline">{sunday.SECOND_SERVICE}</span></th>
               <th className="sticky top-px bg-slate-300 border border-slate-300 uppercase px-0.5 lg:px-1 text-[8px] md:text-xs lg:text-sm"><span className="lg:hidden">3PM</span><span className="hidden lg:inline">{sunday.THIRD_SERVICE}</span></th>
