@@ -211,7 +211,7 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
                       ...event,
                       volunteersNeeded: {
                         ...event.volunteersNeeded,
-                        [key]: !!volunteerId
+                        [key]: volunteerId !== "N/A" && !!volunteerId
                       }
                     });
                   }}
