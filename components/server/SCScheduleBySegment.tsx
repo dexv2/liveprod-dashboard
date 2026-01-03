@@ -4,8 +4,10 @@ import { auth } from "@/auth";
 import Link from "next/link";
 import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import CCScheduleBySegment from "../client/CCScheduleBySegment";
-import CCMergedScheduleBySegment from "../client/CCMergedScheduleBySegment";
 import GCTabLInk from '../global/tabs/GCTabLink';
+import GCLoading from '../global/GCLoading';
+import { Suspense } from 'react';
+import SCEventsManager from './SCEventsManager';
 
 export default async function SCScheduleBySegment({increment, service}: {increment: number, service: string}) {
   const session = await auth();
@@ -32,12 +34,16 @@ export default async function SCScheduleBySegment({increment, service}: {increme
         <div>
           {service === 'events' ? (
             <div className="mt-[0.5px]">
-              <CCScheduleBySegment schedule={{saturday: '', sunday: '', data: []}} dayService={service} isAuthenticated={isAuthenticated} isCompact={false} />
+              <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
+                <Suspense fallback={<GCLoading />}>
+                  <SCEventsManager isAuthenticated={isAuthenticated || false} />
+                </Suspense>
+              </div>
             </div>
           ) : (
             <div className="flex flex-col xl:flex-row gap-2 xl:gap-4 w-full mt-[0.5px]">
-              <CCMergedScheduleBySegment schedule={schedule1} isAuthenticated={isAuthenticated} />
-              <CCMergedScheduleBySegment schedule={schedule2} isAuthenticated={isAuthenticated} />
+              <CCScheduleBySegment schedule={schedule1} isAuthenticated={isAuthenticated} />
+              <CCScheduleBySegment schedule={schedule2} isAuthenticated={isAuthenticated} />
             </div>
           )}
         </div>
