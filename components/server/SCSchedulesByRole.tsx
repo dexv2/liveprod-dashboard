@@ -41,7 +41,7 @@ export default async function SCSchedulesByRole({role}: {role: string}) {
         <tbody>
           { service[category.SUNDAY_SERVICES[0]]?.map((firstService: any, i: number) => {
             const snsFirst = service?.[category.SATURDAY_SERVICES[0]];
-            const snsSecond = service?.[category.SATURDAY_SERVICES[1]];
+            // const snsSecond = service?.[category.SATURDAY_SERVICES[1]];
             const secondService = service[category.SUNDAY_SERVICES[1]]?.[i];
             const thirdService = service[category.SUNDAY_SERVICES[2]]?.[i];
             const fourthService = service[category.SUNDAY_SERVICES[3]]?.[i];
