@@ -41,9 +41,9 @@ export default function GCTabLInk(props: Readonly<{
         <Link
           key={index}
           href={link}
-          className={`text-white py-1 w-36 text-center first:rounded-s-xl last:rounded-e-xl ${isSinglePath ? getBackgroundByName(props?.name?.[index]) : getBackgroundByNumber(index + 1)}`}
+          className={`flex justify-center items-center py-1 w-36 text-center first:rounded-s-xl last:rounded-e-xl ${isSinglePath ? getBackgroundByName(props?.name?.[index]) : getBackgroundByNumber(index + 1)}`}
         >
-          {labels[index]}
+          <p className='text-white'>{labels[index]}</p>
         </Link>
       ))}
     </div>

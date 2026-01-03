@@ -102,6 +102,10 @@ export function formatDateLong(date: string) {
   return new Date(date).toLocaleDateString("en-US", {month: "long", day: "2-digit", year: "numeric", timeZone: "Asia/Manila"});
 }
 
+export function formatDayShort(date: string | Date) {
+  return moment(date).format("ddd").toUpperCase();
+}
+
 export function formatDateISO(date: string | Date) {
   return moment(date).format("YYYY-MM-DD");
 }
