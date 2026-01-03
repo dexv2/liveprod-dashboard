@@ -143,6 +143,23 @@ export const getAllEvents = async () => {
   }
 }
 
+export const getAllUpcomingEvents = async () => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/events/upcoming`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to get events");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error loading events", error);
+    return { data: [], error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
 export const getEventById = async (id: string) => {
   try {
     const res = await fetch(`${SOURCE_URL}/api/events/${id}`, {
