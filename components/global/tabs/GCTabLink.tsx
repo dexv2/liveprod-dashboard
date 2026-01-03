@@ -1,17 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useParams, useSearchParams } from "next/navigation";
+import { useParams, usePathname, useSearchParams } from "next/navigation";
 
 export default function GCTabLInk(props: Readonly<{
-  links: string[];
+  queryParams: string[];
   labels: string[];
   name?: string[];
   isSinglePath?: boolean;
   path?: string
 }>) {
-  const { links, labels, isSinglePath = false } = props;
+  const { queryParams, labels, isSinglePath = false } = props;
   const params = useParams<{role1: string, service: string, segment: string}>();
+  const pathname = usePathname();
   const service = useSearchParams()?.get('service') || 'regular';
   let numPaths = 1;
 
@@ -26,7 +27,7 @@ export default function GCTabLInk(props: Readonly<{
   const getBackgroundByName = (name?: string) => {
     // Check both service and the last part of the URL path
     const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
-    const isActive = name === params?.service || name === service || currentPath.includes(`/${name}`);
+    const isActive = name === params?.service || name === service || currentPath.includes(`${pathname}/${name}`);
 
     if (isActive) {
       return "bg-slate-800";
@@ -37,10 +38,10 @@ export default function GCTabLInk(props: Readonly<{
 
   return (
     <div className="flex gap-px border rounded-xl border-slate-500">
-      {links.map((link, index) => (
+      {queryParams.map((queryParam, index) => (
         <Link
           key={index}
-          href={link}
+          href={`${pathname}${queryParam}`}
           className={`flex justify-center items-center py-1 w-36 text-center first:rounded-s-xl last:rounded-e-xl ${isSinglePath ? getBackgroundByName(props?.name?.[index]) : getBackgroundByNumber(index + 1)}`}
         >
           <p className='text-white'>{labels[index]}</p>
