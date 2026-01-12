@@ -25,8 +25,9 @@ export default function CCVolunteerCell({ service, isAuthenticated }: { service:
         <div className="overflow-hidden h-[1.2rem] lg:h-[1.4rem] text-center text-[8px] md:text-xs lg:text-sm">
           {service?.volunteer?.[0]?.firstName}
         </div> :
-        <div className="flex justify-center h-[1.2rem] lg:h-[1.4rem]">
-          <MdOutlineLockPerson size={16} className="lg:w-[22px] lg:h-[22px]" />
+        <div className="flex justify-center items-center h-[1.2rem] lg:h-[1.4rem]">
+          <p className='text-[10px] xl:text-sm'>N/A</p>
+          {/* <MdOutlineLockPerson size={16} className="lg:w-[22px] lg:h-[22px]" /> */}
         </div>
       }
     </td>

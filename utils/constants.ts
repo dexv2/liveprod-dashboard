@@ -263,12 +263,12 @@ export const roleFilter = [
       role.AUDIO_VOLUNTEER_2
     ]
   },
-  // {
-  //   label: "Events",
-  //   value: "events",
-  //   href: "/schedule/role/events",
-  //   roles: []
-  // },
+  {
+    label: "Events",
+    value: "events",
+    href: "/schedule/role/events",
+    roles: []
+  },
   {
     label: "All",
     value: "all",

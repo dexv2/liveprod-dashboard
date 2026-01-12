@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { BsArrowLeftCircle, BsArrowRightCircle } from 'react-icons/bs';
-import { getAllEvents, getAllVolunteers } from '@/utils/apis/get';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { usePathname, useRouter } from 'next/navigation';
 import { putUpdateEvent } from '@/utils/apis/put';
+import GCArrowPrev from '../global/GCArrowPrev';
+import GCArrowNext from '../global/GCArrowNext';
+import { useDevice } from '../global/DeviceProvider';
 
 interface Event {
   _id?: string;
@@ -44,10 +45,15 @@ interface Volunteer {
 
 export default function CCEventsManager({ isAuthenticated, events, volunteers }: { isAuthenticated: boolean, events: Event[], volunteers: Volunteer[] }) {
   const [currentPage, setCurrentPage] = useState(0);
-  const eventsPerPage = 7;
+  const pathname = usePathname();
+    const { isMobile } = useDevice();
+  const EXPECTED_EVENTS_PER_PAGE = isMobile ? 2 : 4;
+  const isWhite = !pathname.includes('schedule');
+  const totalEvents = events?.length || 0;
+  const eventsPerPage = totalEvents > EXPECTED_EVENTS_PER_PAGE ? EXPECTED_EVENTS_PER_PAGE : totalEvents;
   const router = useRouter();
 
-  const totalPages = Math.ceil(events?.length || 0 / eventsPerPage);
+  const totalPages = Math.ceil(totalEvents / eventsPerPage);
   const startIndex = currentPage * eventsPerPage;
   const endIndex = startIndex + eventsPerPage;
   const currentEvents = events?.slice(startIndex, endIndex) || [];
@@ -85,11 +91,32 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
 
   return (
     <div className="w-full">
+
+      {totalEvents > eventsPerPage && (
+        <div className="flex justify-between items-center p-4">
+          <GCArrowPrev
+            label="Prev"
+            type="button"
+            handlePrevPage={handlePrevPage}
+            disabled={currentPage === 0}
+          />
+          <span className={`text-sm ${isWhite ? 'text-white' : 'text-slate-600'}`}>
+            Page {currentPage + 1} of {totalPages} ({totalEvents} total events)
+          </span>
+          <GCArrowNext
+            label="Next"
+            type="button"
+            handleNextPage={handleNextPage}
+            disabled={currentPage === totalPages - 1}
+          />
+        </div>
+      )}
+
       <div className="bg-slate-800 rounded-t-lg border border-slate-800 flex justify-between items-center px-6">
         <h2 className="text-white text-lg font-semibold py-3">Events</h2>
-        {!isAuthenticated && events.length > 0 ? (
+        {!isAuthenticated && totalEvents > 0 ? (
           <span className="text-white text-sm">
-            Showing {Math.min(currentEvents.length, eventsPerPage)} of {events.length} events
+            Showing {Math.min(currentEvents.length, eventsPerPage)} of {totalEvents} events
           </span>
         ) : isAuthenticated ? (
           <button onClick={addNewEvent} className='text-white px-3 py-1 bg-slate-600 bg-opacity-80 rounded-md'>
@@ -258,34 +285,6 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
           </tbody>
         </table>
       </div>
-      
-      {events?.length > eventsPerPage && (
-        <div className="flex justify-between items-center p-4 border-t">
-          <button 
-            onClick={handlePrevPage}
-            disabled={currentPage === 0}
-            className="px-4 py-2 text-slate-200 rounded disabled:cursor-not-allowed"
-          >
-            <div className='flex gap-1 md:gap-2 items-center'>
-              <BsArrowLeftCircle size={18} className="md:w-[22px] md:h-[22px]" />
-              <p className="text-sm md:text-base">Prev</p>
-            </div>
-          </button>
-          <span className="text-sm text-white">
-            Page {currentPage + 1} of {totalPages} ({events.length} total events)
-          </span>
-          <button 
-            onClick={handleNextPage}
-            disabled={currentPage === totalPages - 1}
-            className="px-4 py-2 text-slate-200 rounded disabled:cursor-not-allowed"
-          >
-            <div className='flex gap-1 md:gap-2 items-center'>
-              <p className="text-sm md:text-base">Next</p>
-              <BsArrowRightCircle size={18} className="md:w-[22px] md:h-[22px]" />
-            </div>
-          </button>
-        </div>
-      )}
     </div>
   );
 }

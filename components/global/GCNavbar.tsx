@@ -75,31 +75,39 @@ export default function Navbar({ session }: { session: Session | null }) {
 
       {/* Desktop menu */}
       <div className="hidden md:flex justify-between">
-        {/* <Link className="text-white p-2" href={"/schedule/segment/audio/regular"}>Upcoming</Link> */}
+        <Link className="text-white p-2" href={"/schedule/segment/audio"}>Upcoming</Link>
         <Link className="text-white p-2" href={"/schedule/calendar"}>Calendar</Link>
-        <div className="relative">
-          <button 
-            className="text-white p-2 cursor-pointer"
-            onMouseEnter={() => setShowDropdown(true)}
-            onMouseLeave={() => setShowDropdown(false)}
-          >
-            Volunteers
-          </button>
-          {showDropdown && (
-            <div 
-              className="absolute top-full left-0 bg-slate-800 rounded shadow-lg z-10 min-w-max"
-              onMouseEnter={() => setShowDropdown(true)}
-              onMouseLeave={() => setShowDropdown(false)}
-            >
-              <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/all"}>Volunteers List</Link>
-              {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/schedule/role/foh"}>Assignments</Link>}
-              {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
-              {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
-              {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
-              {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
+        {!isAdmin ? (
+            <Link className="text-white p-2" href={"/volunteer/all"}>
+              My Schedule
+            </Link>
+          ) : (
+            <div className="relative">
+              <button 
+                className="text-white p-2 cursor-pointer"
+                onMouseEnter={() => setShowDropdown(true)}
+                onMouseLeave={() => setShowDropdown(false)}
+              >
+                Volunteers
+              </button>
+              {showDropdown && (
+                <div 
+                  className="absolute top-full left-0 bg-slate-800 rounded shadow-lg z-10 min-w-max"
+                  onMouseEnter={() => setShowDropdown(true)}
+                  onMouseLeave={() => setShowDropdown(false)}
+                >
+                  <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/all"}>Volunteers List</Link>
+                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/schedule/role/foh"}>Assignments</Link>}
+                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
+                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
+                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
+                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
+                </div>
+              )}
             </div>
-          )}
-        </div>
+          )
+        }
+        
         { !isAuthenticated ?
           <button onClick={() => signIn()} className="text-white p-2">Login</button>
           :
@@ -113,9 +121,9 @@ export default function Navbar({ session }: { session: Session | null }) {
       {/* Mobile menu */}
       {showDropdown && (
         <div className="md:hidden absolute top-full left-0 right-0 bg-slate-800 rounded-b shadow-lg z-10">
-          <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/segment/audio/regular"} onClick={() => setShowDropdown(false)}>Upcoming</Link>
+          <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/segment/audio"} onClick={() => setShowDropdown(false)}>Upcoming</Link>
           <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/calendar"} onClick={() => setShowDropdown(false)}>Calendar</Link>
-          <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/all"} onClick={() => setShowDropdown(false)}>Volunteers List</Link>
+          <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/all"} onClick={() => setShowDropdown(false)}>{`${isAdmin ? "Volunteers List" : "My Schedule"}`}</Link>
           {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/role/foh"} onClick={() => setShowDropdown(false)}>Assignments</Link>}
           {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/training"} onClick={() => setShowDropdown(false)}>Training</Link>}
           {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/observer-tracker"} onClick={() => setShowDropdown(false)}>Observer Tracker</Link>}
