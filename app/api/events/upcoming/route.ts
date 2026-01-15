@@ -7,7 +7,8 @@ export async function GET() {
   try {
     await connectMongoDB();
     const today = getTodayDate();
-    const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 });
+    const events = await Event.find().sort({ date: 1 });
+    // const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 });
     console.log('today:', today);
     console.log('events:', events);
     return NextResponse.json({ data: events }, { status: 200 });
