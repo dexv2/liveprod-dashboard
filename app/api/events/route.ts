@@ -14,7 +14,12 @@ export async function GET() {
     // const events = await Event.find({}).sort({ date: 1 });
     const today = getTodayDate();
     const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 });
-    return NextResponse.json({ data: events }, { status: 200 });
+    return NextResponse.json({ data: events }, {
+      status: 200 ,
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate',
+      }
+    });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
