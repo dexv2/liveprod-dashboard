@@ -6,20 +6,12 @@ import connectMongoDB from "@/libs/mongodb";
 import Event from "@/models/event";
 import { NextRequest, NextResponse } from "next/server";
 import { createGCalEvent } from "@/utils/gcal";
-import { getTodayDate } from '@/utils/helpers';
 
 export async function GET() {
   try {
     await connectMongoDB();
-    // const events = await Event.find({}).sort({ date: 1 });
-    const today = getTodayDate();
-    const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 });
-    return NextResponse.json({ data: events }, {
-      status: 200 ,
-      headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate',
-      }
-    });
+    const events = await Event.find({}).sort({ date: 1 });
+    return NextResponse.json({ data: events }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
