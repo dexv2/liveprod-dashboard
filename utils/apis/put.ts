@@ -47,7 +47,7 @@ export const putUpdateVolunteer = async (id: string, body: VolunteerData) => {
 
 export const putUpdateEvent = async (id: string, body: any) => {
   try {
-    const res = await fetch(`${SOURCE_URL}/api/events/${id}`, {
+    const res = await fetch(`${SOURCE_URL}/api/events/id/${id}`, {
       method: "PUT",
       headers: {
         "Content-type": "application/json"

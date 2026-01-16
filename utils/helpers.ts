@@ -118,6 +118,12 @@ export function newDate() {
   return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Manila"}));
 }
 
+export function getTodayDate() {
+  const date = newDate();
+  const momentDate =  moment(date).format("YYYY-MM-DD");
+  return new Date(`${momentDate}T00:00:00.000+08:00`)
+}
+
 export function getLinkedList(arr: string[]): Node | null {
   let start: Node | null = null;
 

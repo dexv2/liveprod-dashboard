@@ -1,3 +1,7 @@
+export const runtime = "nodejs";
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 import connectMongoDB from "@/libs/mongodb";
 import Event from "@/models/event";
 import { NextRequest, NextResponse } from "next/server";

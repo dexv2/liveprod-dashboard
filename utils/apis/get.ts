@@ -162,7 +162,7 @@ export const getAllUpcomingEvents = async () => {
 
 export const getEventById = async (id: string) => {
   try {
-    const res = await fetch(`${SOURCE_URL}/api/events/${id}`, {
+    const res = await fetch(`${SOURCE_URL}/api/events/id/${id}`, {
       cache: "no-store"
     });
 
