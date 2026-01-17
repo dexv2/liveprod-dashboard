@@ -1,8 +1,8 @@
+export const dynamic = "force-dynamic";
+
 import { auth } from "@/auth";
 import CCAnnouncementBanner from "@/components/client/CCAnnouncementBanner";
-import GCLoading from '@/components/global/GCLoading';
 import SCScheduleBySegment from "@/components/server/SCScheduleBySegment";
-import { Suspense } from 'react';
 import { PiLegoSmiley, PiLegoSmileyDuotone } from "react-icons/pi"
 
 export default async function Home({searchParams}: {searchParams: {increment?: string, service?: string}}) {
