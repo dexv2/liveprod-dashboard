@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import GCLoading from "@/components/global/GCLoading";
 import SCScheduleBySegment from "@/components/server/SCScheduleBySegment";
 import { Suspense } from "react";
