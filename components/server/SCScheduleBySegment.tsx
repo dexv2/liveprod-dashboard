@@ -1,15 +1,11 @@
 import { getSchduleByDateRange } from "@/utils/apis/get";
 import { getNextService } from "@/utils/helpers";
 import { auth } from "@/auth";
-import Link from "next/link";
-import { BsArrowLeftCircle, BsArrowRightCircle } from "react-icons/bs";
 import CCScheduleBySegment from "../client/CCScheduleBySegment";
 import GCTabLInk from '../global/tabs/GCTabLink';
 import GCLoading from '../global/GCLoading';
 import { Suspense } from 'react';
 import SCEventsManager from './SCEventsManager';
-import GCArrowNext from '../global/GCArrowNext';
-import GCArrowPrev from '../global/GCArrowPrev';
 import CCScheduleNavigation from '../client/CCScheduleNavigation';
 
 export default async function SCScheduleBySegment({increment, service}: {increment: number, service: string}) {

@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic";
+
 import SCEventsManager from "@/components/server/SCEventsManager";
 import { auth } from "@/auth";
 import { Suspense } from 'react';
