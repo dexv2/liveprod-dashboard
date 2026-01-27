@@ -14,6 +14,7 @@ export async function GET() {
     const today = getTodayDate();
     const events = await Event.find({ date: { $gte: today } }).sort({ date: 1 });
     
+    // Test cache-control header
     return NextResponse.json(
       { data: events },
       {
