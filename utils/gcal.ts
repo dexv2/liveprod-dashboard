@@ -62,8 +62,8 @@ export async function createGCalEvent(eventData: {
   const jwt = getGoogleAuth();
   const calendar = google.calendar({ version: "v3", auth: jwt });
 
-  const startDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.startTime)}`);
-  const endDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.endTime)}`);
+  const startDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.startTime)}.000+08:00`);
+  const endDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.endTime)}.000+08:00`);
 
   const event = {
     summary: eventData.eventName,
@@ -103,8 +103,8 @@ export async function updateGCalEvent(googleEventId: string, eventData: {
   const jwt = getGoogleAuth();
   const calendar = google.calendar({ version: "v3", auth: jwt });
 
-  const startDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.startTime)}`);
-  const endDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.endTime)}`);
+  const startDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.startTime)}.000+08:00`);
+  const endDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.endTime)}.000+08:00`);
 
   const event = {
     summary: eventData.eventName,
