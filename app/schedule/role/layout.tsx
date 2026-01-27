@@ -1,6 +1,7 @@
 "use client";
 
 
+import CCAddRow from '@/components/client/CCAddRow';
 import GCLoading from '@/components/global/GCLoading';
 import { roleFilter } from '@/utils/constants';
 import Link from 'next/link';
@@ -33,7 +34,7 @@ export default function RootLayout(props: Readonly<{
               </Link>
           ))}
         </div>
-
+        <CCAddRow toggleLoading={() => setIsLoading(!isLoading)} />
       </div>
       <div className='mb-2'></div>
       {props.children}
