@@ -5,7 +5,7 @@ import { usePathname, useRouter } from 'next/navigation';
 import { putUpdateEvent } from '@/utils/apis/put';
 import GCArrowPrev from '../global/GCArrowPrev';
 import GCArrowNext from '../global/GCArrowNext';
-import { useDevice } from '../global/DeviceProvider';
+import { useDevice } from '../../context/DeviceProvider';
 
 interface Event {
   _id?: string;
@@ -46,7 +46,7 @@ interface Volunteer {
 export default function CCEventsManager({ isAuthenticated, events, volunteers }: { isAuthenticated: boolean, events: Event[], volunteers: Volunteer[] }) {
   const [currentPage, setCurrentPage] = useState(0);
   const pathname = usePathname();
-    const { isMobile } = useDevice();
+  const { isMobile } = useDevice();
   const EXPECTED_EVENTS_PER_PAGE = isMobile ? 2 : 4;
   const isWhite = !pathname.includes('schedule');
   const totalEvents = events?.length || 0;
