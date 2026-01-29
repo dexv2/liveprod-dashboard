@@ -62,8 +62,8 @@ export async function createGCalEvent(eventData: {
   const jwt = getGoogleAuth();
   const calendar = google.calendar({ version: "v3", auth: jwt });
 
-  const startDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.startTime)}.000+08:00`);
-  const endDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.endTime)}.000+08:00`);
+  const startDateTime = new Date(`${eventData.date}T${eventData.startTime}:00.000+08:00`);
+  const endDateTime = new Date(`${eventData.date}T${eventData.endTime}:00.000+08:00`);
 
   const event = {
     summary: eventData.eventName,
@@ -103,8 +103,8 @@ export async function updateGCalEvent(googleEventId: string, eventData: {
   const jwt = getGoogleAuth();
   const calendar = google.calendar({ version: "v3", auth: jwt });
 
-  const startDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.startTime)}.000+08:00`);
-  const endDateTime = new Date(`${eventData.date}T${convertTo24Hour(eventData.endTime)}.000+08:00`);
+  const startDateTime = new Date(`${eventData.date}T${eventData.startTime}:00.000+08:00`);
+  const endDateTime = new Date(`${eventData.date}T${eventData.endTime}:00.000+08:00`);
 
   const event = {
     summary: eventData.eventName,
@@ -136,5 +136,6 @@ function convertTo24Hour(time12h: string): string {
   if (modifier === 'PM') {
     hours = (parseInt(hours, 10) + 12).toString();
   }
+  console.log("Converted time:", `${hours.padStart(2, '0')}:${minutes}:00`);
   return `${hours.padStart(2, '0')}:${minutes}:00`;
 }

@@ -71,7 +71,7 @@ export default function CCAssignVolunteer(
 
   const sortedVolunteers = volunteers
     .filter((person) => person.roles?.includes(schedule.role))
-    .sort((person) => person.role ? -1 : 1)
+    .sort((a, b) => a.name.localeCompare(b.name))
     .map((person) => {
       return {
         ...person,

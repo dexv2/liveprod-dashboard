@@ -114,6 +114,10 @@ export function formatTimeTo24Hour(time: string): string {
   return moment(time, ["h:mm A", "hh:mm A"]).format("HH:mm");
 }
 
+export function formatTimeTo12Hour(time: string): string {
+  return moment(time, ["HH:mm", "H:mm", "h:mm A", "hh:mm A"]).format("h:mm A");
+}
+
 export function newDate() {
   return new Date(new Date().toLocaleString("en-US", {timeZone: "Asia/Manila"}));
 }

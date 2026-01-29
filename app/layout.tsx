@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import GCNavbar from "@/components/global/GCNavbar";
 import SessionWrapper from "@/components/global/SessionWrapper";
-import DeviceProvider from "@/components/global/DeviceProvider";
+import DeviceProvider from "@/context/DeviceProvider";
 import { auth } from "@/auth";
 import { Bounce, ToastContainer } from "react-toastify";
 

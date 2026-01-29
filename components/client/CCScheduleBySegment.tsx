@@ -1,6 +1,6 @@
 "use client";
 
-import { useDevice } from "@/components/global/DeviceProvider";
+import { useDevice } from "@/context/DeviceProvider";
 import { category, saturday, sunday } from "@/utils/constants";
 import { formatDateLong } from "@/utils/helpers";
 import CCVolunteerCell from './CCVolunteerCell';

@@ -15,7 +15,6 @@ export default async function SCScheduleBySegment({increment, service}: {increme
   const serviceDate2 = getNextService(increment+1);
   const schedule1 = await getSchduleByDateRange(serviceDate1.saturday, serviceDate1.sunday);
   const schedule2 = await getSchduleByDateRange(serviceDate2.saturday, serviceDate2.sunday);
-  console.log('service:', service);
 
   return (
     <div className="flex justify-center px-1 md:px-4">
