@@ -59,12 +59,7 @@ export default function CCScheduleByRoleData(
       service[schedule._id] = schedule.service;
     }
 
-    const serviceArr = useMemo(() => {
-      if (lockScroll) {
-        return service[category.SUNDAY_SERVICES[0]].slice(0,8);
-      }
-      return service[category.SUNDAY_SERVICES[0]];
-    }, [data, lockScroll]);
+    const serviceArr = lockScroll ? service[category.SUNDAY_SERVICES[0]].slice(0,8) : service[category.SUNDAY_SERVICES[0]] ;
 
     const hasSaturday = Boolean(service?.[category.SATURDAY_SERVICES[0]]?.length);
 
