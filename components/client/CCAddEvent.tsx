@@ -92,11 +92,11 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
     };
     
     const relevantRoles = roleMap[role] || [];
-    return volunteers.filter(volunteer => 
-      volunteer.roles.some(volunteerRole => 
-        relevantRoles.includes(volunteerRole.toLowerCase())
-      )
-    );
+    return volunteers
+      .filter(volunteer => 
+        volunteer.roles.some(volunteerRole =>
+          relevantRoles.includes(volunteerRole.toLowerCase()))
+      ).sort((a, b) => a.name.localeCompare(b.name));
   };
 
   const handleVolunteerSelection = (role: string, volunteerId: string) => {
