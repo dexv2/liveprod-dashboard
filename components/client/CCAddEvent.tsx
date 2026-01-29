@@ -155,19 +155,22 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
           onChange={(e) => setEvent({...event, venue: e.target.value})}
           options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex", "Others"]}
         />
-        <GCTimePicker 
-          label="Call Time" 
-          value={event.callTime} 
+        <GCInputTextWithLabel
+          label="Call Time"
+          type="time"
+          value={event.callTime || ""}
           onChange={(e) => setEvent({...event, callTime: e.target.value})}
         />
-        <GCTimePicker 
-          label="Start Time" 
-          value={event.startTime} 
+        <GCInputTextWithLabel
+          label="Start Time"
+          type="time"
+          value={event.startTime || ""}
           onChange={(e) => setEvent({...event, startTime: e.target.value})}
         />
-        <GCTimePicker 
-          label="End Time" 
-          value={event.endTime} 
+        <GCInputTextWithLabel
+          label="End Time"
+          type="time"
+          value={event.endTime || ""}
           onChange={(e) => setEvent({...event, endTime: e.target.value})}
         />
         <GCSelect 

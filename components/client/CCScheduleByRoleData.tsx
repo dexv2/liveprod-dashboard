@@ -22,7 +22,6 @@ export default function CCScheduleByRoleData(
   error?: unknown,
 }) {
   const lockScroll = useLockScrollContext();
-  console.log("Lock Scroll Context in CCScheduleByRoleData:", lockScroll);
 
   try {
     if (!data) {

@@ -6,6 +6,7 @@ import { putUpdateEvent } from '@/utils/apis/put';
 import GCArrowPrev from '../global/GCArrowPrev';
 import GCArrowNext from '../global/GCArrowNext';
 import { useDevice } from '../../context/DeviceProvider';
+import { formatTimeTo12Hour } from '@/utils/helpers';
 
 interface Event {
   _id?: string;
@@ -194,7 +195,7 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Call Time</td>
               {currentEvents.map((event) => (
                 <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event.callTime}
+                  {formatTimeTo12Hour(event.callTime)}
                 </td>
               ))}
             </tr>
@@ -202,7 +203,7 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Start Time</td>
               {currentEvents.map((event) => (
                 <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event.startTime}
+                  {formatTimeTo12Hour(event.startTime)}
                 </td>
               ))}
             </tr>
@@ -210,7 +211,7 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">End Time</td>
               {currentEvents.map((event) => (
                 <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event.endTime}
+                  {formatTimeTo12Hour(event.endTime)}
                 </td>
               ))}
             </tr>
