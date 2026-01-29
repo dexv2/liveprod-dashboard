@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
+import { RiArrowDropDownLine } from 'react-icons/ri';
 
 export default function Navbar({ session }: { session: Session | null }) {
   const pathname = usePathname();
@@ -76,6 +77,7 @@ export default function Navbar({ session }: { session: Session | null }) {
       {/* Desktop menu */}
       <div className="hidden md:flex justify-between">
         <Link className="text-white p-2" href={"/schedule/segment/audio"}>Upcoming</Link>
+        {isAdmin && <Link className="text-white p-2" href={"/schedule/role/foh"}>Assignments</Link>}
         <Link className="text-white p-2" href={"/schedule/calendar"}>Calendar</Link>
         {!isAdmin ? (
             <Link className="text-white p-2" href={"/volunteer/all"}>
@@ -88,7 +90,11 @@ export default function Navbar({ session }: { session: Session | null }) {
                 onMouseEnter={() => setShowDropdown(true)}
                 onMouseLeave={() => setShowDropdown(false)}
               >
-                Volunteers
+                <div className='flex items-center'>
+                  <div>Admin</div>
+                  <RiArrowDropDownLine size={22} />
+                </div>
+                
               </button>
               {showDropdown && (
                 <div 
@@ -97,7 +103,6 @@ export default function Navbar({ session }: { session: Session | null }) {
                   onMouseLeave={() => setShowDropdown(false)}
                 >
                   <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/all"}>Volunteers List</Link>
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/schedule/role/foh"}>Assignments</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}

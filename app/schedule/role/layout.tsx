@@ -3,16 +3,19 @@
 
 import CCAddRow from '@/components/client/CCAddRow';
 import GCLoading from '@/components/global/GCLoading';
+import { LockScrollProvider } from '@/context/LockScrollProvider';
 import { roleFilter } from '@/utils/constants';
 import Link from 'next/link';
 import { useParams } from "next/navigation";
 import { Fragment, useState } from 'react';
+import { FiLock, FiUnlock } from 'react-icons/fi';
 
 export default function RootLayout(props: Readonly<{
   children: React.ReactNode;
 }>) {
   const params = useParams<{role1: string}>();
   const [isLoading, setIsLoading] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   if (isLoading) return <GCLoading />
   return (
@@ -34,10 +37,24 @@ export default function RootLayout(props: Readonly<{
               </Link>
           ))}
         </div>
-        <CCAddRow toggleLoading={() => setIsLoading(!isLoading)} />
+        { params?.role1 && <div className='flex gap-2 items-center'>
+          <button
+            className='text-slate-700 px-2 py-1 rounded-md mt-2'
+            onClick={() => setIsLocked(!isLocked)}
+          >
+            { isLocked ?
+              <FiLock size={22} /> :
+              <FiUnlock size={22} />
+            }
+          </button>
+          <CCAddRow toggleLoading={() => setIsLoading(!isLoading)} />
+        </div>
+        }
       </div>
       <div className='mb-2'></div>
-      {props.children}
+      <LockScrollProvider lockScroll={isLocked}>
+        {props.children}
+      </LockScrollProvider>
     </Fragment>
   )
 }
