@@ -178,107 +178,111 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Event Name</td>
               {displayEvents.map((event, index) => (
-                <td key={event?._id || `empty-${index}`} className=" bg-slate-200 border border-slate-300 p-2 text-center font-bold text-lg w-32 break-words">
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center font-bold text-lg w-32 break-words">
                   {event?.eventName || ''}
                 </td>
               ))}
             </tr>
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Venue</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event.venue}
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
+                  {event?.venue || ''}
                 </td>
               ))}
             </tr>
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Call Time</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {formatTimeTo12Hour(event.callTime)}
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
+                  {event?.callTime ? formatTimeTo12Hour(event.callTime) : ''}
                 </td>
               ))}
             </tr>
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Start Time</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {formatTimeTo12Hour(event.startTime)}
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
+                  {event?.startTime ? formatTimeTo12Hour(event.startTime) : ''}
                 </td>
               ))}
             </tr>
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">End Time</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {formatTimeTo12Hour(event.endTime)}
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
+                  {event?.endTime ? formatTimeTo12Hour(event.endTime) : ''}
                 </td>
               ))}
             </tr>
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Praise & Worship</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event.praiseAndWorship ? 'Yes' : 'No'}
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
+                  {event?.praiseAndWorship ? 'Yes' : event?.praiseAndWorship === false ? 'No' : ''}
                 </td>
               ))}
             </tr>
             <tr>
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Other Details</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event.otherDetails || '-'}
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
+                  {event?.otherDetails ? event?.otherDetails : !!event ? '-' : ''}
                 </td>
               ))}
             </tr>
             <tr>
-              <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Volunteers Needed</td>
-              {currentEvents.map((event) => (
-                <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  <div className="text-xs space-y-1">
-                    {Object.entries(event.volunteersNeeded)
-                      .filter(([_, needed]) => needed)
-                      .map(([role, _]) => {
-                        const roleLabels: { [key: string]: string } = {
-                          foh: 'FOH',
-                          assistantFoh: 'Assistant FOH',
-                          bcMix: 'BC Mix',
-                          assistantBcMix: 'Assistant BC Mix',
-                          monMix: 'Mon Mix',
-                          rfTech: 'RF Tech'
-                        };
-                        const assignedVolunteer = event.assignedVolunteers?.[role as keyof typeof event.assignedVolunteers];
-                        const volunteerName = assignedVolunteer 
-                          ? (assignedVolunteer === 'N/A' || assignedVolunteer === 'TBC') 
-                            ? assignedVolunteer 
-                            : volunteers.find(v => v._id === assignedVolunteer)?.name || 'Unknown'
-                          : 'N/A';
-                        
-                        return (
-                          <div key={role} className="border-b border-gray-200 pb-1 last:border-b-0">
-                            <div className="font-semibold">{roleLabels[role]}</div>
-                            <div className="text-gray-600">{volunteerName}</div>
-                          </div>
-                        );
-                      })}
-                    {Object.values(event.volunteersNeeded).every(needed => !needed) && (
-                      <div>None</div>
-                    )}
-                  </div>
+              <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24 align-top">Volunteers Needed</td>
+              {displayEvents.map((event, index) => (
+                <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words align-top min-h-[200px]">
+                  { !event?.volunteersNeeded ? '' : 
+                    <div className="text-xs space-y-1">
+                      {Object.entries(event.volunteersNeeded)
+                        .filter(([_, needed]) => needed)
+                        .map(([role, _]) => {
+                          const roleLabels: { [key: string]: string } = {
+                            foh: 'FOH',
+                            assistantFoh: 'Assistant FOH',
+                            bcMix: 'BC Mix',
+                            assistantBcMix: 'Assistant BC Mix',
+                            monMix: 'Mon Mix',
+                            rfTech: 'RF Tech'
+                          };
+                          const assignedVolunteer = event.assignedVolunteers?.[role as keyof typeof event.assignedVolunteers];
+                          const volunteerName = assignedVolunteer 
+                            ? (assignedVolunteer === 'N/A' || assignedVolunteer === 'TBC') 
+                              ? assignedVolunteer 
+                              : volunteers.find(v => v._id === assignedVolunteer)?.name || 'Unknown'
+                            : 'N/A';
+                          
+                          return (
+                            <div key={role} className="border-b border-gray-200 pb-1 last:border-b-0">
+                              <div className="font-semibold">{roleLabels[role]}</div>
+                              <div className="text-gray-600">{volunteerName}</div>
+                            </div>
+                          );
+                        })}
+                      {Object.values(event.volunteersNeeded).every(needed => !needed) && (
+                        <div>None</div>
+                      )}
+                    </div>
+                  }
                 </td>
               ))}
             </tr>
             {isAuthenticated && (
               <tr>
                 <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Actions</td>
-                {currentEvents.map((event) => (
-                  <td key={event._id} className="bg-slate-200 border border-slate-300 p-2 text-center w-32">
-                    <button 
-                      onClick={() => editEvent(event?._id || 'new')}
-                      className="bg-sky-600 text-white px-4 py-1 rounded text-xs hover:bg-sky-700"
-                    >
-                      Edit
-                    </button>
+                {displayEvents.map((event, index) => (
+                  <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32">
+                    { !event?._id ? '' : 
+                      <button 
+                        onClick={() => editEvent(event?._id || 'new')}
+                        className="bg-sky-600 text-white px-4 py-1 rounded text-xs hover:bg-sky-700"
+                      >
+                        Edit
+                      </button>
+                    }
                   </td>
                 ))}
               </tr>
