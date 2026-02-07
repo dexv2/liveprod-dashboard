@@ -24,7 +24,7 @@ export default function Navbar({ session }: { session: Session | null }) {
     const prevPath = newPath;
     setNewPath(url);
 
-    if (prevPath.startsWith("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login") || prevPath.startsWith("/add-event")) {
+    if (prevPath.includes("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login") || prevPath.startsWith("/add-event")) {
       router.refresh();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
