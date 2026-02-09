@@ -151,6 +151,16 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
 
     return (
       <div className="px-4 md:px-16 lg:px-32 text-slate-700">
+        {isAdmin && (
+          <div className="flex justify-end pb-3">
+            <button 
+              onClick={() => router.push('/volunteer/all')}
+              className="border border-slate-400 px-4 py-2 rounded-md hover:bg-gray-100"
+            >
+              ← Back to Volunteer List
+            </button>
+          </div>
+        )}
         <div className="flex justify-end pb-3">
           <div className={`flex gap-2 justify-end ${!hasChanges && "opacity-0"}`}>
             <button disabled={!hasChanges} onClick={resetValues} className="border border-slate-400 px-3 rounded-md py-0.5">
