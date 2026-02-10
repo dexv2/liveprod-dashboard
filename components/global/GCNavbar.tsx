@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { RiArrowDropDownLine } from 'react-icons/ri';
+import { VIEW_ASSIGNMENTS } from '@/utils/constants';
 
 export default function GCNavbar() {
   const pathname = usePathname();
@@ -17,6 +18,11 @@ export default function GCNavbar() {
 
   const isAuthenticated = mounted ? session?.user?.username : false;
   const isAdmin = mounted ? (session?.user as any)?.isAdmin : false;
+
+  const hasViewAssignmentsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ASSIGNMENTS);
+  }, [session]);
 
   useEffect(() => {
     setMounted(true);
@@ -77,7 +83,7 @@ export default function GCNavbar() {
       {/* Desktop menu */}
       <div className="hidden md:flex justify-between">
         <Link className="text-white p-2" href={"/schedule/segment/audio"}>Upcoming</Link>
-        {isAdmin && <Link className="text-white p-2" href={"/schedule/role/foh"}>Assignments</Link>}
+        {hasViewAssignmentsPermission && <Link className="text-white p-2" href={"/schedule/role/foh"}>Assignments</Link>}
         <Link className="text-white p-2" href={"/schedule/calendar"}>Calendar</Link>
         {!isAdmin ? (
             <Link className="text-white p-2" href={"/volunteer/all"}>
