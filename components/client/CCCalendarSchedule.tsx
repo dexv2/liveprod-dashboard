@@ -18,9 +18,25 @@ function CustomToolbar(toolbar: ToolbarProps) {
 
   const label = () => {
     const date = moment(toolbar.date);
+    if (toolbar.view === 'month') {
+      return (
+        <span className="font-semibold text-lg">
+          {date.format('MMMM YYYY')}
+        </span>
+      );
+    }
+    if (toolbar.view === 'week') {
+      const startOfWeek = moment(date).startOf('week');
+      const endOfWeek = moment(date).endOf('week');
+      return (
+        <span className="font-semibold text-lg">
+          {startOfWeek.format('MMMM D')} - {endOfWeek.format('MMMM D, YYYY')}
+        </span>
+      );
+    }
     return (
       <span className="font-semibold text-lg">
-        {toolbar.view === 'month' ? date.format('MMMM YYYY') : date.format('MMMM DD, YYYY')}
+        {date.format('MMMM DD, YYYY')}
       </span>
     );
   };
@@ -93,9 +109,76 @@ export default function CpCalendarSchedule({ events, length }: { events: any, le
     });
   };
 
+  if (view === Views.AGENDA) {
+    const today = moment().startOf('day');
+    const futureEvents = events.filter((event: any) => {
+      return moment(event.start).isSameOrAfter(today);
+    });
+
+    const groupedEvents = futureEvents.reduce((acc: any, event: any) => {
+      const dateKey = moment(event.start).format('YYYY-MM-DD');
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(event);
+      return acc;
+    }, {});
+
+    const sortedDates = Object.keys(groupedEvents).sort();
+
+    return (
+      <div>
+        <CustomToolbar 
+          date={date}
+          view={view}
+          views={[Views.AGENDA, Views.MONTH, Views.WEEK]}
+          onNavigate={() => {}}
+          onView={(newView) => {
+            if (newView === Views.AGENDA) {
+              setDate(newDate());
+            }
+            setView(newView);
+          }}
+          label=""
+          localizer={localizer}
+        />
+        <p className="text-center text-gray-600 mb-4">
+          Your schedules as of today, {moment().format('MMMM D, YYYY')}
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {sortedDates.length > 0 ? (
+            sortedDates.map((dateKey) => (
+              <div key={dateKey} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
+                <h3 className="font-semibold text-sm mb-3 text-center leading-tight">
+                  {moment(dateKey).format('dddd, MMMM D, YYYY')}
+                </h3>
+                <div className="space-y-2">
+                  {groupedEvents[dateKey].map((event: any, i: number) => (
+                    <div key={i} className="border-l-4 border-sky-700 pl-3 py-2 bg-sky-50 rounded">
+                      <div className="font-medium text-sm">{event.title}</div>
+                      <div className="text-xs text-gray-600 mt-1">
+                        {moment(event.start).format('h:mm A')}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="col-span-full bg-white border border-gray-200 rounded-lg p-8 text-center">
+              <p className="text-gray-500">No upcoming events scheduled</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (isMobile && view === Views.WEEK) {
     const weekDates = getWeekDates();
-    const displayDate = selectedDate || weekDates[0];
+    const today = moment().startOf('day');
+    const currentWeekDay = weekDates.find(d => moment(d).isSame(today, 'day')) || weekDates[0];
+    const displayDate = selectedDate || currentWeekDay;
     const dayEvents = getEventsForDate(displayDate);
 
     return (

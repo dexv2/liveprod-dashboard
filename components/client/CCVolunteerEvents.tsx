@@ -113,18 +113,13 @@ export default function CCVolunteerEvents({ volunteerId }: { volunteerId: string
                   </span>
                 </div>
                 <div>
-                  <h5 className="font-medium mb-1">Role:</h5>
-                  <p className="text-sm text-gray-600">{getVolunteerRole(event)}</p>
-                  <h5 className="font-medium mb-1 mt-2">Venue:</h5>
-                  <p className="text-sm text-gray-600">{event.venue}</p>
+                  <p className="text-sm"><span className="font-medium">Role:</span> {getVolunteerRole(event)}</p>
+                  <p className="text-sm mt-1"><span className="font-medium">Venue:</span> {event.venue}</p>
                 </div>
                 <div>
-                  <h5 className="font-medium mb-1">Call Time:</h5>
-                  <p className="text-sm text-gray-600">{event.callTime || 'N/A'}</p>
-                  <h5 className="font-medium mb-1 mt-2">Start Time:</h5>
-                  <p className="text-sm text-gray-600">{event.startTime || 'N/A'}</p>
-                  <h5 className="font-medium mb-1 mt-2">End Time:</h5>
-                  <p className="text-sm text-gray-600">{event.endTime || 'N/A'}</p>
+                  <p className="text-sm"><span className="font-medium">Call Time:</span> {event.callTime || 'N/A'}</p>
+                  <p className="text-sm mt-1"><span className="font-medium">Start Time:</span> {event.startTime || 'N/A'}</p>
+                  <p className="text-sm mt-1"><span className="font-medium">End Time:</span> {event.endTime || 'N/A'}</p>
                 </div>
               </div>
             </div>
