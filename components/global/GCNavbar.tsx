@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import { VIEW_ASSIGNMENTS } from '@/utils/constants';
+import { VIEW_ASSIGNMENTS, VIEW_TRAINING } from '@/utils/constants';
 
 export default function GCNavbar() {
   const pathname = usePathname();
@@ -22,6 +22,11 @@ export default function GCNavbar() {
   const hasViewAssignmentsPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(VIEW_ASSIGNMENTS);
+  }, [session]);
+
+  const hasViewTrainingPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_TRAINING);
   }, [session]);
 
   useEffect(() => {
@@ -109,7 +114,7 @@ export default function GCNavbar() {
                   onMouseLeave={() => setShowDropdown(false)}
                 >
                   <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/all"}>Volunteers List</Link>
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
+                  {hasViewTrainingPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
