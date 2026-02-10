@@ -9,7 +9,7 @@ interface Schedule {
   data: any
 }
 
-export default function MCScheduleBySegment({ schedule, convertedData, isAuthenticated = false }: { schedule: Schedule, convertedData: any, isAuthenticated?: boolean }) {
+export default function MCScheduleBySegment({ schedule, convertedData }: { schedule: Schedule, convertedData: any }) {
   return (
     <Fragment>
       <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
@@ -39,7 +39,7 @@ export default function MCScheduleBySegment({ schedule, convertedData, isAuthent
                   <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
                     <td className="text-center h-4 xl:h-6 text-[10px] xl:text-xs">{i+1}</td>
                     <td className="w-1/2 uppercase text-[10px] xl:text-sm">{role.replace("broadcast", "bc").replace("monitor", "mon").replace(/\d+/g, "")}</td>
-                    <CCVolunteerCell service={satFirst} isAuthenticated={isAuthenticated} />
+                    <CCVolunteerCell service={satFirst} />
                   </tr>
                 )
               })}
@@ -76,8 +76,8 @@ export default function MCScheduleBySegment({ schedule, convertedData, isAuthent
                   <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
                     <td className="text-center h-4 xl:h-6 text-[10px] xl:text-xs">{i+1}</td>
                     <td className="w-1/3 px-0.5 xl:px-1 uppercase text-[10px] xl:text-sm">{role.replace("broadcast", "bc").replace("monitor", "mon").replace(/\d+/g, "")}</td>
-                    <CCVolunteerCell service={sunFirst} isAuthenticated={isAuthenticated} />
-                    <CCVolunteerCell service={sunSecond} isAuthenticated={isAuthenticated} />
+                    <CCVolunteerCell service={sunFirst} />
+                    <CCVolunteerCell service={sunSecond} />
                   </tr>
                 )
               })}
@@ -99,8 +99,8 @@ export default function MCScheduleBySegment({ schedule, convertedData, isAuthent
                   <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
                     <td className="text-center h-4 xl:h-6 text-[10px] xl:text-xs">{i+1}</td>
                     <td className="w-1/3 px-0.5 xl:px-1 uppercase text-[10px] xl:text-sm">{role.replace("broadcast", "bc").replace("monitor", "mon").replace(/\d+/g, "")}</td>
-                    <CCVolunteerCell service={sunThird} isAuthenticated={isAuthenticated} />
-                    <CCVolunteerCell service={sunFourth} isAuthenticated={isAuthenticated} />
+                    <CCVolunteerCell service={sunThird} />
+                    <CCVolunteerCell service={sunFourth} />
                   </tr>
                 )
               })}

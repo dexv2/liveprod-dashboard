@@ -52,6 +52,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.username = user.username;
         token.isAdmin = true;
+        token.superAdmin = (user as any).superAdmin || false;
+        token.permissions = Array.isArray((user as any).permissions) ? (user as any).permissions : [];
       }
       return token;
     },
@@ -59,6 +61,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (token) {
         (session.user as any).username = token.username;
         (session.user as any).isAdmin = token.isAdmin;
+        (session.user as any).permissions = token.permissions;
+        (session.user as any).superAdmin = token.superAdmin;
       }
       return session;
     }

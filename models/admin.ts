@@ -17,6 +17,14 @@ const adminSchema = new Schema({
     max: 5,
     default: 1
   },
+  permissions: {
+    type: [String],
+    default: []
+  },
+  superAdmin: {
+    type: Boolean,
+    default: false
+  },
   registeredBy: {
     type: Schema.Types.ObjectId,
     ref: "Admin"

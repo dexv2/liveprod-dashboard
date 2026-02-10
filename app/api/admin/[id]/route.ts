@@ -1,21 +1,42 @@
 import connectMongoDB from "@/libs/mongodb"
 import Admin from "@/models/admin"
 import Schedule from "@/models/schedule";
-import Volunteer from "@/models/volunteer";
 import { callTextbee } from "@/utils/apis/textbee";
+import { saltAndHashPassword } from '@/utils/password';
 import { NextResponse } from "next/server";
 
 interface RequestData {
   username?: string
   tier?: number
+  permissions?: string[]
+  superAdmin?: boolean
+  password?: string
 }
 
 export async function PUT(request: any, { params }: any) {
   const requestData: RequestData = await request.json();
+  const updatedFields: RequestData = {};
+
+  if (typeof requestData?.username === "string") {
+    updatedFields.username = requestData.username;
+  }
+  if (typeof requestData?.password === "string") {
+    const hashedPassword = await saltAndHashPassword(requestData.password);
+    updatedFields.password = hashedPassword;
+  }
+  if (Array.isArray(requestData?.permissions)) {
+    updatedFields.permissions = requestData.permissions;
+  }
+  if (typeof requestData?.superAdmin === "boolean") {
+    updatedFields.superAdmin = requestData.superAdmin;
+  }
+  if (typeof requestData?.tier === "number") {
+    updatedFields.tier = requestData.tier;
+  }
 
   try {
     await connectMongoDB();
-    await Admin.findByIdAndUpdate(params.id, { tier: requestData.tier });
+    await Admin.findByIdAndUpdate(params.id, updatedFields);
 
     return NextResponse.json({message: `Admin info updated`}, {status: 200});
   } catch (error) {
