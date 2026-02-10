@@ -11,7 +11,7 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { deleteVolunteer } from "@/utils/apis/delete";
 import { toast } from "react-toastify";
 import { sleep } from "@/utils/helpers";
-import { category, VIEW_VOLUNTEERS_LISTS, ADD_VOLUNTEER } from "@/utils/constants";
+import { category, VIEW_VOLUNTEERS_LISTS, ADD_VOLUNTEER, DELETE_VOLUNTEER_DATA } from "@/utils/constants";
 import { useSession } from 'next-auth/react';
 
 interface Data {
@@ -68,6 +68,11 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
   const hasAddVolunteerPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(ADD_VOLUNTEER);
+  }, [session]);
+
+  const hasDeleteVolunteerPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(DELETE_VOLUNTEER_DATA);
   }, [session]);
 
   const deleteVol = async (volunteerId: string, volunteerName: string) => {
@@ -145,7 +150,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
     );
   }
 
-  if (hasViewVolunteerListsPermission) {
+  if (hasDeleteVolunteerPermission) {
     columns.push({
       name: "Actions",
       selector: (row: Data) => <RiDeleteBinLine className="text-rose-600" onClick={() => deleteVol(row._id, row.name)} size={18} /> as any,
