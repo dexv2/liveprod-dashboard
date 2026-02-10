@@ -1,11 +1,13 @@
 "use client";
 
-import { category } from "@/utils/constants";
+import { category, VIEW_ASSIGNMENTS } from "@/utils/constants";
 import { formatDate } from "@/utils/helpers";
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, useEffect } from "react";
 import CCSchedulesByRole from "../client/CCScheduleByRole";
 import CCVolunteerCell from './CCVolunteerCell';
 import { useLockScrollContext } from '@/context/LockScrollProvider';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function CCScheduleByRoleData(
 {
@@ -20,6 +22,19 @@ export default function CCScheduleByRoleData(
   error?: unknown,
 }) {
   const lockScroll = useLockScrollContext();
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const hasViewAssignmentsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ASSIGNMENTS);
+  }, [session]);
+
+  useEffect(() => {
+    if (!hasViewAssignmentsPermission) {
+      router.push('/');
+    }
+  }, [hasViewAssignmentsPermission, router]);
 
   try {
     if (!data) {
