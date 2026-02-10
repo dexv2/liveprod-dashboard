@@ -1,19 +1,19 @@
 "use client";
 
-import { Session } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { RiArrowDropDownLine } from 'react-icons/ri';
 
-export default function Navbar({ session }: { session: Session | null }) {
+export default function GCNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [newPath, setNewPath] = useState("/");
   const [showDropdown, setShowDropdown] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
 
   const isAuthenticated = mounted ? session?.user?.username : false;
   const isAdmin = mounted ? (session?.user as any)?.isAdmin : false;
@@ -24,7 +24,7 @@ export default function Navbar({ session }: { session: Session | null }) {
     const prevPath = newPath;
     setNewPath(url);
 
-    if (prevPath.includes("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login") || prevPath.startsWith("/add-event")) {
+    if (prevPath.includes("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/add-event")) {
       router.refresh();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps

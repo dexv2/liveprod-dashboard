@@ -11,13 +11,11 @@ export default function CCScheduleByRoleData(
 {
   role,
   data,
-  isAuthenticated,
   isError = false,
   error,
 }: {
   role: string,
   data?: any,
-  isAuthenticated: boolean,
   isError?: boolean,
   error?: unknown,
 }) {
@@ -80,16 +78,16 @@ export default function CCScheduleByRoleData(
                     <td className="w-12 lg:w-20 text-center text-[8px] md:text-xs lg:text-sm px-0.5 lg:px-1">
                       {snsFirst?.[i]?.date ? formatDate(snsFirst[i].date) : ''}
                     </td>
-                    <CCVolunteerCell service={snsFirst?.[i]} isAuthenticated={isAuthenticated} />
+                    <CCVolunteerCell service={snsFirst?.[i]} />
                   </Fragment>
                 )}
                 <td className="border border-slate-300 w-12 lg:w-20 text-center text-[8px] md:text-xs lg:text-sm px-0.5 lg:px-1">
                   {firstService?.date ? formatDate(firstService.date) : ''}
                 </td>
-                <CCVolunteerCell service={firstService} isAuthenticated={isAuthenticated} />
-                <CCVolunteerCell service={secondService} isAuthenticated={isAuthenticated} />
-                <CCVolunteerCell service={thirdService} isAuthenticated={isAuthenticated} />
-                <CCVolunteerCell service={fourthService} isAuthenticated={isAuthenticated} />
+                <CCVolunteerCell service={firstService} />
+                <CCVolunteerCell service={secondService} />
+                <CCVolunteerCell service={thirdService} />
+                <CCVolunteerCell service={fourthService} />
               </tr>
             )})
           }
