@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { VIEW_TRAINING } from '@/utils/constants';
+import { VIEW_TRAINING, UPDATE_TRAINING } from '@/utils/constants';
 
 interface Training {
   _id?: string;
@@ -25,7 +25,7 @@ interface Volunteer {
   name: string;
 }
 
-export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated: boolean }) {
+export default function CCTrainingManager() {
   const { data: session } = useSession();
   const router = useRouter();
   const [trainings, setTrainings] = useState<Training[]>([]);
@@ -48,6 +48,11 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
   const hasViewTrainingPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(VIEW_TRAINING);
+  }, [session]);
+
+  const hasUpdateTrainingPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(UPDATE_TRAINING);
   }, [session]);
 
   useEffect(() => {
@@ -149,9 +154,7 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
 
   return (
     <div className="w-full">
-
-
-      {isAuthenticated && (
+      {hasUpdateTrainingPermission && (
         <div className="p-4 bg-slate-50 border-b">
           <h3 className="text-lg font-semibold mb-4">Add New Training</h3>
           
@@ -302,7 +305,7 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
                     {training.description && (
                       <p className="text-sm text-gray-500 mt-1">{training.description}</p>
                     )}
-                    {isAuthenticated && (
+                    {hasUpdateTrainingPermission && (
                       <button
                         onClick={() => {
                           setEditingTraining(training);
