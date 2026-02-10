@@ -1,8 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import { toast } from "react-toastify";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { VIEW_ANNOUNCEMENTS, UPDATE_ANNOUNCEMENTS } from '@/utils/constants';
 
 interface Announcement {
   _id: string;
@@ -22,10 +25,28 @@ const themes = [
 ];
 
 export default function CCAnnouncementManager() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
   const [theme, setTheme] = useState<'info' | 'success' | 'warning' | 'error' | 'celebration'>('info');
+
+  const hasViewAnnouncementsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ANNOUNCEMENTS);
+  }, [session]);
+
+  const hasUpdateAnnouncementsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(UPDATE_ANNOUNCEMENTS);
+  }, [session]);
+
+  useEffect(() => {
+    if (!hasViewAnnouncementsPermission) {
+      router.push('/');
+    }
+  }, [hasViewAnnouncementsPermission, router]);
 
   useEffect(() => {
     fetchAnnouncements();
@@ -75,56 +96,58 @@ export default function CCAnnouncementManager() {
       <h1 className="text-2xl font-bold text-slate-700 mb-8">Announcement Manager</h1>
       
       {/* Create Announcement Form */}
-      <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-        <h2 className="text-lg font-semibold mb-4">Create New Announcement</h2>
-        
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <GCInputTextWithLabel
-            label="Title"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
+      {hasUpdateAnnouncementsPermission && (
+        <div className="bg-white p-6 rounded-lg shadow-md mb-8">
+          <h2 className="text-lg font-semibold mb-4">Create New Announcement</h2>
           
-          <div>
-            <label className="block text-sm font-medium mb-1">Message</label>
-            <textarea
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              placeholder="Enter announcement message"
-              className="w-full p-2 border border-gray-300 rounded-md"
-              rows={3}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <GCInputTextWithLabel
+              label="Title"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
-          </div>
-          
-          <div>
-            <label className="block text-sm font-medium mb-1">Theme</label>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
-              {themes.map((themeOption) => (
-                <label key={themeOption.value} className="flex items-center cursor-pointer">
-                  <input
-                    type="radio"
-                    name="theme"
-                    value={themeOption.value}
-                    checked={theme === themeOption.value}
-                    onChange={(e) => setTheme(e.target.value as any)}
-                    className="mr-2"
-                  />
-                  <span className={`px-3 py-1 rounded text-sm ${themeOption.color}`}>
-                    {themeOption.label}
-                  </span>
-                </label>
-              ))}
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Message</label>
+              <textarea
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Enter announcement message"
+                className="w-full p-2 border border-gray-300 rounded-md"
+                rows={3}
+              />
             </div>
-          </div>
-          
-          <button
-            type="submit"
-            className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
-          >
-            Create Announcement
-          </button>
-        </form>
-      </div>
+            
+            <div>
+              <label className="block text-sm font-medium mb-1">Theme</label>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+                {themes.map((themeOption) => (
+                  <label key={themeOption.value} className="flex items-center cursor-pointer">
+                    <input
+                      type="radio"
+                      name="theme"
+                      value={themeOption.value}
+                      checked={theme === themeOption.value}
+                      onChange={(e) => setTheme(e.target.value as any)}
+                      className="mr-2"
+                    />
+                    <span className={`px-3 py-1 rounded text-sm ${themeOption.color}`}>
+                      {themeOption.label}
+                    </span>
+                  </label>
+                ))}
+              </div>
+            </div>
+            
+            <button
+              type="submit"
+              className="bg-blue-500 text-white px-6 py-2 rounded hover:bg-blue-600"
+            >
+              Create Announcement
+            </button>
+          </form>
+        </div>
+      )}
 
       {/* Announcements List */}
       <div className="bg-white p-6 rounded-lg shadow-md">
