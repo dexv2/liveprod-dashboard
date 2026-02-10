@@ -282,6 +282,7 @@ export const roleFilter = [
 export const ADD_VOLUNTEER = 'ADD_VOLUNTEER';
 export const DELETE_VOLUNTEER_DATA = 'DELETE_VOLUNTEER_DATA';
 export const ASSIGN_VOLUNTEER_SCHEDULE = 'ASSIGN_VOLUNTEER_SCHEDULE';
+export const ADD_DATE_ROWS = 'ADD_DATE_ROWS';
 export const UPDATE_VOLUNTEER_PROFILE = 'UPDATE_VOLUNTEER_PROFILE';
 export const UPDATE_EVENT = 'UPDATE_EVENT';
 export const UPDATE_TRAINING = 'UPDATE_TRAINING';
@@ -298,6 +299,7 @@ export const PERMISSIONS = [
   { label: 'Add Volunteer', value: ADD_VOLUNTEER },
   { label: 'Delete Volunteer Data', value: DELETE_VOLUNTEER_DATA },
   { label: 'Assign Volunteer Schedule', value: ASSIGN_VOLUNTEER_SCHEDULE },
+  { label: 'Add Date Rows', value: ADD_DATE_ROWS },
   { label: 'Update Volunteer Profile', value: UPDATE_VOLUNTEER_PROFILE },
   { label: 'Update Event', value: UPDATE_EVENT },
   { label: 'Update Training', value: UPDATE_TRAINING },
