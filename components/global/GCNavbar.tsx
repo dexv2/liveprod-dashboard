@@ -6,7 +6,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { RiArrowDropDownLine } from 'react-icons/ri';
-import { VIEW_ASSIGNMENTS, VIEW_TRAINING, VIEW_OBSERVER_TRACKER } from '@/utils/constants';
+import { VIEW_ASSIGNMENTS, VIEW_TRAINING, VIEW_OBSERVER_TRACKER, VIEW_ANNOUNCEMENTS } from '@/utils/constants';
 
 export default function GCNavbar() {
   const pathname = usePathname();
@@ -32,6 +32,11 @@ export default function GCNavbar() {
   const hasViewObserverTrackerPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(VIEW_OBSERVER_TRACKER);
+  }, [session]);
+
+  const hasViewAnnouncementsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ANNOUNCEMENTS);
   }, [session]);
 
   useEffect(() => {
@@ -122,7 +127,7 @@ export default function GCNavbar() {
                   {hasViewTrainingPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
                   {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
                   {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
+                  {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
                 </div>
               )}
             </div>
@@ -149,7 +154,7 @@ export default function GCNavbar() {
           {hasViewTrainingPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/training"} onClick={() => setShowDropdown(false)}>Training</Link>}
           {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/observer-tracker"} onClick={() => setShowDropdown(false)}>Observer Tracker</Link>}
           {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/analytics"} onClick={() => setShowDropdown(false)}>Analytics</Link>}
-          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/announcements"} onClick={() => setShowDropdown(false)}>Announcements</Link>}
+          {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/announcements"} onClick={() => setShowDropdown(false)}>Announcements</Link>}
           { !isAuthenticated ?
             <button onClick={() => { signIn(); setShowDropdown(false); }} className="block w-full text-left text-white px-4 py-3 hover:bg-slate-700">Login</button>
             :
