@@ -328,7 +328,7 @@ export default function CpCalendarSchedule({ events, length }: { events: any, le
         }}
         date={date}
         onNavigate={(date) => {
-          if (view !== Views.AGENDA) {
+          if (view === 'month' || view === 'week') {
             setDate(new Date(date))
           }
         }}
