@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { VIEW_TRAINING } from '@/utils/constants';
 
 interface Training {
   _id?: string;
@@ -23,6 +26,8 @@ interface Volunteer {
 }
 
 export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated: boolean }) {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const [newTraining, setNewTraining] = useState<Training>({
@@ -39,6 +44,17 @@ export default function CCTrainingManager({ isAuthenticated }: { isAuthenticated
   const [selectedVolunteers, setSelectedVolunteers] = useState<string[]>([]);
   const [editingTraining, setEditingTraining] = useState<Training | null>(null);
   const [editSelectedVolunteers, setEditSelectedVolunteers] = useState<string[]>([]);
+
+  const hasViewTrainingPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_TRAINING);
+  }, [session]);
+
+  useEffect(() => {
+    if (!hasViewTrainingPermission) {
+      router.push('/');
+    }
+  }, [hasViewTrainingPermission, router]);
 
   useEffect(() => {
     fetchTrainings();
