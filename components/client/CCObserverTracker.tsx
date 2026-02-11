@@ -49,7 +49,7 @@ interface EvaluationForm {
   notes: string;
 }
 
-export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated: boolean }) {
+export default function CCObserverTracker() {
   const { data: session } = useSession();
   const router = useRouter();
   const [observerLogs, setObserverLogs] = useState<ObserverLog[]>([]);
@@ -70,6 +70,10 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
   const hasUpdateObserverTrackerPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(UPDATE_OBSERVER_TRACKER);
+  }, [session]);
+
+  const isAuthenticated = useMemo(() => {
+    return !!session?.user?.username;
   }, [session]);
 
   useEffect(() => {
@@ -279,7 +283,7 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
                     type="checkbox"
                     checked={log.status === 'active'}
                     onChange={(e) => updateMilestone(log._id, 'promoted', e.target.checked)}
-                    disabled={!log.orientationCompleted || !log.assignedPosition || log.evaluations.length < 3}
+                    disabled={!log.orientationCompleted || !log.assignedPosition || log.evaluations.length < 3 || !hasUpdateObserverTrackerPermission}
                     className="w-4 h-4"
                   />
                   <span className="text-sm">Promoted {log.status === 'active' ? '🎉' : ''}</span>
