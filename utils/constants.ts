@@ -277,3 +277,38 @@ export const roleFilter = [
     roles: category.ROLES
   }
 ]
+
+// ADMIN PERMISSIONS
+export const ADD_VOLUNTEER = 'ADD_VOLUNTEER';
+export const DELETE_VOLUNTEER_DATA = 'DELETE_VOLUNTEER_DATA';
+export const ASSIGN_VOLUNTEER_SCHEDULE = 'ASSIGN_VOLUNTEER_SCHEDULE';
+export const ADD_DATE_ROWS = 'ADD_DATE_ROWS';
+export const UPDATE_VOLUNTEER_PROFILE = 'UPDATE_VOLUNTEER_PROFILE';
+export const UPDATE_EVENT = 'UPDATE_EVENT';
+export const UPDATE_TRAINING = 'UPDATE_TRAINING';
+export const UPDATE_OBSERVER_TRACKER = 'UPDATE_OBSERVER_TRACKER';
+export const UPDATE_ANNOUNCEMENTS = 'UPDATE_ANNOUNCEMENTS';
+export const VIEW_VOLUNTEERS_LISTS = 'VIEW_VOLUNTEERS_LISTS';
+export const VIEW_ASSIGNMENTS = 'VIEW_ASSIGNMENTS';
+export const VIEW_TRAINING = 'VIEW_TRAINING';
+export const VIEW_OBSERVER_TRACKER = 'VIEW_OBSERVER_TRACKER';
+export const VIEW_ANALYTICS = 'VIEW_ANALYTICS';
+export const VIEW_ANNOUNCEMENTS = 'VIEW_ANNOUNCEMENTS';
+
+export const PERMISSIONS = [
+  { label: 'Add Volunteer', value: ADD_VOLUNTEER },
+  { label: 'Delete Volunteer Data', value: DELETE_VOLUNTEER_DATA },
+  { label: 'Assign Volunteer Schedule', value: ASSIGN_VOLUNTEER_SCHEDULE },
+  { label: 'Add Date Rows', value: ADD_DATE_ROWS },
+  { label: 'Update Volunteer Profile', value: UPDATE_VOLUNTEER_PROFILE },
+  { label: 'Update Event', value: UPDATE_EVENT },
+  { label: 'Update Training', value: UPDATE_TRAINING },
+  { label: 'Update Observer Tracker', value: UPDATE_OBSERVER_TRACKER },
+  { label: 'Update Announcements', value: UPDATE_ANNOUNCEMENTS },
+  { label: 'View Volunteers Lists', value: VIEW_VOLUNTEERS_LISTS },
+  { label: 'View Assignments', value: VIEW_ASSIGNMENTS },
+  { label: 'View Training', value: VIEW_TRAINING },
+  { label: 'View Observer Tracker', value: VIEW_OBSERVER_TRACKER },
+  { label: 'View Analytics', value: VIEW_ANALYTICS },
+  { label: 'View Announcements', value: VIEW_ANNOUNCEMENTS }
+];

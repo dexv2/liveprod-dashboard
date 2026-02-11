@@ -12,7 +12,7 @@ interface Schedule {
   data: any
 }
 
-export default function CCScheduleBySegment({ schedule, isAuthenticated = false }: { schedule: Schedule, isAuthenticated: boolean }) {
+export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }) {
   const { isMobile } = useDevice();
   
   const convertData = (data: any) => {
@@ -29,7 +29,7 @@ export default function CCScheduleBySegment({ schedule, isAuthenticated = false 
   const convertedData: any = convertData(schedule?.data);
 
   if (isMobile) {
-    return <MCScheduleBySegment schedule={schedule} convertedData={convertedData} isAuthenticated={isAuthenticated} />;
+    return <MCScheduleBySegment schedule={schedule} convertedData={convertedData} />;
   }
 
   return (
@@ -68,11 +68,11 @@ export default function CCScheduleBySegment({ schedule, isAuthenticated = false 
                 <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
                   <td className="w-4 xl:w-9 text-center h-4 xl:h-6 text-[10px] xl:text-xs">{i+1}</td>
                   <td className="px-0.5 xl:px-1 uppercase w-20 xl:w-52 text-[10px] xl:text-sm">{role.replace("broadcast", "bc").replace("monitor", "mon").replace(/\d+/g, "")}</td>
-                  <CCVolunteerCell service={satFirst} isAuthenticated={isAuthenticated} />
-                  <CCVolunteerCell service={sunFirst} isAuthenticated={isAuthenticated} />
-                  <CCVolunteerCell service={sunSecond} isAuthenticated={isAuthenticated} />
-                  <CCVolunteerCell service={sunThird} isAuthenticated={isAuthenticated} />
-                  <CCVolunteerCell service={sunFourth} isAuthenticated={isAuthenticated} />
+                  <CCVolunteerCell service={satFirst} />
+                  <CCVolunteerCell service={sunFirst} />
+                  <CCVolunteerCell service={sunSecond} />
+                  <CCVolunteerCell service={sunThird} />
+                  <CCVolunteerCell service={sunFourth} />
                 </tr>
               )
             })}

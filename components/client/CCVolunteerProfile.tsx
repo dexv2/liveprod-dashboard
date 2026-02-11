@@ -5,13 +5,14 @@ import CCVolunteerEvents from "@/components/client/CCVolunteerEvents";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import GCSelect from "@/components/global/GCSelect";
 import { putUpdateVolunteer } from "@/utils/apis/put";
-import { category, serviceTime, serviceCode } from "@/utils/constants";
+import { category, serviceTime, serviceCode, UPDATE_VOLUNTEER_PROFILE } from "@/utils/constants";
 import { diff } from "@/utils/dates";
 import { newDate } from "@/utils/helpers";
 import { redirect, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { GoDotFill } from "react-icons/go";
 import { IoCloseCircle, IoPersonCircleSharp, IoSaveSharp } from "react-icons/io5";
+import { useSession } from 'next-auth/react';
 
 interface Training {
   name: string
@@ -40,8 +41,9 @@ interface Schedule {
   service: string
 }
 
-export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin }: { volunteer: Volunteer, isAuthenticated: boolean, isAdmin: boolean }) {
+export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer }) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [ firstName, setFirstName ] = useState<string>(volunteer.firstName);
   const [ lastName, setLastName ] = useState<string>(volunteer.lastName);
   const [ nickName, setNickName ] = useState<string>(volunteer?.nickName || "");
@@ -52,6 +54,15 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
   const [ gender, setGender ] = useState<string>(volunteer.gender);
   const [ phone, setPhone ] = useState<string>(volunteer.phone || "");
   const [ trainings, setTrainings ] = useState<Training[]>(volunteer.trainings || []);
+
+  const hasUpdateVolunteerProfilePermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(UPDATE_VOLUNTEER_PROFILE);
+  }, [session]);
+
+  const isAdmin = useMemo(() => {
+    return (session?.user as any)?.isAdmin ?? false;
+  }, [session]);
 
   const hasChanges = useMemo(() => (
     firstName !== volunteer.firstName ||
@@ -211,28 +222,28 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
               <div className="px-3 pt-8 pb-5 text-sm">
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5">
-                    <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setFirstName(e.target.value)} label="first name" value={firstName} />
-                    <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setLastName(e.target.value)} label="last name" value={lastName} />
+                    <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setFirstName(e.target.value)} label="first name" value={firstName} />
+                    <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setLastName(e.target.value)} label="last name" value={lastName} />
                   </div>
                   <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5">
                     <div className="flex flex-col justify-start gap-5 w-full">
                       <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
-                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setSegment(e.target.value)} label="segment" value={segment} options={category.SEGMENTS} />
-                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
+                        <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setSegment(e.target.value)} label="segment" value={segment} options={category.SEGMENTS} />
+                        <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
                       </div>
                       <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
-                        <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
-                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
+                        <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
+                        <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
                       </div>
                       {isAdmin && (
                         <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
-                          <GCInputTextWithLabel disabled={!isAuthenticated} onChange={(e) => setPhone(e.target.value)} label="phone number" value={phone} />
+                          <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setPhone(e.target.value)} label="phone number" value={phone} />
                           <div className="w-full lg:block hidden"></div>
                         </div>
                       )}
                     </div>
                     <div className="flex flex-col justify-between gap-0 w-full">
-                      <GCSelect disabled={!isAuthenticated} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase />
+                      <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase />
                       <div className="flex flex-col gap-0.5 w-full">
                         <div className="bg-zinc-50 p-3 border border-slate-100 rounded-b-sm min-h-24">
                           <div className="flex flex-wrap justify-start gap-2 break-normal">
@@ -242,7 +253,7 @@ export default function CCVolunteerProfile({ volunteer, isAuthenticated, isAdmin
                                     {/* Non-breakable space is char 160 */}
                                     <div>{volunteerRole.replaceAll(" ", String.fromCharCode(160))}</div>
                                     <div className="relative">
-                                      {isAuthenticated && 
+                                      {hasUpdateVolunteerProfilePermission && 
                                         <div className="absolute -top-3 left-0 opacity-0 hover:opacity-100">
                                           <IoCloseCircle size={20} className="cursor-pointer" onClick={() => setRoles(roles.filter(r => r != volunteerRole))} />
                                         </div>

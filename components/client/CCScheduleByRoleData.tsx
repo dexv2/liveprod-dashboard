@@ -1,27 +1,40 @@
 "use client";
 
-import { category } from "@/utils/constants";
+import { category, VIEW_ASSIGNMENTS } from "@/utils/constants";
 import { formatDate } from "@/utils/helpers";
-import { Fragment, useMemo } from "react";
+import { Fragment, useMemo, useEffect } from "react";
 import CCSchedulesByRole from "../client/CCScheduleByRole";
 import CCVolunteerCell from './CCVolunteerCell';
 import { useLockScrollContext } from '@/context/LockScrollProvider';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 export default function CCScheduleByRoleData(
 {
   role,
   data,
-  isAuthenticated,
   isError = false,
   error,
 }: {
   role: string,
   data?: any,
-  isAuthenticated: boolean,
   isError?: boolean,
   error?: unknown,
 }) {
   const lockScroll = useLockScrollContext();
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const hasViewAssignmentsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ASSIGNMENTS);
+  }, [session]);
+
+  useEffect(() => {
+    if (!hasViewAssignmentsPermission) {
+      router.push('/');
+    }
+  }, [hasViewAssignmentsPermission, router]);
 
   try {
     if (!data) {
@@ -80,16 +93,16 @@ export default function CCScheduleByRoleData(
                     <td className="w-12 lg:w-20 text-center text-[8px] md:text-xs lg:text-sm px-0.5 lg:px-1">
                       {snsFirst?.[i]?.date ? formatDate(snsFirst[i].date) : ''}
                     </td>
-                    <CCVolunteerCell service={snsFirst?.[i]} isAuthenticated={isAuthenticated} />
+                    <CCVolunteerCell service={snsFirst?.[i]} />
                   </Fragment>
                 )}
                 <td className="border border-slate-300 w-12 lg:w-20 text-center text-[8px] md:text-xs lg:text-sm px-0.5 lg:px-1">
                   {firstService?.date ? formatDate(firstService.date) : ''}
                 </td>
-                <CCVolunteerCell service={firstService} isAuthenticated={isAuthenticated} />
-                <CCVolunteerCell service={secondService} isAuthenticated={isAuthenticated} />
-                <CCVolunteerCell service={thirdService} isAuthenticated={isAuthenticated} />
-                <CCVolunteerCell service={fourthService} isAuthenticated={isAuthenticated} />
+                <CCVolunteerCell service={firstService} />
+                <CCVolunteerCell service={secondService} />
+                <CCVolunteerCell service={thirdService} />
+                <CCVolunteerCell service={fourthService} />
               </tr>
             )})
           }

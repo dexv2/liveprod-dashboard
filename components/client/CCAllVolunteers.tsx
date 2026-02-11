@@ -11,7 +11,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { deleteVolunteer } from "@/utils/apis/delete";
 import { toast } from "react-toastify";
 import { sleep } from "@/utils/helpers";
-import { category } from "@/utils/constants";
+import { category, VIEW_VOLUNTEERS_LISTS, ADD_VOLUNTEER, DELETE_VOLUNTEER_DATA } from "@/utils/constants";
+import { useSession } from 'next-auth/react';
 
 interface Data {
   _id: string
@@ -51,12 +52,28 @@ const conditionalRowStyles = [
   }
 ];
 
-export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdmin: boolean }) {
+export default function CCAllVolunteers({ data }: { data: Data[] }) {
   const router = useRouter();
+  const { data: session } = useSession();
   const [query, setQuery] = useState('');
   const [genderFilter, setGenderFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
+  
+  const hasViewVolunteerListsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_VOLUNTEERS_LISTS);
+  }, [session]);
+
+  const hasAddVolunteerPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(ADD_VOLUNTEER);
+  }, [session]);
+
+  const hasDeleteVolunteerPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(DELETE_VOLUNTEER_DATA);
+  }, [session]);
 
   const deleteVol = async (volunteerId: string, volunteerName: string) => {
     const confirmed = confirm(`Are you sure you want to remove ${volunteerName} as volunteer?`);
@@ -98,7 +115,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
     },
   ];
 
-  if (isAdmin) {
+  if (hasViewVolunteerListsPermission) {
     columns.splice(0, 0, {
       name: "ID",
       selector: (row: Data) => {
@@ -111,7 +128,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
     });
   }
 
-  if (isAdmin) {
+  if (hasViewVolunteerListsPermission) {
     columns.push(
       {
         name: "Gender",
@@ -133,7 +150,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
     );
   }
 
-  if (isAdmin) {
+  if (hasDeleteVolunteerPermission) {
     columns.push({
       name: "Actions",
       selector: (row: Data) => <RiDeleteBinLine className="text-rose-600" onClick={() => deleteVol(row._id, row.name)} size={18} /> as any,
@@ -143,7 +160,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
   }
 
   const filteredVolunteers = useMemo(() => {
-    if (!isAdmin) {
+    if (!hasViewVolunteerListsPermission) {
       return []; // Non-admin users see no volunteers in the list
     }
     
@@ -159,10 +176,10 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
     if (query === '' && !genderFilter && !statusFilter && !roleFilter) return data;
     return filteredValues;
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, genderFilter, statusFilter, roleFilter, isAdmin, data])
+  }, [query, genderFilter, statusFilter, roleFilter, hasViewVolunteerListsPermission, data])
 
   const noDataMessage = () => {
-    if (isAdmin) return "There are no records to display";
+    if (hasViewVolunteerListsPermission) return "There are no records to display";
     return "Enter your Volunteer ID above to access your profile";
   }
 
@@ -175,7 +192,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
       <div className="w-full">
         <div className="flex flex-col gap-7 text-slate-700 px-4 md:px-16 lg:px-32 pt-8">
           <div className="flex flex-col md:flex-row md:justify-between items-start md:items-end mb-6 gap-4">
-            {isAdmin && (
+            {hasViewVolunteerListsPermission && (
               <div className="flex flex-wrap gap-2 md:gap-3 items-end w-full md:w-auto">
                 <div className="min-w-[100px] md:min-w-[120px]">
                   <label className="block text-xs md:text-sm font-medium mb-1">Gender</label>
@@ -230,7 +247,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
               </div>
             )}
             <div className="flex flex-col md:flex-row gap-2 md:gap-3 items-stretch md:items-end w-full md:w-auto">
-              {isAdmin ? (
+              {hasViewVolunteerListsPermission ? (
                 <div className="w-full md:w-64">
                   <GCInputSearch onChange={(event) => setQuery(event.target.value)} />
                 </div>
@@ -266,7 +283,7 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
                   </button>
                 </div>
               )}
-              { isAdmin &&
+              { hasAddVolunteerPermission &&
                 <button
                   onClick={openModal}
                   id="add-volunteer"
@@ -277,18 +294,18 @@ export default function CCAllVolunteers({ data, isAdmin }: { data: Data[], isAdm
               }
             </div>
           </div>
-          <div className={`${isAdmin && !!filteredVolunteers.length ? "border border-slate-200" : ""} rounded-md`}>
+          <div className={`${hasViewVolunteerListsPermission && !!filteredVolunteers.length ? "border border-slate-200" : ""} rounded-md`}>
             <DataTable
               columns={columns}
               data={filteredVolunteers}
               conditionalRowStyles={conditionalRowStyles}
-              pagination={isAdmin}
+              pagination={hasViewVolunteerListsPermission}
               responsive
-              {...(isAdmin && {
+              {...(hasViewVolunteerListsPermission && {
                 paginationPerPage: 25,
                 paginationRowsPerPageOptions: [10, 25, 50, 100]
               })}
-              onRowClicked={isAdmin ? (row: Data) => router.push(`/volunteer/profile/${row._id}`) : undefined}
+              onRowClicked={hasViewVolunteerListsPermission ? (row: Data) => router.push(`/volunteer/profile/${row._id}`) : undefined}
               noDataComponent={
                 <div className="flex h-96 flex-col justify-center">
                   <div className="flex gap-1 text-slate-700">

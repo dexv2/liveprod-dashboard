@@ -1,22 +1,48 @@
 "use client";
 
-import { Session } from "next-auth";
-import { signIn, signOut } from "next-auth/react";
+import { signIn, signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { RiArrowDropDownLine } from 'react-icons/ri';
+import { VIEW_ASSIGNMENTS, VIEW_TRAINING, VIEW_OBSERVER_TRACKER, VIEW_ANNOUNCEMENTS, VIEW_ANALYTICS } from '@/utils/constants';
 
-export default function Navbar({ session }: { session: Session | null }) {
+export default function GCNavbar() {
   const pathname = usePathname();
   const router = useRouter();
   const [newPath, setNewPath] = useState("/");
   const [showDropdown, setShowDropdown] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const { data: session } = useSession();
 
   const isAuthenticated = mounted ? session?.user?.username : false;
   const isAdmin = mounted ? (session?.user as any)?.isAdmin : false;
+
+  const hasViewAssignmentsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ASSIGNMENTS);
+  }, [session]);
+
+  const hasViewTrainingPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_TRAINING);
+  }, [session]);
+
+  const hasViewObserverTrackerPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_OBSERVER_TRACKER);
+  }, [session]);
+
+  const hasViewAnnouncementsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ANNOUNCEMENTS);
+  }, [session]);
+
+  const hasViewAnalyticsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ANALYTICS);
+  }, [session]);
 
   useEffect(() => {
     setMounted(true);
@@ -24,7 +50,7 @@ export default function Navbar({ session }: { session: Session | null }) {
     const prevPath = newPath;
     setNewPath(url);
 
-    if (prevPath.includes("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/login") || prevPath.startsWith("/add-event")) {
+    if (prevPath.includes("/assign-volunteer/") || prevPath.startsWith("/volunteer/add") || prevPath.startsWith("/add-event")) {
       router.refresh();
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,7 +103,7 @@ export default function Navbar({ session }: { session: Session | null }) {
       {/* Desktop menu */}
       <div className="hidden md:flex justify-between">
         <Link className="text-white p-2" href={"/schedule/segment/audio"}>Upcoming</Link>
-        {isAdmin && <Link className="text-white p-2" href={"/schedule/role/foh"}>Assignments</Link>}
+        {hasViewAssignmentsPermission && <Link className="text-white p-2" href={"/schedule/role/foh"}>Assignments</Link>}
         <Link className="text-white p-2" href={"/schedule/calendar"}>Calendar</Link>
         {!isAdmin ? (
             <Link className="text-white p-2" href={"/volunteer/all"}>
@@ -103,10 +129,10 @@ export default function Navbar({ session }: { session: Session | null }) {
                   onMouseLeave={() => setShowDropdown(false)}
                 >
                   <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/all"}>Volunteers List</Link>
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
-                  {isAdmin && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
+                  {hasViewTrainingPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
+                  {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
+                  {hasViewAnalyticsPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
+                  {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
                 </div>
               )}
             </div>
@@ -129,11 +155,11 @@ export default function Navbar({ session }: { session: Session | null }) {
           <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/segment/audio"} onClick={() => setShowDropdown(false)}>Upcoming</Link>
           <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/calendar"} onClick={() => setShowDropdown(false)}>Calendar</Link>
           <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/all"} onClick={() => setShowDropdown(false)}>{`${isAdmin ? "Volunteers List" : "My Schedule"}`}</Link>
-          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/role/foh"} onClick={() => setShowDropdown(false)}>Assignments</Link>}
-          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/training"} onClick={() => setShowDropdown(false)}>Training</Link>}
-          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/observer-tracker"} onClick={() => setShowDropdown(false)}>Observer Tracker</Link>}
-          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/analytics"} onClick={() => setShowDropdown(false)}>Analytics</Link>}
-          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/announcements"} onClick={() => setShowDropdown(false)}>Announcements</Link>}
+          {hasViewAssignmentsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/schedule/role/foh"} onClick={() => setShowDropdown(false)}>Assignments</Link>}
+          {hasViewTrainingPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/training"} onClick={() => setShowDropdown(false)}>Training</Link>}
+          {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/observer-tracker"} onClick={() => setShowDropdown(false)}>Observer Tracker</Link>}
+          {hasViewAnalyticsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/analytics"} onClick={() => setShowDropdown(false)}>Analytics</Link>}
+          {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/announcements"} onClick={() => setShowDropdown(false)}>Announcements</Link>}
           { !isAuthenticated ?
             <button onClick={() => { signIn(); setShowDropdown(false); }} className="block w-full text-left text-white px-4 py-3 hover:bg-slate-700">Login</button>
             :

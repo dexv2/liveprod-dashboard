@@ -1,15 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import { toast } from "react-toastify";
 
-interface Login {
-  (username: FormDataEntryValue | null, password: FormDataEntryValue | null): Promise<void>;
-}
-
-export default function CCLogin({ error, login }: { error: number, login: Login }) {
+export default function CCLogin({ error }: { error: number }) {
   const [ loading, setLoading ] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (error) {
@@ -22,7 +21,21 @@ export default function CCLogin({ error, login }: { error: number, login: Login 
     e.preventDefault();
     setLoading(true);
     const formData = new FormData(e.currentTarget);
-    await login(formData.get("username"), formData.get("password"));
+    
+    const result = await signIn("credentials", {
+      username: formData.get("username") as string,
+      password: formData.get("password") as string,
+      redirect: false,
+    });
+
+    if (result?.error) {
+      toast.error("Invalid username or password!");
+      setLoading(false);
+    } else {
+      // Session will automatically update in SessionProvider
+      router.push("/");
+      router.refresh();
+    }
   }
 
   return (

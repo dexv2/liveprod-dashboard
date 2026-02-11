@@ -4,9 +4,8 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import GCNavbar from "@/components/global/GCNavbar";
-import SessionWrapper from "@/components/global/SessionWrapper";
+import SessionWrapper from "@/context/SessionWrapper";
 import DeviceProvider from "@/context/DeviceProvider";
-import { auth } from "@/auth";
 import { Bounce, ToastContainer } from "react-toastify";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -27,15 +26,14 @@ export default async function RootLayout(props: Readonly<{
   modal: React.ReactNode;
   children: React.ReactNode;
 }>) {
-  const session = await auth();
 
   return (
     <html lang="en">
       <body className={`${inter.className} background-gradient min-h-screen`}>
-        <SessionWrapper session={session}>
+        <SessionWrapper>
           <DeviceProvider>
             <div className="mx-auto p-4">
-              <GCNavbar session={session} />
+              <GCNavbar />
               <div className="">
                 {props.modal}
                 {props.children}

@@ -2,10 +2,10 @@ import { category } from "@/utils/constants";
 import { formatDate } from "@/utils/helpers";
 import { redirect } from "next/navigation";
 import { Fragment } from "react";
-import SCVolunteerCell from "@/components/server/SCVolunteerCell";
 import { getSchedulesByRole } from "@/utils/apis/get";
 import CCFlexibleScheduleByRole from "../client/CCFlexibleScheduleByRole";
 import { scheduleConfigManager, ServiceTime } from "@/utils/scheduleConfig";
+import CCVolunteerCell from '../client/CCVolunteerCell';
 
 export default async function SCFlexibleSchedulesByRole({role}: {role: string}) {
   if (!category.ROLES.includes(role)) {
@@ -54,7 +54,7 @@ export default async function SCFlexibleSchedulesByRole({role}: {role: string}) 
                         {serviceData ? formatDate(serviceData.date) : ''}
                       </td>
                     )}
-                    <SCVolunteerCell service={serviceData} />
+                    <CCVolunteerCell service={serviceData} />
                   </Fragment>
                 );
               })}
@@ -74,7 +74,7 @@ export default async function SCFlexibleSchedulesByRole({role}: {role: string}) 
                         {serviceData ? formatDate(serviceData.date) : ''}
                       </td>
                     )}
-                    <SCVolunteerCell service={serviceData} />
+                    <CCVolunteerCell service={serviceData} />
                   </Fragment>
                 );
               })}

@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { usePathname, useRouter } from 'next/navigation';
 import { putUpdateEvent } from '@/utils/apis/put';
 import GCArrowPrev from '../global/GCArrowPrev';
 import GCArrowNext from '../global/GCArrowNext';
 import { useDevice } from '../../context/DeviceProvider';
 import { formatTimeTo12Hour } from '@/utils/helpers';
+import { useSession } from 'next-auth/react';
+import { UPDATE_EVENT } from '@/utils/constants';
 
 interface Event {
   _id?: string;
@@ -44,7 +46,8 @@ interface Volunteer {
   roles: string[];
 }
 
-export default function CCEventsManager({ isAuthenticated, events, volunteers }: { isAuthenticated: boolean, events: Event[], volunteers: Volunteer[] }) {
+export default function CCEventsManager({ events, volunteers }: { events: Event[], volunteers: Volunteer[] }) {
+  const { data: session } = useSession();
   const [currentPage, setCurrentPage] = useState(0);
   const pathname = usePathname();
   const { isMobile } = useDevice();
@@ -53,6 +56,11 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
   const totalEvents = events?.length || 0;
   const eventsPerPage = totalEvents > EXPECTED_EVENTS_PER_PAGE ? EXPECTED_EVENTS_PER_PAGE : totalEvents;
   const router = useRouter();
+
+  const hasUpdateEventsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(UPDATE_EVENT);
+  }, [session]);
 
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
   const startIndex = currentPage * eventsPerPage;
@@ -115,11 +123,11 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
 
       <div className="bg-slate-800 rounded-t-lg border border-slate-800 flex justify-between items-center px-6">
         <h2 className="text-white text-lg font-semibold py-3">Events</h2>
-        {!isAuthenticated && totalEvents > 0 ? (
+        {!hasUpdateEventsPermission && totalEvents > 0 ? (
           <span className="text-white text-sm">
             Showing {Math.min(currentEvents.length, eventsPerPage)} of {totalEvents} events
           </span>
-        ) : isAuthenticated ? (
+        ) : hasUpdateEventsPermission ? (
           <button onClick={addNewEvent} className='text-white px-3 py-1 bg-slate-600 bg-opacity-80 rounded-md'>
             Add New Event
           </button>
@@ -134,7 +142,7 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
               {displayEvents.map((event, index) => (
                 <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32">
                   {event ? (
-                    isAuthenticated ? (
+                    hasUpdateEventsPermission ? (
                       <select 
                         className={`p-1 border border-gray-300 rounded text-sm ${
                           event.status === 'confirmed' ? 'text-green-600' : 
@@ -270,7 +278,7 @@ export default function CCEventsManager({ isAuthenticated, events, volunteers }:
                 </td>
               ))}
             </tr>
-            {isAuthenticated && (
+            {hasUpdateEventsPermission && (
               <tr>
                 <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Actions</td>
                 {displayEvents.map((event, index) => (

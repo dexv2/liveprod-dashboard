@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { FaEdit, FaCheck, FaClock, FaChartLine } from "react-icons/fa";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { VIEW_OBSERVER_TRACKER, UPDATE_OBSERVER_TRACKER } from '@/utils/constants';
 
 interface ObserverLog {
   _id: string;
@@ -46,9 +49,10 @@ interface EvaluationForm {
   notes: string;
 }
 
-export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated: boolean }) {
+export default function CCObserverTracker() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [observerLogs, setObserverLogs] = useState<ObserverLog[]>([]);
-  const [volunteers, setVolunteers] = useState<any[]>([]);
   const [showEvalForm, setShowEvalForm] = useState<string | null>(null);
   const [evaluation, setEvaluation] = useState<EvaluationForm>({
     punctuality: 5,
@@ -58,10 +62,29 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
     notes: ''
   });
 
+  const hasViewObserverTrackerPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_OBSERVER_TRACKER);
+  }, [session]);
+
+  const hasUpdateObserverTrackerPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(UPDATE_OBSERVER_TRACKER);
+  }, [session]);
+
+  const isAuthenticated = useMemo(() => {
+    return !!session?.user?.username;
+  }, [session]);
+
+  useEffect(() => {
+    if (session && !hasViewObserverTrackerPermission) {
+      router.push('/');
+    }
+  }, [session, hasViewObserverTrackerPermission, router]);
+
   useEffect(() => {
     if (isAuthenticated) {
       fetchObserverLogs();
-      fetchVolunteers();
     }
   }, [isAuthenticated]);
 
@@ -82,24 +105,6 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
       console.error('Error fetching observer logs:', error);
     }
   };
-
-  const fetchVolunteers = async () => {
-    try {
-      const response = await fetch('/api/volunteers');
-      const result = await response.json();
-      if (result.success) {
-        setVolunteers(result.data.filter((v: any) => 
-          v.status === 'observer'
-        ));
-      }
-    } catch (error) {
-      console.error('Error fetching volunteers:', error);
-    }
-  };
-
-
-
-
 
   const addEvaluation = async (logId: string) => {
     try {
@@ -250,6 +255,7 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
                     checked={log.orientationCompleted}
                     onChange={(e) => updateMilestone(log._id, 'orientationCompleted', e.target.checked)}
                     className="w-4 h-4"
+                    disabled={!hasUpdateObserverTrackerPermission}
                   />
                   <span className="text-sm">Orientation</span>
                 </div>
@@ -259,6 +265,7 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
                     checked={!!log.assignedPosition}
                     onChange={(e) => updateMilestone(log._id, 'assigned', e.target.checked)}
                     className="w-4 h-4"
+                    disabled={!hasUpdateObserverTrackerPermission}
                   />
                   <span className="text-sm">Assigned</span>
                 </div>
@@ -276,7 +283,7 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
                     type="checkbox"
                     checked={log.status === 'active'}
                     onChange={(e) => updateMilestone(log._id, 'promoted', e.target.checked)}
-                    disabled={!log.orientationCompleted || !log.assignedPosition || log.evaluations.length < 3}
+                    disabled={!log.orientationCompleted || !log.assignedPosition || log.evaluations.length < 3 || !hasUpdateObserverTrackerPermission}
                     className="w-4 h-4"
                   />
                   <span className="text-sm">Promoted {log.status === 'active' ? '🎉' : ''}</span>
@@ -315,23 +322,25 @@ export default function CCObserverTracker({ isAuthenticated }: { isAuthenticated
               </div>
             </div>
 
-            <div className="mt-4 flex gap-2">
-              <button
-                onClick={() => setShowEvalForm(log._id)}
-                className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
-              >
-                Add Evaluation
-              </button>
-              
-              {log.status === 'review_pending' && (
+            {hasUpdateObserverTrackerPermission && (
+              <div className="mt-4 flex gap-2">
                 <button
-                  onClick={() => updateStatus(log._id, 'active')}
-                  className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                  onClick={() => setShowEvalForm(log._id)}
+                  className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
                 >
-                  Approve
+                  Add Evaluation
                 </button>
-              )}
-            </div>
+                
+                {log.status === 'review_pending' && (
+                  <button
+                    onClick={() => updateStatus(log._id, 'active')}
+                    className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
+                  >
+                    Approve
+                  </button>
+                )}
+              </div>
+            )}
 
             {showEvalForm === log._id && (
               <div className="mt-4 p-4 bg-gray-50 rounded">

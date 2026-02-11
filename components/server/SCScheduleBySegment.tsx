@@ -9,8 +9,6 @@ import SCEventsManager from './SCEventsManager';
 import CCScheduleNavigation from '../client/CCScheduleNavigation';
 
 export default async function SCScheduleBySegment({increment, service}: {increment: number, service: string}) {
-  const session = await auth();
-  const isAuthenticated = (session?.user as any)?.isAdmin;
   const serviceDate1 = getNextService(increment);
   const serviceDate2 = getNextService(increment+1);
   const schedule1 = await getSchduleByDateRange(serviceDate1.saturday, serviceDate1.sunday);
@@ -38,14 +36,14 @@ export default async function SCScheduleBySegment({increment, service}: {increme
             <div className="mt-[0.5px]">
               <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
                 <Suspense fallback={<GCLoading />}>
-                  <SCEventsManager isAuthenticated={isAuthenticated || false} />
+                  <SCEventsManager />
                 </Suspense>
               </div>
             </div>
           ) : (
             <div className="flex flex-col xl:flex-row gap-2 xl:gap-4 w-full mt-[0.5px]">
-              <CCScheduleBySegment schedule={schedule1} isAuthenticated={isAuthenticated} />
-              <CCScheduleBySegment schedule={schedule2} isAuthenticated={isAuthenticated} />
+              <CCScheduleBySegment schedule={schedule1} />
+              <CCScheduleBySegment schedule={schedule2} />
             </div>
           )}
         </div>
