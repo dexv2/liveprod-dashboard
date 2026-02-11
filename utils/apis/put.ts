@@ -66,4 +66,18 @@ export const putUpdateEvent = async (id: string, body: any) => {
   }
 }
 
+export const putChangePassword = async (id: string, newPassword: string) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/admin/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify({ password: newPassword })
+    });
 
+    return await res.json();
+  } catch (error) {
+    throw error;
+  }
+}

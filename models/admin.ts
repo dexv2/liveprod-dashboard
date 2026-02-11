@@ -25,6 +25,10 @@ const adminSchema = new Schema({
     type: Boolean,
     default: false
   },
+  isPasswordChanged: {
+    type: Boolean,
+    default: false
+  },
   registeredBy: {
     type: Schema.Types.ObjectId,
     ref: "Admin"
