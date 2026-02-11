@@ -1,12 +1,28 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { VIEW_ANALYTICS } from '@/utils/constants';
 
 export default function CCAdminAnalytics() {
+  const { data: session } = useSession();
+  const router = useRouter();
   const [isMetabaseOnline, setIsMetabaseOnline] = useState(true);
   const [loading, setLoading] = useState(true);
   
   const metabaseUrl = process.env.NEXT_PUBLIC_METABASE_URL || 'http://10.200.100.135:3000';
+
+  const hasViewAnalyticsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(VIEW_ANALYTICS);
+  }, [session]);
+
+  useEffect(() => {
+    if (!hasViewAnalyticsPermission) {
+      router.push('/');
+    }
+  }, [hasViewAnalyticsPermission, router]);
   
   useEffect(() => {
     const checkConnection = async () => {
