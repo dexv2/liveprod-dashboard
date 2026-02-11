@@ -50,19 +50,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     },
     async jwt({ token, user }) {
       if (user) {
+        token.id = (user as any)._id as string;
         token.username = user.username;
         token.isAdmin = true;
         token.superAdmin = (user as any).superAdmin || false;
+        token.isPasswordChanged = (user as any).isPasswordChanged || false;
         token.permissions = Array.isArray((user as any).permissions) ? (user as any).permissions : [];
       }
       return token;
     },
     async session({ session, token }) {
       if (token) {
+        (session.user as any).id = token.id;
         (session.user as any).username = token.username;
         (session.user as any).isAdmin = token.isAdmin;
         (session.user as any).permissions = token.permissions;
         (session.user as any).superAdmin = token.superAdmin;
+        (session.user as any).isPasswordChanged = token.isPasswordChanged;
       }
       return session;
     }

@@ -63,7 +63,7 @@ export default function GCNavbar() {
      */
     document.body.classList.toggle(
       "background-gradient",
-      /^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname)
+      /^\/$|^\/(?:assign-volunteer|add-event|login|change-password)/.test(pathname)
     );
   }, [pathname])
 
@@ -73,6 +73,7 @@ export default function GCNavbar() {
     if (pathname.startsWith("/schedule/assign-volunteer")) return "Masterlist";
     if (pathname.startsWith("/schedule/calendar")) return "Live Production Calendar";
     if (pathname.startsWith("/login")) return "Login Page";
+    if (pathname.startsWith("/change-password")) return "Change Password";
     if (pathname.startsWith("/volunteer/all")) return "Volunteers List";
     if (pathname.startsWith("/volunteer/profile")) return "Volunteer Profile";
     if (pathname.startsWith("/volunteer/add")) return "Add Volunteer";

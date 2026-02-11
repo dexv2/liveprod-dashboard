@@ -1,4 +1,5 @@
 import connectMongoDB from "@/libs/mongodb"
+import { changePasswordSchema } from '@/libs/zod';
 import Admin from "@/models/admin"
 import Schedule from "@/models/schedule";
 import { callTextbee } from "@/utils/apis/textbee";
@@ -11,6 +12,7 @@ interface RequestData {
   permissions?: string[]
   superAdmin?: boolean
   password?: string
+  isPasswordChanged?: boolean
 }
 
 export async function PUT(request: any, { params }: any) {
@@ -21,8 +23,18 @@ export async function PUT(request: any, { params }: any) {
     updatedFields.username = requestData.username;
   }
   if (typeof requestData?.password === "string") {
-    const hashedPassword = await saltAndHashPassword(requestData.password);
-    updatedFields.password = hashedPassword;
+    try {
+      const { password } = await changePasswordSchema.parseAsync({ password: requestData.password });
+      const hashedPassword = await saltAndHashPassword(password);
+      updatedFields.password = hashedPassword;
+      updatedFields.isPasswordChanged = true;
+    } catch (error: any) {
+      // Return validation error before reaching the main try-catch
+      return NextResponse.json({ 
+        message: error?.errors?.[0]?.message || "Invalid password format",
+        error: error?.errors
+      }, { status: 400 });
+    }
   }
   if (Array.isArray(requestData?.permissions)) {
     updatedFields.permissions = requestData.permissions;
@@ -33,6 +45,9 @@ export async function PUT(request: any, { params }: any) {
   if (typeof requestData?.tier === "number") {
     updatedFields.tier = requestData.tier;
   }
+  if (typeof requestData?.isPasswordChanged === "boolean") {
+    updatedFields.isPasswordChanged = requestData.isPasswordChanged;
+  }
 
   try {
     await connectMongoDB();
@@ -40,7 +55,7 @@ export async function PUT(request: any, { params }: any) {
 
     return NextResponse.json({message: `Admin info updated`}, {status: 200});
   } catch (error) {
-    return NextResponse.json({ message: "An error occurred while updating admin.", data: null }, { status: 500 });
+    return NextResponse.json({ message: "An error occurred while updating admin", data: null, error: true }, { status: 500 });
   }
 }
 

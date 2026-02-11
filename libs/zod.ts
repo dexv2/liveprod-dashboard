@@ -9,3 +9,10 @@ export const loginSchema = object({
     .min(8, "Password must be at least 8 characters")
     .max(32, "Password must be at most 32 characters")
 });
+
+export const changePasswordSchema = object({
+  password: string({ required_error: "New password is required:" })
+    .min(1, "New password is required")
+    .min(8, "New password must be at least 8 characters")
+    .max(32, "New password must be at most 32 characters")
+});
