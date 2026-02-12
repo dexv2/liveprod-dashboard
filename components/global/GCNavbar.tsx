@@ -65,7 +65,7 @@ export default function Navbar({ session }: { session: Session | null }) {
             <h1 className="text-white text-sm md:text-lg uppercase font-semibold">Live&nbsp;Prod</h1>
           </div>
           <p className="text-white text-xs md:text-xs italic max-w-md">
-            "May the God who gives endurance and encouragement give you the same attitude of mind toward each other that Christ Jesus had, so that with one mind and one voice you may glorify the God and Father of our Lord Jesus Christ." - Romans 15:5-6 NIV
+            &ldquo;May the God who gives endurance and encouragement give you the same attitude of mind toward each other that Christ Jesus had, so that with one mind and one voice you may glorify the God and Father of our Lord Jesus Christ.&rdquo; - Romans 15:5-6 NIV
           </p>
         </div>
       </Link>

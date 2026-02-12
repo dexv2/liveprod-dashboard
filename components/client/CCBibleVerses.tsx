@@ -36,7 +36,7 @@ export default function CCBibleVerses() {
         {dailyVerse ? (
           <>
             <p className="text-sm md:text-base text-amber-800 italic mb-2">
-              "{dailyVerse.text}"
+              &ldquo;{dailyVerse.text}&rdquo;
             </p>
             <p className="text-xs md:text-sm text-amber-700 font-medium text-right">{dailyVerse.reference}</p>
           </>
