@@ -46,13 +46,11 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
   const { data: session } = useSession();
   const [ firstName, setFirstName ] = useState<string>(volunteer.firstName);
   const [ lastName, setLastName ] = useState<string>(volunteer.lastName);
-  const [ nickName, setNickName ] = useState<string>(volunteer?.nickName || "");
   const [ segment, setSegment ] = useState<string>(volunteer.segment);
   const [ status, setStatus ] = useState<string>(volunteer.status);
   const [ role, setRole ] = useState<string | undefined>(undefined);
   const [ roles, setRoles ] = useState<string[]>(volunteer.roles);
   const [ gender, setGender ] = useState<string>(volunteer.gender);
-  const [ phone, setPhone ] = useState<string>(volunteer.phone || "");
   const [ trainings, setTrainings ] = useState<Training[]>(volunteer.trainings || []);
 
   const hasUpdateVolunteerProfilePermission = useMemo(() => {
@@ -67,31 +65,25 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
   const hasChanges = useMemo(() => (
     firstName !== volunteer.firstName ||
     lastName !== volunteer.lastName ||
-    nickName !== (volunteer?.nickName || "") ||
     status !== volunteer.status ||
     segment !== volunteer.segment ||
     gender !== volunteer.gender ||
-    phone !== (volunteer.phone || "") ||
     JSON.stringify(roles) !== JSON.stringify(volunteer.roles) ||
     JSON.stringify(trainings) !== JSON.stringify(volunteer.trainings || [])
   ), [
     firstName,
     lastName,
-    nickName,
     segment,
     status,
     roles,
     gender,
-    phone,
     trainings,
     volunteer.firstName,
     volunteer.lastName,
-    volunteer.nickName,
     volunteer.segment,
     volunteer.status,
     volunteer.roles,
     volunteer.gender,
-    volunteer.phone,
     volunteer.trainings
   ]);
 
@@ -105,16 +97,14 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
   const resetValues = () => {
     setFirstName(volunteer.firstName)
     setLastName(volunteer.lastName)
-    setNickName(volunteer?.nickName || "")
     setStatus(volunteer.status)
     setSegment(volunteer.segment)
-    setPhone(volunteer.phone || "")
     setTrainings(volunteer.trainings || [])
   }
 
   const updateVolunteerInfo = async () => {
     try {
-      await putUpdateVolunteer(volunteer._id, { firstName, lastName, nickName, segment, status, roles, gender, phone, trainings });
+      await putUpdateVolunteer(volunteer._id, { firstName, lastName, segment, status, roles, gender, trainings });
       router.refresh();
     } catch (error) {
       alert('Failed to save volunteer information');
@@ -155,10 +145,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
       if (status === "inactive") return "text-red-600"
       return "text-slate-700"
     }
-    const getAlias = () => {
-      if (volunteer.nickName) return ` "${volunteer.nickName}" `;
-      return ` `;
-    }
+
 
     return (
       <div className="px-4 md:px-16 lg:px-32 text-slate-700">
@@ -206,7 +193,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
                 <IoPersonCircleSharp size={100} />
                 <div className="flex flex-col px-2 pb-2 pt-4 justify-start">
                   <h2 className="font-semibold text-lg capitalize">
-                    {`${volunteer.firstName}${getAlias()}${volunteer.lastName}`}
+                    {`${volunteer.firstName} ${volunteer.lastName}`}
                   </h2>
                   {isAdmin && (
                     <p className="text-xs text-slate-500 font-mono">
@@ -232,6 +219,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
                         <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
                       </div>
                       <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
+<<<<<<< Updated upstream
                         <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
                         <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
                       </div>
@@ -244,6 +232,14 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
                     </div>
                     <div className="flex flex-col justify-between gap-0 w-full">
                       <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase />
+=======
+                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
+                        <div className="w-full lg:block hidden"></div>
+                      </div>
+                    </div>
+                    <div className="flex flex-col justify-between gap-0 w-full">
+                      <GCSelect disabled={!isAuthenticated} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase hideBottomBorder={!isAuthenticated} />
+>>>>>>> Stashed changes
                       <div className="flex flex-col gap-0.5 w-full">
                         <div className="bg-zinc-50 p-3 border border-slate-100 rounded-b-sm min-h-24">
                           <div className="flex flex-wrap justify-start gap-2 break-normal">
