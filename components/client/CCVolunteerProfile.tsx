@@ -219,50 +219,37 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
                         <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setStatus(e.target.value)} label="status" value={status} options={category.STATUS} />
                       </div>
                       <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
-<<<<<<< Updated upstream
-                        <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setNickName(e.target.value)} label="nickname" value={nickName} />
                         <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
-                      </div>
-                      {isAdmin && (
-                        <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5 w-full">
-                          <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setPhone(e.target.value)} label="phone number" value={phone} />
-                          <div className="w-full lg:block hidden"></div>
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex flex-col justify-between gap-0 w-full">
-                      <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase />
-=======
-                        <GCSelect disabled={!isAuthenticated} onChange={(e) => setGender(e.target.value)} label="gender" value={gender} options={category.GENDER} />
                         <div className="w-full lg:block hidden"></div>
                       </div>
                     </div>
-                    <div className="flex flex-col justify-between gap-0 w-full">
-                      <GCSelect disabled={!isAuthenticated} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase hideBottomBorder={!isAuthenticated} />
->>>>>>> Stashed changes
-                      <div className="flex flex-col gap-0.5 w-full">
-                        <div className="bg-zinc-50 p-3 border border-slate-100 rounded-b-sm min-h-24">
-                          <div className="flex flex-wrap justify-start gap-2 break-normal">
-                            { roles.map((volunteerRole, i) => (
-                                <div key={i} className="uppercase border border-slate-500 py-1.5 px-3 rounded-full">
-                                  <div className="flex gap-0">
-                                    {/* Non-breakable space is char 160 */}
-                                    <div>{volunteerRole.replaceAll(" ", String.fromCharCode(160))}</div>
-                                    <div className="relative">
-                                      {hasUpdateVolunteerProfilePermission && 
-                                        <div className="absolute -top-3 left-0 opacity-0 hover:opacity-100">
-                                          <IoCloseCircle size={20} className="cursor-pointer" onClick={() => setRoles(roles.filter(r => r != volunteerRole))} />
-                                        </div>
-                                      }
+                    {hasUpdateVolunteerProfilePermission && (
+                      <div className="flex flex-col justify-between gap-0 w-full">
+                        <GCSelect disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setRole(e.target.value)} label="roles assigned" value={role} options={category.ROLES} uppercase hideBottomBorder={!hasUpdateVolunteerProfilePermission} />
+                        <div className="flex flex-col gap-0.5 w-full">
+                          <div className="bg-zinc-50 p-3 border border-slate-100 rounded-b-sm min-h-24">
+                            <div className="flex flex-wrap justify-start gap-2 break-normal">
+                              { roles.map((volunteerRole, i) => (
+                                  <div key={i} className="uppercase border border-slate-500 py-1.5 px-3 rounded-full">
+                                    <div className="flex gap-0">
+                                      {/* Non-breakable space is char 160 */}
+                                      <div>{volunteerRole.replaceAll(" ", String.fromCharCode(160))}</div>
+                                      <div className="relative">
+                                        {hasUpdateVolunteerProfilePermission && 
+                                          <div className="absolute -top-3 left-0 opacity-0 hover:opacity-100">
+                                            <IoCloseCircle size={20} className="cursor-pointer" onClick={() => setRoles(roles.filter(r => r != volunteerRole))} />
+                                          </div>
+                                        }
+                                      </div>
                                     </div>
                                   </div>
-                                </div>
-                              ))
-                            }
+                                ))
+                              }
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
