@@ -59,9 +59,14 @@ export default function Navbar({ session }: { session: Session | null }) {
   return (
     <nav className={`${/^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname) ? "bg-opacity-0 mb-4": "bg-opacity-100 mb-8"} flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
       <Link href={"/"}>
-        <div className="flex gap-1 items-center">
-          <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px] md:h-[45px]" alt="logo" />
-          <h1 className="text-white text-sm md:text-lg uppercase font-semibold">Live&nbsp;Prod</h1>
+        <div className="flex flex-col gap-1">
+          <div className="flex gap-1 items-center">
+            <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px] md:h-[45px]" alt="logo" />
+            <h1 className="text-white text-sm md:text-lg uppercase font-semibold">Live&nbsp;Prod</h1>
+          </div>
+          <p className="text-white text-xs md:text-xs italic max-w-md">
+            "May the God who gives endurance and encouragement give you the same attitude of mind toward each other that Christ Jesus had, so that with one mind and one voice you may glorify the God and Father of our Lord Jesus Christ." - Romans 15:5-6 NIV
+          </p>
         </div>
       </Link>
       {/* Mobile menu button */}
