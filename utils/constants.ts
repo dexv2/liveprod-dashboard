@@ -136,14 +136,14 @@ export const category: { [key: string]: string[] } = {
 }
 
 export const saturday = {
-  FIRST_SERVICE: "5:00 PM",
+  FIRST_SERVICE: "5PM",
 }
 
 export const sunday = {
-  FIRST_SERVICE: "9:00 am",
-  SECOND_SERVICE: "12:00 pm",
-  THIRD_SERVICE: "3:00 pm",
-  FOURTH_SERVICE: "6:00 pm"
+  FIRST_SERVICE: "9am",
+  SECOND_SERVICE: "12pm",
+  THIRD_SERVICE: "3pm",
+  FOURTH_SERVICE: "6pm"
 }
 
 export const serviceCodeToTime = {
