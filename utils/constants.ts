@@ -29,7 +29,7 @@ const role = {
 
 export const serviceCode = {
   SNS_1: "sns1",
-  SNS_2: "sns2",
+  // SNS_2: "sns2",
   SUNDAY_1: "sunday1",
   SUNDAY_2: "sunday2",
   SUNDAY_3: "sunday3",
@@ -43,7 +43,7 @@ export const serviceCode = {
 export const category: { [key: string]: string[] } = {
   SERVICES: [
     serviceCode.SNS_1,
-    serviceCode.SNS_2,
+    // serviceCode.SNS_2,
     serviceCode.SUNDAY_1,
     serviceCode.SUNDAY_2,
     serviceCode.SUNDAY_3,
@@ -55,7 +55,7 @@ export const category: { [key: string]: string[] } = {
   ],
   SATURDAY_SERVICES: [
     serviceCode.SNS_1,
-    serviceCode.SNS_2,
+    // serviceCode.SNS_2,
   ],
   SUNDAY_SERVICES: [
     serviceCode.SUNDAY_1,
@@ -65,7 +65,7 @@ export const category: { [key: string]: string[] } = {
   ],
   REGULAR_SERVICES: [
     serviceCode.SNS_1,
-    serviceCode.SNS_2,
+    // serviceCode.SNS_2,
     serviceCode.SUNDAY_1,
     serviceCode.SUNDAY_2,
     serviceCode.SUNDAY_3,
@@ -136,14 +136,14 @@ export const category: { [key: string]: string[] } = {
 }
 
 export const saturday = {
-  FIRST_SERVICE: "5:00 PM",
+  FIRST_SERVICE: "5PM",
 }
 
 export const sunday = {
-  FIRST_SERVICE: "9:00 am",
-  SECOND_SERVICE: "12:00 pm",
-  THIRD_SERVICE: "3:00 pm",
-  FOURTH_SERVICE: "6:00 pm"
+  FIRST_SERVICE: "9am",
+  SECOND_SERVICE: "12pm",
+  THIRD_SERVICE: "3pm",
+  FOURTH_SERVICE: "6pm"
 }
 
 export const serviceCodeToTime = {
@@ -160,8 +160,8 @@ export const service = {
 }
 
 export const serviceTime = {
-  [serviceCode.SNS_1]: "16:00",
-  [serviceCode.SNS_2]: "18:30",
+  [serviceCode.SNS_1]: "17:00",
+  // [serviceCode.SNS_2]: "18:30",
   [serviceCode.SUNDAY_1]: "09:00",
   [serviceCode.SUNDAY_2]: "12:00",
   [serviceCode.SUNDAY_3]: "15:00",

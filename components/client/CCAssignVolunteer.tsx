@@ -40,7 +40,7 @@ enum Availability {
   AM = "am",
   PM = "pm",
   WholeDay = "wholeDay",
-  WholeSNS = "wholeSNS"
+  // WholeSNS = "wholeSNS"
 }
 
 export default function CCAssignVolunteer(
@@ -64,9 +64,10 @@ export default function CCAssignVolunteer(
       setAvailability(Availability.AM)
     } else if (schedule.service === serviceCode.SUNDAY_3) {
       setAvailability(Availability.PM)
-    } else if (schedule.service === serviceCode.SNS_1) {
-      setAvailability(Availability.WholeSNS)
     }
+    // else if (schedule.service === serviceCode.SNS_1) {
+    //   setAvailability(Availability.WholeSNS)
+    // }
   },[schedule.service])
 
   const sortedVolunteers = volunteers
@@ -102,11 +103,13 @@ export default function CCAssignVolunteer(
       for (const scheduleId of schedulesGrouped.am.concat(schedulesGrouped.pm)) {
         await putScheduleAssign(scheduleId, volunteer._id);
       }
-    } else if (availability === Availability.WholeSNS) {
-      for (const scheduleId of schedulesGrouped.sns) {
-        await putScheduleAssign(scheduleId, volunteer._id);
-      }
-    } else {
+    }
+    // else if (availability === Availability.WholeSNS) {
+    //   for (const scheduleId of schedulesGrouped.sns) {
+    //     await putScheduleAssign(scheduleId, volunteer._id);
+    //   }
+    // }
+    else {
       await putScheduleAssign(schedule._id, volunteer._id);
     }
 
@@ -184,14 +187,14 @@ export default function CCAssignVolunteer(
             label='AM/PM'
             onClick={() => updateAvailability(Availability.WholeDay)}
           />
-          <CAvailability
+          {/* <CAvailability
             currentService={schedule.service}
             targetService={serviceCode.SNS_1}
             current={availability}
             value={Availability.WholeSNS}
             label='Whole SNS'
             onClick={() => updateAvailability(Availability.WholeSNS)}
-          />
+          /> */}
         </div>
         <div className="flex justify-center text-small gap-1 pb-3 uppercase text-slate-600">
           <div>{formatDate(schedule.date)}</div>

@@ -43,9 +43,9 @@ export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }
               </th>
             </tr>
             <tr className='h-0.5'></tr>
-            <tr className='uppercase bg-slate-300 border-t border-x border-slate-300 text-[10px] xl:text-sm'>
+            <tr className='uppercase bg-slate-300 border-x border-slate-300 text-[10px] xl:text-sm'>
               <th colSpan={2} className="px-0.5 xl:px-1 py-1">Position</th>
-              <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">Sat</span><span className="hidden xl:inline">Sat {saturday.FIRST_SERVICE}</span></th>
+              <th className="px-0.5 xl:px-1 py-1 text-zinc-600 border-x border-x-zinc-500"><span className="xl:hidden">Sat</span><span className="hidden xl:inline">Sat {saturday.FIRST_SERVICE}</span></th>
               <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">9AM</span><span className="hidden xl:inline">Sun {sunday.FIRST_SERVICE}</span></th>
               <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">12PM</span><span className="hidden xl:inline">Sun {sunday.SECOND_SERVICE}</span></th>
               <th className="px-0.5 xl:px-1 py-1"><span className="xl:hidden">3PM</span><span className="hidden xl:inline">Sun {sunday.THIRD_SERVICE}</span></th>
@@ -68,7 +68,7 @@ export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }
                 <tr key={i} data-group={role.slice(0, 3)} className={`${isLastInGroup && "last-in-group"} ${isFirstInGroup && "first-in-group"} border border-slate-300 bg-slate-100 odd:bg-slate-200`}>
                   <td className="w-4 xl:w-9 text-center h-4 xl:h-6 text-[10px] xl:text-xs">{i+1}</td>
                   <td className="px-0.5 xl:px-1 uppercase w-20 xl:w-52 text-[10px] xl:text-sm">{role.replace("broadcast", "bc").replace("monitor", "mon").replace(/\d+/g, "")}</td>
-                  <CCVolunteerCell service={satFirst} />
+                  <CCVolunteerCell service={satFirst} isSaturday />
                   <CCVolunteerCell service={sunFirst} />
                   <CCVolunteerCell service={sunSecond} />
                   <CCVolunteerCell service={sunThird} />

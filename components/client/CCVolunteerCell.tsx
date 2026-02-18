@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useSession } from 'next-auth/react';
 import { ASSIGN_VOLUNTEER_SCHEDULE } from '@/utils/constants';
 
-export default function CCVolunteerCell({ service }: { service: any }) {
+export default function CCVolunteerCell({ service, isSaturday = false }: { service: any, isSaturday?: boolean }) {
   const { data: session } = useSession();
   const router = useRouter();
   const pathname = usePathname();
@@ -27,16 +27,10 @@ export default function CCVolunteerCell({ service }: { service: any }) {
   };
 
   return (
-    <td onClick={handleClick} className={`${hasAssignPermission && !!service?.id ? "hover:bg-slate-300 cursor-pointer" : ""} border-x border-x-slate-300 min-w-12 lg:min-w-20 px-0.5 lg:px-1`}>
-      { !!service?.id ?
-        <div className="flex flex-col justify-center overflow-hidden h-[1.2rem] lg:h-[1.4rem] text-center text-[10px] font-medium sm:font-normal md:text-sm lg:text-sm xl:text-sm">
-          {service?.volunteer?.[0]?.firstName}
-        </div> :
-        <div className="flex justify-center items-center h-[1.2rem] lg:h-[1.4rem]">
-          <p className='text-[10px] xl:text-sm'>N/A</p>
-          {/* <MdOutlineLockPerson size={16} className="lg:w-[22px] lg:h-[22px]" /> */}
-        </div>
-      }
+    <td onClick={handleClick} className={`${hasAssignPermission && !!service?.id ? "hover:bg-slate-300 cursor-pointer" : ""} ${isSaturday ? "border-x-zinc-500" : "border-x-slate-300"} border-x min-w-12 lg:min-w-20 px-0.5 lg:px-1`}>
+      <div className="flex flex-col justify-center overflow-hidden h-[1.2rem] lg:h-[1.4rem] text-center text-[10px] font-medium sm:font-normal md:text-sm lg:text-sm xl:text-sm">
+        {!!service?.id ? service?.volunteer?.[0]?.firstName : 'N/A'}
+      </div>
     </td>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { newDate } from "@/utils/helpers";
+import { formatDayShort, newDate } from "@/utils/helpers";
 import moment from "moment";
 import { useState, useEffect } from "react";
 import { Calendar, View, Views, momentLocalizer, ToolbarProps } from "react-big-calendar";
@@ -154,7 +154,7 @@ export default function CpCalendarSchedule({ events, length }: { events: any, le
                 </h3>
                 <div className="space-y-2">
                   {groupedEvents[dateKey].map((event: any, i: number) => (
-                    <div key={i} className="border-l-4 border-sky-700 pl-3 py-2 bg-sky-50 rounded">
+                    <div key={i} className={`${formatDayShort(dateKey) === "SAT" ? "border-sky-700" : "border-green-700" } border-l-4 pl-3 py-2 bg-sky-50 rounded`}>
                       <div className="font-medium text-sm">{event.title}</div>
                       <div className="text-xs text-gray-600 mt-1">
                         {moment(event.start).format('h:mm A')}
