@@ -219,14 +219,14 @@ export default function CCTrainingManager() {
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Trainors:</label>
+            <label className="block text-sm font-medium mb-2">Trainers:</label>
             {newTraining.trainors.map((trainor, index) => (
               <div key={index} className="flex gap-2 mb-2">
                 <input
                   type="text"
                   value={trainor}
                   onChange={(e) => updateTrainor(index, e.target.value)}
-                  placeholder={`Trainor ${index + 1} name`}
+                  placeholder={`Trainer ${index + 1} name`}
                   className="flex-1 p-2 border border-gray-300 rounded"
                 />
                 {newTraining.trainors.length > 1 && (
@@ -245,7 +245,7 @@ export default function CCTrainingManager() {
               onClick={addTrainor}
               className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
             >
-              Add Trainor
+              Add Trainer
             </button>
           </div>
 
@@ -318,7 +318,7 @@ export default function CCTrainingManager() {
                     )}
                   </div>
                   <div>
-                    <h5 className="font-medium mb-1">Trainors:</h5>
+                    <h5 className="font-medium mb-1">Trainers:</h5>
                     <ul className="text-sm text-gray-600">
                       {training.trainors.map((trainor, index) => (
                         <li key={index}>• {trainor}</li>
@@ -414,7 +414,7 @@ export default function CCTrainingManager() {
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium mb-2">Trainors:</label>
+              <label className="block text-sm font-medium mb-2">Trainers:</label>
               {editingTraining.trainors.map((trainor, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <input
@@ -444,7 +444,7 @@ export default function CCTrainingManager() {
                 onClick={() => setEditingTraining({...editingTraining, trainors: [...editingTraining.trainors, ""]})}
                 className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
               >
-                Add Trainor
+                Add Trainer
               </button>
             </div>
 

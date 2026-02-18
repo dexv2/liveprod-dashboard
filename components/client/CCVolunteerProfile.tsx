@@ -294,7 +294,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
                         </p>
                       </div>
                       <div>
-                        <h5 className="font-medium mb-1">Trainors:</h5>
+                        <h5 className="font-medium mb-1">Trainers:</h5>
                         <ul className="text-sm text-gray-600">
                           {training.trainors?.map((trainor: string, i: number) => (
                             <li key={i}>• {trainor}</li>
