@@ -15,7 +15,7 @@ export default async function SCAssignVolunteer({ id }: { id: string }) {
         acc.am.push(item._id);
       } else if (item.service === "sunday3" || item.service === "sunday4") {
         acc.pm.push(item._id);
-      } else if (item.service === "sns1" || item.service === "sns2") {
+      } else if (item.service === "sns1") {
         acc.sns.push(item._id);
       }
       return acc;
