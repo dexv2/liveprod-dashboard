@@ -20,8 +20,8 @@ export default function RootLayout(props: Readonly<{
   if (isLoading) return <GCLoading />
   return (
     <Fragment>
-      <div className='flex items-center justify-between mt-11'>
-        <div className='flex items-center gap-2'>
+      <div className='flex items-end justify-between gap-2 lg:gap-8 mt-12'>
+        <div className='flex items-center flex-wrap gap-2'>
           { roleFilter.map((role, index) => (
               <Link
                 key={index}
@@ -37,18 +37,19 @@ export default function RootLayout(props: Readonly<{
               </Link>
           ))}
         </div>
-        { params?.role1 && <div className='flex gap-2 items-center'>
-          <button
-            className='text-slate-700 px-2 py-1 rounded-md mt-2'
-            onClick={() => setIsLocked(!isLocked)}
-          >
-            { isLocked ?
-              <FiLock size={22} /> :
-              <FiUnlock size={22} />
-            }
-          </button>
-          <CCAddRow toggleLoading={() => setIsLoading(!isLoading)} />
-        </div>
+        { params?.role1 &&
+          <div className='flex gap-2 items-center justify-center'>
+            <button
+              className='text-slate-700 px-2 py-1 rounded-md'
+              onClick={() => setIsLocked(!isLocked)}
+            >
+              { isLocked ?
+                <FiLock size={22} /> :
+                <FiUnlock size={22} />
+              }
+            </button>
+            <CCAddRow toggleLoading={() => setIsLoading(!isLoading)} />
+          </div>
         }
       </div>
       <div className='mb-2'></div>
