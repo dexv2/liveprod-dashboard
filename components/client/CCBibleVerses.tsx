@@ -32,7 +32,7 @@ export default function CCBibleVerses() {
 
   return (
     <div className="mb-6">
-      <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-lg p-4 md:p-6 shadow-sm w-full">
+      <div className="bg-gradient-to-br from-amber-50 to-amber-100 border border-amber-200 rounded-lg px-4 py-2 md:px-6 shadow-sm w-full">
         {dailyVerse ? (
           <>
             <p className="text-sm md:text-base text-amber-800 italic mb-2">
