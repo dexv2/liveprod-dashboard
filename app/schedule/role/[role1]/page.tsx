@@ -9,7 +9,7 @@ export default function ScheduleByRole({params}: {params: {role1: string}}) {
 
   return (
     <Fragment>
-      <div className='flex flex-col gap-3 px-2 lg:px-0'>
+      <div className='flex flex-col gap-3 lg:px-0'>
         { columns.map((column, index) => (
           <div key={index} className="flex flex-col lg:flex-row gap-3 justify-center">
             { column.map((role, idx) => (
