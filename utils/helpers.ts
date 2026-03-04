@@ -94,6 +94,10 @@ export function getMonth(date: string) {
   return new Date(date).toLocaleDateString('en-US', { month: 'long', timeZone: 'Asia/Manila' });
 }
 
+export function getMonthAndDay(date: string) {
+  return moment(date).format("MMMM D");
+}
+
 export function formatDate(date: string) {
   return new Date(date).toLocaleDateString("en-US", {month: "short", day: "2-digit", timeZone: "Asia/Manila"});
 }
