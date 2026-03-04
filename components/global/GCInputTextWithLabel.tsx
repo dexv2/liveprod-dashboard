@@ -1,4 +1,6 @@
-import { ChangeEventHandler } from "react"
+"use client";
+
+import { ChangeEventHandler, useMemo } from "react"
 
 interface InputText {
   label: string
@@ -20,6 +22,14 @@ export default function GCInputTextWithLabel(
     required,
     onChange
   }: InputText) {
+  const isInvalidValue = useMemo(() => {
+    if (type === "date" && value?.toLowerCase().includes("invalid")) {
+      return true;
+    } else {
+      return !value?.length;
+    }
+  }, [value, type]);
+
   return (
     <div className="flex flex-col gap-0.5 w-full">
       <label htmlFor="input" className="text-slate-400 pl-3 capitalize">{`${label}:`}</label>
@@ -32,7 +42,7 @@ export default function GCInputTextWithLabel(
         autoComplete="off"
         required={required}
         onBlur={(e) => {
-          if (required && !value?.length && e.target.classList.contains("border-b-slate-400")) {
+          if (required && isInvalidValue && e.target.classList.contains("border-b-slate-400")) {
             e.target.classList.add("border-b-red-500")
             e.target.classList.remove("border-b-slate-400")
           } else if (required && value?.length && e.target.classList.contains("border-b-red-500")) {

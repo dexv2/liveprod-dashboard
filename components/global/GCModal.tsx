@@ -13,10 +13,6 @@ export default function GCModal({ children, title, childClass }: { children: Rea
     document.body.style.paddingRight = `${window.innerWidth - document.documentElement.clientWidth}px`;
     document.body.style.overflow = 'hidden';
 
-    if (!dialogRef.current?.open) {
-      dialogRef.current?.showModal();
-    }
-
     // Cleanup: restore scroll when modal unmounts
     return () => {
       document.body.style.overflow = '';
@@ -31,8 +27,8 @@ export default function GCModal({ children, title, childClass }: { children: Rea
   }
 
   return createPortal(
-    <div className="fixed bg-[rgba(0,0,0,0.7)] flex justify-center items-center z-[1000] inset-0 p-4">
-      <dialog ref={dialogRef} className={`${childClass} w-full h-auto flex justify-between flex-col rounded-xl focus:outline-none"`} onClose={onDismiss}>
+    <div className="fixed bg-[rgba(0,0,0,0.7)] flex justify-center items-center z-[1000] inset-0 p-4" onClick={onDismiss}>
+      <dialog ref={dialogRef} open className={`${childClass} w-full h-auto flex justify-between flex-col rounded-xl focus:outline-none  p-0 border-0 overflow-hidden`} onCancel={onDismiss} onClick={(e) => e.stopPropagation()}>
         <div className="flex justify-between bg-slate-900 py-1">
           <p className="h-12 flex items-center justify-center font-medium text-xl text-white pl-4">
             {title}
