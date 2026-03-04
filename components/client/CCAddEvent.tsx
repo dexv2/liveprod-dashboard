@@ -2,12 +2,13 @@
 
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import GCSelect from "@/components/global/GCSelect";
-import GCTimePicker from "@/components/global/GCTimePicker";
 import { postAddEvent } from '@/utils/apis/post';
 import { putUpdateEvent } from '@/utils/apis/put';
 import { formatDateISO } from '@/utils/helpers';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import GCLoading from '../global/GCLoading';
 
 interface Event {
   _id?: string;
@@ -67,6 +68,7 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
     }
   });
   const [selectedVolunteers, setSelectedVolunteers] = useState<{[key: string]: string}>({});
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -119,7 +121,23 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
 
   const handleSubmit = async () => {
     const eventData = getEventData();
+    if (!eventData.date || !eventData.day) {
+      return toast.error("Please select a date for the event.");
+    } else if (!eventData.eventName) {
+      return toast.error("Please enter an event name.");
+    } else if (!eventData.venue) {
+      return toast.error("Please select a venue for the event.");
+    } else if (!eventData.callTime) {
+      return toast.error("Please select a call time for the event.");
+    } else if (!eventData.startTime) {
+      return toast.error("Please select a start time for the event.");
+    } else if (!eventData.endTime) {
+      return toast.error("Please select an end time for the event.");
+    }
+    setIsLoading(true);
     await postAddEvent(eventData);
+    setIsLoading(false);
+    toast.success("Event added successfully!");
     closeModal();
   };
 
@@ -130,7 +148,8 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
   }
 
   return (
-    <div className="p-4 bg-slate-50 border-b h-[700px]">
+    <div className="p-4 bg-slate-50 border-b">
+      {isLoading && <GCLoading />}
       <div className="grid grid-cols-2 gap-4 mb-4">
         <GCSelect 
           label="Status" 
@@ -139,35 +158,41 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
           options={["confirmed", "tentative", "cancelled"]}
         />
         <GCInputTextWithLabel 
+          required
           label="Date" 
           type="date"
           value={formatDateISO(event.date)}
           onChange={(e) => handleDateChange(e.target.value)}
         />
         <GCInputTextWithLabel 
+          required
           label="Event Name" 
           value={event.eventName} 
           onChange={(e) => setEvent({...event, eventName: e.target.value})}
         />
         <GCSelect 
+          required
           label="Venue" 
           value={event.venue} 
           onChange={(e) => setEvent({...event, venue: e.target.value})}
           options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex", "Others"]}
         />
         <GCInputTextWithLabel
+          required
           label="Call Time"
           type="time"
           value={event.callTime || ""}
           onChange={(e) => setEvent({...event, callTime: e.target.value})}
         />
         <GCInputTextWithLabel
+          required
           label="Start Time"
           type="time"
           value={event.startTime || ""}
           onChange={(e) => setEvent({...event, startTime: e.target.value})}
         />
         <GCInputTextWithLabel
+          required
           label="End Time"
           type="time"
           value={event.endTime || ""}
