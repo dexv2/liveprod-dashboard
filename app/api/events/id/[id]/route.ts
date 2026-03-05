@@ -1,7 +1,7 @@
 import connectMongoDB from "@/libs/mongodb";
 import Event from "@/models/event";
 import { NextRequest, NextResponse } from "next/server";
-import { createGCalEvent, updateGCalEvent } from "@/utils/gcal";
+import { createGCalEvent, deleteGCalEvent, updateGCalEvent } from "@/utils/gcal";
 
 export async function GET(request: NextRequest, { params }: any) {
   try {
@@ -74,3 +74,15 @@ export async function PUT(request: NextRequest, { params }: any) {
   }
 }
 
+export async function DELETE(request: any, { params }: any) {
+  try {
+    await connectMongoDB();
+    const event = await Event.findByIdAndDelete(params.id);
+    if (event?.googleCalendarEventId) {
+      await deleteGCalEvent(event.googleCalendarEventId);
+    }
+    return NextResponse.json({message: `${event?.eventName} event deleted!`, success: true}, {status: 200});
+  } catch (error: any) {
+    return NextResponse.json({message: error.message, success: false}, {status: 500});
+  }
+}

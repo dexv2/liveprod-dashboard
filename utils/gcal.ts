@@ -139,3 +139,20 @@ function convertTo24Hour(time12h: string): string {
   console.log("Converted time:", `${hours.padStart(2, '0')}:${minutes}:00`);
   return `${hours.padStart(2, '0')}:${minutes}:00`;
 }
+
+export async function deleteGCalEvent(googleEventId: string) {
+  const calId = process.env.GOOGLE_CALENDAR_ID || "";
+  if (!calId) {
+    throw new Error("Missing GOOGLE_CALENDAR_ID");
+  }
+
+  const jwt = getGoogleAuth();
+  const calendar = google.calendar({ version: "v3", auth: jwt });
+
+  await calendar.events.delete({
+    calendarId: calId,
+    eventId: googleEventId
+  });
+
+  return { success: true };
+}

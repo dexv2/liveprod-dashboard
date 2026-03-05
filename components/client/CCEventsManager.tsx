@@ -9,6 +9,10 @@ import { useDevice } from '../../context/DeviceProvider';
 import { formatTimeTo12Hour } from '@/utils/helpers';
 import { useSession } from 'next-auth/react';
 import { UPDATE_EVENT } from '@/utils/constants';
+import { RiDeleteBinLine } from 'react-icons/ri';
+import { GrEdit } from 'react-icons/gr';
+import { deleteEventData } from '@/utils/apis/delete';
+import GCLoading from '../global/GCLoading';
 
 interface Event {
   _id?: string;
@@ -48,7 +52,6 @@ interface Volunteer {
 
 export default function CCEventsManager({ events, volunteers }: { events: Event[], volunteers: Volunteer[] }) {
   const { data: session } = useSession();
-  const [currentPage, setCurrentPage] = useState(0);
   const pathname = usePathname();
   const { isMobile } = useDevice();
   const EXPECTED_EVENTS_PER_PAGE = isMobile ? 2 : 4;
@@ -56,6 +59,8 @@ export default function CCEventsManager({ events, volunteers }: { events: Event[
   const totalEvents = events?.length || 0;
   const eventsPerPage = totalEvents > EXPECTED_EVENTS_PER_PAGE ? EXPECTED_EVENTS_PER_PAGE : totalEvents;
   const router = useRouter();
+  const [currentPage, setCurrentPage] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const hasUpdateEventsPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -98,9 +103,18 @@ export default function CCEventsManager({ events, volunteers }: { events: Event[
     router.push(`/add-event/${eventId}`);
   }
 
+  const deleteEvent = async (eventId: string, name: string) => {
+    if (confirm(`Are you sure you want to delete the "${name}" event? This action cannot be undone.`)) {
+      setLoading(true);
+      await deleteEventData(eventId);
+      setLoading(false);
+      router.refresh();
+    }
+  }
+
   return (
     <div className="w-full">
-
+      {loading && <GCLoading />}
       {totalEvents > eventsPerPage && (
         <div className="flex justify-between items-center p-4">
           <GCArrowPrev
@@ -284,12 +298,20 @@ export default function CCEventsManager({ events, volunteers }: { events: Event[
                 {displayEvents.map((event, index) => (
                   <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32">
                     { !event?._id ? '' : 
-                      <button 
-                        onClick={() => editEvent(event?._id || 'new')}
-                        className="bg-sky-600 text-white px-4 py-1 rounded text-xs hover:bg-sky-700"
-                      >
-                        Edit
-                      </button>
+                      <div className='flex gap-1 justify-center'>
+                        <button 
+                          onClick={() => deleteEvent(event?._id as string, event?.eventName || 'this', )}
+                          className="border border-rose-600 text-rose-600 px-4 py-1 rounded text-xs"
+                        >
+                          <RiDeleteBinLine size={15} />
+                        </button>
+                        <button 
+                          onClick={() => editEvent(event?._id || 'new')}
+                          className="bg-sky-600 text-white px-4 py-1 rounded text-xs hover:bg-sky-700"
+                        >
+                          <GrEdit size={15} />
+                        </button>
+                      </div>
                     }
                   </td>
                 ))}
