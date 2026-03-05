@@ -1,3 +1,4 @@
+import { category } from '@/utils/constants';
 import mongoose, { Schema } from "mongoose";
 
 const eventSchema = new Schema({
@@ -36,9 +37,9 @@ const eventSchema = new Schema({
     required: true
   },
   praiseAndWorship: {
-    type: Boolean,
-    required: true,
-    default: false
+    type: String,
+    enum: category.CONFIRMATION,
+    default: "TBC"
   },
   otherDetails: {
     type: String,

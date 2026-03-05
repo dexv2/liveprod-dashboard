@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import GCLoading from '../global/GCLoading';
+import { category } from '@/utils/constants';
 
 interface Event {
   _id?: string;
@@ -20,7 +21,7 @@ interface Event {
   callTime: string;
   startTime: string;
   endTime: string;
-  praiseAndWorship: boolean;
+  praiseAndWorship: string;
   otherDetails: string;
   volunteersNeeded: {
     foh: boolean;
@@ -56,7 +57,7 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
     callTime: "",
     startTime: "",
     endTime: "",
-    praiseAndWorship: false,
+    praiseAndWorship: "TBC",
     otherDetails: "",
     volunteersNeeded: {
       foh: false,
@@ -200,9 +201,9 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
         />
         <GCSelect 
           label="Praise and Worship" 
-          value={event.praiseAndWorship ? "yes" : "no"} 
-          onChange={(e) => setEvent({...event, praiseAndWorship: e.target.value === "yes"})}
-          options={["yes", "no"]}
+          value={event.praiseAndWorship} 
+          onChange={(e) => setEvent({...event, praiseAndWorship: e.target.value})}
+          options={category.CONFIRMATION}
         />
       </div>
       
