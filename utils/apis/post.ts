@@ -18,7 +18,7 @@ interface Event {
   callTime: string;
   startTime: string;
   endTime: string;
-  praiseAndWorship: boolean;
+  praiseAndWorship: string;
   otherDetails: string;
   volunteersNeeded: {
     foh: boolean;

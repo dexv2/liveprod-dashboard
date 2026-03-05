@@ -132,6 +132,11 @@ export const category: { [key: string]: string[] } = {
   GENDER: [
     "male",
     "female"
+  ],
+  CONFIRMATION: [
+    "Yes",
+    "No",
+    "TBC"
   ]
 }
 

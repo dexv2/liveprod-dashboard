@@ -28,12 +28,12 @@ export default function GCModal({ children, title, childClass }: { children: Rea
 
   return createPortal(
     <div className="fixed bg-[rgba(0,0,0,0.7)] flex justify-center items-center z-[1000] inset-0 p-4" onClick={onDismiss}>
-      <dialog ref={dialogRef} open className={`${childClass} w-full h-auto flex justify-between flex-col rounded-xl focus:outline-none  p-0 border-0 overflow-hidden`} onCancel={onDismiss} onClick={(e) => e.stopPropagation()}>
-        <div className="flex justify-between bg-slate-900 py-1">
+      <dialog ref={dialogRef} open className={`${childClass} w-full h-auto max-h-[95vh] flex justify-between flex-col rounded-xl focus:outline-none p-0 border-0 overflow-y-auto`} onCancel={onDismiss} onClick={(e) => e.stopPropagation()}>
+        <div className="sticky top-0 z-10 w-full flex justify-between bg-slate-900 py-1">
           <p className="h-12 flex items-center justify-center font-medium text-xl text-white pl-4">
             {title}
           </p>
-          <button onClick={onDismiss} className="w-12 h-12 cursor-pointer flex items-center text-white justify-center font-medium text-2xl rounded-xl hover:bg-slate-700 focus:outline-none">
+          <button onClick={onDismiss} className="w-12 h-12 cursor-pointer flex items-center text-slate-300 justify-center font-medium text-2xl rounded-xl hover:text-white focus:outline-none">
             <AiOutlineClose />
           </button>
         </div>

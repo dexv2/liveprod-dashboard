@@ -24,7 +24,7 @@ interface Event {
   callTime: string;
   startTime: string;
   endTime: string;
-  praiseAndWorship: boolean;
+  praiseAndWorship: string;
   otherDetails: string;
   volunteersNeeded: {
     foh: boolean;
@@ -241,7 +241,7 @@ export default function CCEventsManager({ events, volunteers }: { events: Event[
               <td className="bg-slate-300 border border-slate-300 p-2 font-semibold w-24">Praise & Worship</td>
               {displayEvents.map((event, index) => (
                 <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32 break-words">
-                  {event?.praiseAndWorship ? 'Yes' : event?.praiseAndWorship === false ? 'No' : ''}
+                  {event?.praiseAndWorship}
                 </td>
               ))}
             </tr>
