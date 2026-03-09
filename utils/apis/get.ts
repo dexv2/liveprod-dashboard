@@ -1,4 +1,3 @@
-import { unstable_noStore } from 'next/cache';
 import { SOURCE_URL } from "./source";
 
 // ------------------------------------ SCHEDULES ------------------------------------
@@ -146,7 +145,6 @@ export const getAllEvents = async () => {
 
 export const getAllUpcomingEvents = async () => {
   try {
-    unstable_noStore();
     const res = await fetch(`${SOURCE_URL}/api/events/upcoming`, {
       cache: "no-store"
     });
