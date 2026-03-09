@@ -1,15 +1,10 @@
 export const dynamic = "force-dynamic";
-
-import SCEventsManager from "@/components/server/SCEventsManager";
-import { Suspense } from 'react';
-import GCLoading from '@/components/global/GCLoading';
+import CCEventsManager from '@/components/client/CCEventsManager';
 
 export default async function EventsPage() {
   return (
     <div className="w-full">
-      <Suspense fallback={<GCLoading />}>
-        <SCEventsManager />
-      </Suspense>
+      <CCEventsManager />
     </div>
   );
 }
