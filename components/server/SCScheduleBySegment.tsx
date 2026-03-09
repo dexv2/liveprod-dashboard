@@ -1,12 +1,9 @@
 import { getSchduleByDateRange } from "@/utils/apis/get";
 import { getNextService } from "@/utils/helpers";
-import { auth } from "@/auth";
 import CCScheduleBySegment from "../client/CCScheduleBySegment";
 import GCTabLInk from '../global/tabs/GCTabLink';
-import GCLoading from '../global/GCLoading';
-import { Suspense } from 'react';
-import SCEventsManager from './SCEventsManager';
 import CCScheduleNavigation from '../client/CCScheduleNavigation';
+import CCEventsManager from '../client/CCEventsManager';
 
 export default async function SCScheduleBySegment({increment, service}: {increment: number, service: string}) {
   const serviceDate1 = getNextService(increment);
@@ -35,9 +32,7 @@ export default async function SCScheduleBySegment({increment, service}: {increme
           {service === 'events' ? (
             <div className="mt-[0.5px]">
               <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
-                <Suspense fallback={<GCLoading />}>
-                  <SCEventsManager />
-                </Suspense>
+                <CCEventsManager />
               </div>
             </div>
           ) : (

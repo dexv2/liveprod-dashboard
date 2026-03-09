@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { usePathname, useRouter } from 'next/navigation';
 import { putUpdateEvent } from '@/utils/apis/put';
 import GCArrowPrev from '../global/GCArrowPrev';
@@ -13,6 +13,7 @@ import { RiDeleteBinLine } from 'react-icons/ri';
 import { GrEdit } from 'react-icons/gr';
 import { deleteEventData } from '@/utils/apis/delete';
 import GCLoading from '../global/GCLoading';
+import { getAllUpcomingEvents, getAllVolunteers } from '@/utils/apis/get';
 
 interface Event {
   _id?: string;
@@ -50,17 +51,41 @@ interface Volunteer {
   roles: string[];
 }
 
-export default function CCEventsManager({ events, volunteers }: { events: Event[], volunteers: Volunteer[] }) {
+export default function CCEventsManager() {
   const { data: session } = useSession();
   const pathname = usePathname();
   const { isMobile } = useDevice();
+  const [events, setEvents] = useState<Event[]>([]);
+  const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const EXPECTED_EVENTS_PER_PAGE = isMobile ? 2 : 4;
   const isWhite = !pathname.includes('schedule');
   const totalEvents = events?.length || 0;
   const eventsPerPage = totalEvents > EXPECTED_EVENTS_PER_PAGE ? EXPECTED_EVENTS_PER_PAGE : totalEvents;
   const router = useRouter();
-  const [currentPage, setCurrentPage] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState<number>(0);
+  const [loading, setLoading] = useState<boolean>(false);
+
+  const fetchEvents = async () => {
+    const events = await getAllUpcomingEvents();
+    setEvents(events?.data || []);
+  };
+
+  const fetchVolunteers = async () => {
+    const volunteers = await getAllVolunteers();
+    setVolunteers(volunteers?.data || []);
+  }
+
+  const fetchEventsAndVolunteers = async () => {
+    setLoading(true);
+    await fetchEvents();
+    await fetchVolunteers();
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchEventsAndVolunteers();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hasUpdateEventsPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -89,7 +114,7 @@ export default function CCEventsManager({ events, volunteers }: { events: Event[
   const handleStatusUpdate = async (eventId: string, newStatus: string) => {
     try {
       await putUpdateEvent(eventId, { status: newStatus });
-      router.refresh();
+      await fetchEvents();
     } catch (error) {
       console.error('Error updating event status:', error);
     }
@@ -107,14 +132,15 @@ export default function CCEventsManager({ events, volunteers }: { events: Event[
     if (confirm(`Are you sure you want to delete the "${name}" event? This action cannot be undone.`)) {
       setLoading(true);
       await deleteEventData(eventId);
+      await fetchEvents();
       setLoading(false);
-      router.refresh();
     }
   }
 
+  if (loading) return <GCLoading />;
+
   return (
     <div className="w-full">
-      {loading && <GCLoading />}
       {totalEvents > eventsPerPage && (
         <div className="flex justify-between items-center p-4">
           <GCArrowPrev
