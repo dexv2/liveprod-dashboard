@@ -1,10 +1,15 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, use } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import { VIEW_TRAINING, UPDATE_TRAINING } from '@/utils/constants';
+import GCSelect from '../global/GCSelect';
+import { IoMdCloseCircle } from 'react-icons/io';
+import { deleteTrainingData } from '@/utils/apis/delete';
+import GCLoading from '../global/GCLoading';
+import { getAllTrainings } from '@/utils/apis/get';
 
 interface Training {
   _id?: string;
@@ -28,22 +33,13 @@ interface Volunteer {
 export default function CCTrainingManager() {
   const { data: session } = useSession();
   const router = useRouter();
+  const pathName = usePathname();
   const [trainings, setTrainings] = useState<Training[]>([]);
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
-  const [newTraining, setNewTraining] = useState<Training>({
-    trainingName: "",
-    description: "",
-    date: "",
-    startTime: "",
-    endTime: "",
-    venue: "",
-    trainingType: "",
-    trainors: [""],
-    volunteers: []
-  });
-  const [selectedVolunteers, setSelectedVolunteers] = useState<string[]>([]);
   const [editingTraining, setEditingTraining] = useState<Training | null>(null);
   const [editSelectedVolunteers, setEditSelectedVolunteers] = useState<string[]>([]);
+  const [newPath, setNewPath] = useState<string>(pathName);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const hasViewTrainingPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -54,6 +50,16 @@ export default function CCTrainingManager() {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(UPDATE_TRAINING);
   }, [session]);
+
+  useEffect(() => {
+    const url = `${pathName}`
+    const prevPath = newPath;
+    setNewPath(url);
+
+    if (pathName.startsWith('/volunteer/training') && prevPath.startsWith('/add-training')) {
+      fetchTrainings();
+    }
+  }, [pathName, newPath]);
 
   useEffect(() => {
     if (!hasViewTrainingPermission) {
@@ -67,13 +73,10 @@ export default function CCTrainingManager() {
   }, []);
 
   const fetchTrainings = async () => {
-    try {
-      const response = await fetch('/api/trainings');
-      const result = await response.json();
-      setTrainings(result.data || []);
-    } catch (error) {
-      console.error('Error fetching trainings:', error);
-    }
+    setIsLoading(true);
+    const result = await getAllTrainings();
+    setTrainings(result.data || []);
+    setIsLoading(false);
   };
 
   const fetchVolunteers = async () => {
@@ -86,266 +89,105 @@ export default function CCTrainingManager() {
     }
   };
 
-  const addTrainor = () => {
-    setNewTraining({
-      ...newTraining,
-      trainors: [...newTraining.trainors, ""]
-    });
-  };
+  const addNewTraining = () => {
+    router.push('/add-training/new');
+  }
 
-  const removeTrainor = (index: number) => {
-    const updatedTrainors = newTraining.trainors.filter((_, i) => i !== index);
-    setNewTraining({
-      ...newTraining,
-      trainors: updatedTrainors.length > 0 ? updatedTrainors : [""]
-    });
-  };
+  const deleteTraining = async (trainingId?: string) => {
+    if (!trainingId) return;
 
-  const updateTrainor = (index: number, value: string) => {
-    const updatedTrainors = [...newTraining.trainors];
-    updatedTrainors[index] = value;
-    setNewTraining({
-      ...newTraining,
-      trainors: updatedTrainors
-    });
-  };
-
-  const handleVolunteerSelection = (volunteerId: string, isSelected: boolean) => {
-    if (isSelected) {
-      setSelectedVolunteers([...selectedVolunteers, volunteerId]);
-    } else {
-      setSelectedVolunteers(selectedVolunteers.filter(id => id !== volunteerId));
+    if (confirm("Are you sure you want to delete this training record?")) {
+      await deleteTrainingData(trainingId);
+      fetchTrainings();
     }
-  };
-
-  const handleSubmit = async () => {
-    try {
-      const trainingData = {
-        ...newTraining,
-        trainors: newTraining.trainors.filter(trainor => trainor.trim() !== ""),
-        volunteers: selectedVolunteers
-      };
-
-      const response = await fetch('/api/trainings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(trainingData)
-      });
-
-      if (response.ok) {
-        fetchTrainings();
-        setNewTraining({
-          trainingName: "",
-          description: "",
-          date: "",
-          startTime: "",
-          endTime: "",
-          venue: "",
-          trainingType: "",
-          trainors: [""],
-          volunteers: []
-        });
-        setSelectedVolunteers([]);
-      }
-    } catch (error) {
-      console.error('Error creating training:', error);
-    }
-  };
+  }
 
   return (
-    <div className="w-full">
-      {hasUpdateTrainingPermission && (
-        <div className="p-4 bg-slate-50 border-b">
-          <h3 className="text-lg font-semibold mb-4">Add New Training</h3>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <GCInputTextWithLabel
-              label="Training Name"
-              value={newTraining.trainingName}
-              onChange={(e) => setNewTraining({...newTraining, trainingName: e.target.value})}
-            />
-            <GCInputTextWithLabel
-              label="Date"
-              type="date"
-              value={newTraining.date}
-              onChange={(e) => setNewTraining({...newTraining, date: e.target.value})}
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <GCInputTextWithLabel
-              label="Start Time"
-              type="time"
-              value={newTraining.startTime || ""}
-              onChange={(e) => setNewTraining({...newTraining, startTime: e.target.value})}
-            />
-            <GCInputTextWithLabel
-              label="End Time"
-              type="time"
-              value={newTraining.endTime || ""}
-              onChange={(e) => setNewTraining({...newTraining, endTime: e.target.value})}
-            />
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <GCInputTextWithLabel
-              label="Venue"
-              value={newTraining.venue || ""}
-              onChange={(e) => setNewTraining({...newTraining, venue: e.target.value})}
-            />
-            <div>
-              <label className="block text-sm font-medium mb-1">Training Type</label>
-              <select
-                value={newTraining.trainingType || ""}
-                onChange={(e) => setNewTraining({...newTraining, trainingType: e.target.value})}
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="">Select training type</option>
-                <option value="Technical">Technical</option>
-                <option value="Orientation">Orientation</option>
-                <option value="Refresher">Refresher</option>
-                <option value="Advanced">Advanced</option>
-                <option value="Workshop">Workshop</option>
-              </select>
-            </div>
-          </div>
-          
-          <div className="mb-4">
-            <GCInputTextWithLabel
-              label="Training Description"
-              value={newTraining.description || ""}
-              onChange={(e) => setNewTraining({...newTraining, description: e.target.value})}
-            />
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Trainers:</label>
-            {newTraining.trainors.map((trainor, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <input
-                  type="text"
-                  value={trainor}
-                  onChange={(e) => updateTrainor(index, e.target.value)}
-                  placeholder={`Trainer ${index + 1} name`}
-                  className="flex-1 p-2 border border-gray-300 rounded"
-                />
-                {newTraining.trainors.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeTrainor(index)}
-                    className="px-3 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addTrainor}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            >
-              Add Trainer
-            </button>
-          </div>
-
-          <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Select Volunteers:</label>
-            <div className="max-h-40 overflow-y-auto border border-gray-300 rounded p-2">
-              {volunteers.sort((a, b) => a.name.localeCompare(b.name)).map((volunteer) => (
-                <label key={volunteer._id} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedVolunteers.includes(volunteer._id)}
-                    onChange={(e) => handleVolunteerSelection(volunteer._id, e.target.checked)}
-                    className="mr-2"
-                  />
-                  {volunteer.name}
-                </label>
-              ))}
-            </div>
-          </div>
-
-          <button
-            onClick={handleSubmit}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Add Training
-          </button>
+    <div className='w-full'>
+      {isLoading && <GCLoading />}
+      <div className="pt-4">
+        <div className='bg-slate-800 rounded-t-lg border border-slate-800 flex justify-between items-center px-6'>
+          <h2 className="text-lg text-white font-semibold py-3">Training Records</h2>
+          <button onClick={addNewTraining} className='text-white bg-slate-600 px-3 py-1 bg-opacity-80 rounded-md'>Add New Training</button>
         </div>
-      )}
-
-      <div className="p-4">
-        <h3 className="text-lg font-semibold mb-4">Training Records</h3>
-        {trainings.length === 0 ? (
-          <p className="text-gray-500">No training records found.</p>
-        ) : (
-          <div className="space-y-4">
-            {trainings.map((training) => (
-              <div key={training._id} className="border border-gray-300 rounded p-4">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <h4 className="font-semibold text-lg">{training.trainingName}</h4>
-                    <p className="text-gray-600">
-                      {new Date(training.date).toLocaleDateString()}
-                    </p>
-                    {training.startTime && training.endTime && (
-                      <p className="text-sm text-gray-600">
-                        {training.startTime} - {training.endTime}
-                      </p>
-                    )}
-                    {training.venue && (
-                      <p className="text-sm text-gray-600">📍 {training.venue}</p>
-                    )}
-                    {training.trainingType && (
-                      <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mt-1">
-                        {training.trainingType}
-                      </span>
-                    )}
-                    {training.description && (
-                      <p className="text-sm text-gray-500 mt-1">{training.description}</p>
-                    )}
-                    {hasUpdateTrainingPermission && (
-                      <button
-                        onClick={() => {
-                          setEditingTraining(training);
-                          setEditSelectedVolunteers(training.volunteers.map(v => v._id));
-                        }}
-                        className="mt-2 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600"
-                      >
-                        Edit
-                      </button>
-                    )}
-                  </div>
-                  <div>
-                    <h5 className="font-medium mb-1">Trainers:</h5>
-                    <ul className="text-sm text-gray-600">
-                      {training.trainors.map((trainor, index) => (
-                        <li key={index}>• {trainor}</li>
-                      ))}
-                    </ul>
-                  </div>
-                  <div>
-                    <h5 className="font-medium mb-1">Volunteers ({training.volunteers.length}):</h5>
-                    <div className="text-sm text-gray-600 max-h-20 overflow-y-auto">
-                      {training.volunteers.map((volunteer, index) => (
-                        <div key={volunteer._id}>• {volunteer.name}</div>
-                      ))}
+        <div className='bg-slate-100 rounded-b-lg p-4'>
+          {trainings.length === 0 ? (
+            <p className="text-gray-500">No training records found.</p>
+            ) : (
+              <div className="space-y-4">
+                {trainings.map((training) => (
+                  <div key={training._id} className="border border-gray-300 rounded-2xl p-4 relative">
+                    <div className='absolute top-1 right-1 cursor-pointer text-slate-700 hover:text-rose-600'>
+                      <IoMdCloseCircle
+                        size={24}
+                        onClick={() => deleteTraining(training?._id)}
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                      <div>
+                        <h4 className="font-semibold text-lg">{training.trainingName}</h4>
+                        <p className="text-gray-600">
+                          {new Date(training.date).toLocaleDateString()}
+                        </p>
+                        {training.startTime && training.endTime && (
+                          <p className="text-sm text-gray-600">
+                            {training.startTime} - {training.endTime}
+                          </p>
+                        )}
+                        {training.venue && (
+                          <p className="text-sm text-gray-600">📍 {training.venue}</p>
+                        )}
+                        {training.trainingType && (
+                          <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded mt-1">
+                            {training.trainingType}
+                          </span>
+                        )}
+                        {training.description && (
+                          <p className="text-sm text-gray-500 mt-1">{training.description}</p>
+                        )}
+                        {hasUpdateTrainingPermission && (
+                          <button
+                            onClick={() => {
+                              router.push(`/add-training/${training._id}`);
+                              // setEditingTraining(training);
+                              // setEditSelectedVolunteers(training.volunteers.map(v => v._id));
+                            }}
+                            className="mt-2 bg-blue-500 text-white px-2 py-1 rounded text-xs hover:bg-blue-600"
+                          >
+                            Edit
+                          </button>
+                        )}
+                      </div>
+                      <div>
+                        <h5 className="font-medium mb-1">Trainers:</h5>
+                        <ul className="text-sm text-gray-600">
+                          {training.trainors.map((trainor, index) => (
+                            <li key={index}>• {trainor}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div>
+                        <h5 className="font-medium mb-1">Volunteers ({training.volunteers.length}):</h5>
+                        <div className="text-sm text-gray-600 max-h-20 overflow-y-auto">
+                          {training.volunteers.map((volunteer, index) => (
+                            <div key={volunteer._id}>• {volunteer.name}</div>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <h5 className="font-medium mb-1">Total Attendees:</h5>
+                        <p className="text-lg font-semibold text-gray-700">
+                          {training.trainors.filter(t => t.trim() !== "").reduce((count, trainor) => {
+                            return count + trainor.split(';').filter(name => name.trim() !== "").length;
+                          }, 0) + training.volunteers.length}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <h5 className="font-medium mb-1">Total Attendees:</h5>
-                    <p className="text-lg font-semibold text-gray-700">
-                      {training.trainors.filter(t => t.trim() !== "").reduce((count, trainor) => {
-                        return count + trainor.split(';').filter(name => name.trim() !== "").length;
-                      }, 0) + training.volunteers.length}
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
-        )}
+            )}
+        </div>
       </div>
 
       {editingTraining && (
@@ -388,21 +230,12 @@ export default function CCTrainingManager() {
                 value={editingTraining.venue || ""}
                 onChange={(e) => setEditingTraining({...editingTraining, venue: e.target.value})}
               />
-              <div>
-                <label className="block text-sm font-medium mb-1">Training Type</label>
-                <select
-                  value={editingTraining.trainingType || ""}
-                  onChange={(e) => setEditingTraining({...editingTraining, trainingType: e.target.value})}
-                  className="w-full p-2 border border-gray-300 rounded"
-                >
-                  <option value="">Select training type</option>
-                  <option value="Technical">Technical</option>
-                  <option value="Orientation">Orientation</option>
-                  <option value="Refresher">Refresher</option>
-                  <option value="Advanced">Advanced</option>
-                  <option value="Workshop">Workshop</option>
-                </select>
-              </div>
+              <GCSelect
+                label="Training Type" 
+                value={editingTraining.trainingType || ""} 
+                onChange={(e) => setEditingTraining({...editingTraining, trainingType: e.target.value})}
+                options={["Technical", "Orientation", "Refresher", "Advanced", "Workshop", "Others"]}
+              />
             </div>
             
             <div className="mb-4">
