@@ -37,8 +37,8 @@ export default function RootLayout(props: Readonly<{
                 {props.modal}
                 {props.children}
               </div>
-              <ToastProvider />
             </div>
+            <ToastProvider />
           </DeviceProvider>
         </SessionWrapper>
       </body>
