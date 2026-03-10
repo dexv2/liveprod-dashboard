@@ -31,3 +31,19 @@ export const deleteEventData = async (id: string) => {
     console.log("Error deleting event", error);
   }
 }
+
+export const deleteTrainingData = async (id: string) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/trainings/${id}`, {
+      method: "DELETE"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to delete training");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error deleting training", error);
+  }
+}

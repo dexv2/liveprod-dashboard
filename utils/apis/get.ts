@@ -175,3 +175,36 @@ export const getEventById = async (id: string) => {
     console.log("Error loading event", error);
   }
 }
+
+export const getAllTrainings = async () => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/trainings`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to get trainings");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error loading trainings", error);
+    return { data: [], error: error instanceof Error ? error.message : 'Unknown error' };
+  }
+}
+
+export const getTrainingById = async (id: string) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/trainings/${id}`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to get training");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error loading training", error);
+  }
+}

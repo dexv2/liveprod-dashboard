@@ -2,6 +2,19 @@ import { NextResponse } from 'next/server';
 import connectMongoDB from '@/libs/mongodb';
 import Training from '@/models/training';
 
+export async function GET(_: Request, { params }: { params: { id: string } }) {
+  try {
+    await connectMongoDB();
+    const training = await Training.findById(params.id).populate('volunteers', 'name');
+    if (!training) {
+      return NextResponse.json({ message: 'Training not found' }, { status: 404 });
+    }
+    return NextResponse.json({ data: training }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
   try {
     await connectMongoDB();
@@ -14,6 +27,16 @@ export async function PUT(request: Request, { params }: { params: { id: string }
     ).populate('volunteers', 'name');
 
     return NextResponse.json({ data: updatedTraining }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(_: Request, { params }: { params: { id: string } }) {
+  try {
+    await connectMongoDB();
+    await Training.findByIdAndDelete(params.id);
+    return NextResponse.json({ message: 'Training deleted successfully' }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
