@@ -81,3 +81,25 @@ export const putChangePassword = async (id: string, newPassword: string) => {
     throw error;
   }
 }
+
+export const putUpdateTraining = async (id: string, body: any) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/trainings/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to update training");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error updating training", error);
+    throw error;
+  }
+}
+

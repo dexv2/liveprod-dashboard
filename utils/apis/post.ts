@@ -86,3 +86,15 @@ export const postAddEvent = async (eventData: Event) => {
     console.error('Error creating event:', error);
   }
 }
+
+export const postAddTraining = async (trainingData: any) => {
+  try {
+    await fetch('/api/trainings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(trainingData)
+    });
+  } catch (error) {
+    console.error('Error creating training:', error);
+  }
+}
