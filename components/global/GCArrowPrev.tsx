@@ -6,7 +6,8 @@ import { BsArrowLeftCircle } from 'react-icons/bs';
 
 export default function GCArrowPrev({ label, type, queryParams, disabled, handlePrevPage, isSticky }: { label: string, type: string, queryParams?: string, disabled?: boolean, handlePrevPage?: () => void, isSticky?: boolean }) {
   const pathname = usePathname();
-  const isWhite = !pathname.includes('schedule');
+  // const isWhite = !pathname.includes('schedule');
+  const isWhite = true;
 
   if (type === 'link') {
     return (

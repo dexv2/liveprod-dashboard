@@ -30,9 +30,9 @@ export default function RootLayout(props: Readonly<{
                 key={index}
                 href={role.href}
                 className={
-                  `${role.value === params.role1 ?
-                    "bg-stone-50 border border-stone-600 text-stone-600" :
-                    "bg-slate-100 border border-slate-100 text-slate-600"} 
+                  `${role.value === params.role1 || (!params.role1 && role.value === 'events') ?
+                    "bg-slate-800 border border-slate-600 text-white" :
+                    "bg-slate-100 text-slate-800"}
                     text-sm px-4 py-1 mb-100 rounded-md
                   `}
               >
@@ -43,7 +43,7 @@ export default function RootLayout(props: Readonly<{
                 id='roles'
                 value={params.role1}
                 onChange={(e) => router.push(e.target.value)}
-                className='bg-slate-100 border border-slate-200 text-slate-600 px-2 py-1 mb-100 rounded-md focus:outline-none'
+                className='bg-slate-800 border border-slate-600 text-white px-2 py-1 mb-100 rounded-md focus:outline-none'
               >
                 { roleFilter.map((role, index) => (
                   <option
@@ -60,7 +60,7 @@ export default function RootLayout(props: Readonly<{
         { params?.role1 &&
           <div className='flex gap-2 items-center justify-center'>
             <button
-              className='text-slate-700 px-2 py-1 rounded-md'
+              className='text-white px-2 py-1 rounded-md'
               onClick={() => setIsLocked(!isLocked)}
             >
               { isLocked ?

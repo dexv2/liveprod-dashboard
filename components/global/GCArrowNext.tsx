@@ -6,7 +6,8 @@ import { BsArrowRightCircle } from 'react-icons/bs';
 
 export default function GCArrowNext({ label, type, queryParams, disabled, handleNextPage, isSticky }: { label: string, type: string, queryParams?: string, disabled?: boolean, handleNextPage?: () => void, isSticky?: boolean }) {
   const pathname = usePathname();
-  const isWhite = !pathname.includes('schedule');
+  // const isWhite = !pathname.includes('schedule');
+  const isWhite = true;
 
   if (type === 'link') {
     return (

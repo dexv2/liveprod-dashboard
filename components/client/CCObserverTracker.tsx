@@ -224,8 +224,8 @@ export default function CCObserverTracker() {
   return (
     <div className="px-8 py-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Observer Tracker</h1>
-        <span className="text-slate-600 font-medium">{observerLogs.length} observers</span>
+        <h1 className="text-xl font-semibold text-white">Observer Tracker</h1>
+        <span className="text-white font-medium">{observerLogs.length} observers</span>
       </div>
 
 
@@ -388,7 +388,7 @@ export default function CCObserverTracker() {
 
       {observerLogs.length === 0 && (
         <div className="text-center py-12">
-          <p className="text-gray-500">No observers found. Volunteers with status &quot;observer&quot; will automatically appear here.</p>
+          <p className="text-white">No observers found. Volunteers with status &quot;observer&quot; will automatically appear here.</p>
         </div>
       )}
     </div>

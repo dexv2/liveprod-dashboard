@@ -58,7 +58,8 @@ export default function CCEventsManager() {
   const [events, setEvents] = useState<Event[]>([]);
   const [volunteers, setVolunteers] = useState<Volunteer[]>([]);
   const EXPECTED_EVENTS_PER_PAGE = isMobile ? 2 : 4;
-  const isWhite = !pathname.includes('schedule');
+  // const isWhite = !pathname.includes('schedule');
+  const isWhite = true;
   const totalEvents = events?.length || 0;
   const eventsPerPage = totalEvents > EXPECTED_EVENTS_PER_PAGE ? EXPECTED_EVENTS_PER_PAGE : totalEvents;
   const router = useRouter();
