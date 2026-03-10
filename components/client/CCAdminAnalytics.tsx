@@ -48,7 +48,7 @@ export default function CCAdminAnalytics() {
     return (
       <div className="px-8 py-6">
         <div className="flex justify-center items-center h-64">
-          <div className="text-lg">Checking Metabase connection...</div>
+          <div className="text-lg text-white">Checking Metabase connection...</div>
         </div>
       </div>
     );

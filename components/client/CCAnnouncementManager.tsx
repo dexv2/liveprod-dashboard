@@ -93,7 +93,7 @@ export default function CCAnnouncementManager() {
 
   return (
     <div className="px-8 py-6">
-      <h1 className="text-2xl font-bold text-slate-700 mb-8">Announcement Manager</h1>
+      <h1 className="text-xl font-semibold text-white mb-8">Announcement Manager</h1>
       
       {/* Create Announcement Form */}
       {hasUpdateAnnouncementsPermission && (

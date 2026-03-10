@@ -150,18 +150,18 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
     return (
       <div className="px-4 md:px-16 lg:px-32 text-slate-700">
         {isAdmin && (
-          <div className="flex justify-end pb-3">
+          <div className="flex justify-start pb-3">
             <button 
               onClick={() => router.push('/volunteer/all')}
-              className="border border-slate-400 px-4 py-2 rounded-md hover:bg-gray-100"
+              className="hover:bg-slate-700 border border-slate-100 px-4 py-1 rounded-md text-white"
             >
-              ← Back to Volunteer List
+              ← Back
             </button>
           </div>
         )}
         <div className="flex justify-end pb-3">
           <div className={`flex gap-2 justify-end ${!hasChanges && "opacity-0"}`}>
-            <button disabled={!hasChanges} onClick={resetValues} className="border border-slate-400 px-3 rounded-md py-0.5">
+            <button disabled={!hasChanges} onClick={resetValues} className="text-white bg-slate-800 bg-opacity-30 border border-slate-400 px-3 rounded-md py-0.5">
               Cancel
             </button>
             <button 
@@ -181,7 +181,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
           </div>
         </div>
         <div className="flex flex-col gap-7">
-          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
                 Basic Info
@@ -253,7 +253,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </div>
             </div>
           </div>
-          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
                 Schedule
@@ -264,7 +264,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               <CCCalendarSchedule events={schedule} length={length} />
             </div>
           </div>
-          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
                 Events
@@ -275,7 +275,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               <CCVolunteerEvents volunteerId={volunteer._id} />
             </div>
           </div>
-          <div className="w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
+          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
                 Trainings Attended

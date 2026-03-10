@@ -195,7 +195,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
             {hasViewVolunteerListsPermission && (
               <div className="flex flex-wrap gap-2 md:gap-3 items-end w-full md:w-auto">
                 <div className="min-w-[100px] md:min-w-[120px]">
-                  <label className="block text-xs md:text-sm font-medium mb-1">Gender</label>
+                  <label className="block text-xs md:text-sm mb-1 text-white">Gender</label>
                   <select 
                     value={genderFilter} 
                     onChange={(e) => setGenderFilter(e.target.value)}
@@ -208,7 +208,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
                   </select>
                 </div>
                 <div className="min-w-[100px] md:min-w-[120px]">
-                  <label className="block text-xs md:text-sm font-medium mb-1">Status</label>
+                  <label className="block text-xs md:text-sm mb-1 text-white">Status</label>
                   <select 
                     value={statusFilter} 
                     onChange={(e) => setStatusFilter(e.target.value)}
@@ -221,7 +221,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
                   </select>
                 </div>
                 <div className="min-w-[140px] md:min-w-[180px]">
-                  <label className="block text-xs md:text-sm font-medium mb-1">Role</label>
+                  <label className="block text-xs md:text-sm mb-1 text-white">Role</label>
                   <select 
                     value={roleFilter} 
                     onChange={(e) => setRoleFilter(e.target.value)}
@@ -240,7 +240,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
                     setRoleFilter('');
                     setQuery('');
                   }}
-                  className="px-2 md:px-3 py-1 md:py-2 bg-gray-500 text-white rounded hover:bg-gray-600 h-8 md:h-10 text-xs md:text-sm"
+                  className="px-2 md:px-3 py-1 md:py-2 bg-slate-800 border border-slate-600 text-white rounded hover:bg-slate-700 h-8 md:h-10 text-xs md:text-sm"
                 >
                   Reset
                 </button>
@@ -254,7 +254,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
               ) : (
                 <div className="flex flex-col md:flex-row gap-2 items-stretch md:items-end w-full">
                   <div className="w-full md:w-80">
-                    <label className="block text-xs md:text-sm font-medium mb-1">Enter Volunteer ID</label>
+                    <label className="block text-xs md:text-sm font-medium mb-1 text-white">Enter Volunteer ID</label>
                     <input
                       type="text"
                       placeholder="A123456 / S123456 / L123456"
@@ -308,7 +308,7 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
               onRowClicked={hasViewVolunteerListsPermission ? (row: Data) => router.push(`/volunteer/profile/${row._id}`) : undefined}
               noDataComponent={
                 <div className="flex h-96 flex-col justify-center">
-                  <div className="flex gap-1 text-slate-700">
+                  <div className="flex gap-1 text-white">
                     <PiLegoSmileyDuotone size={27} />
                     <div className="flex flex-col justify-center">{noDataMessage()}</div>
                     <PiLegoSmiley size={27} />
@@ -325,6 +325,21 @@ export default function CCAllVolunteers({ data }: { data: Data[] }) {
                 rows: {
                   style: {
                     minHeight: "2.8rem"
+                  }
+                },
+                table: {
+                  style: {
+                    backgroundColor: "transparent"
+                  }
+                },
+                // tableWrapper: {
+                //   style: {
+                //     backgroundColor: "transparent"
+                //   }
+                // },
+                noData: {
+                  style: {
+                    backgroundColor: "transparent"
                   }
                 }
               }}

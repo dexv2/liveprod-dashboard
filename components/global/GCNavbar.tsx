@@ -63,7 +63,8 @@ export default function GCNavbar() {
      */
     document.body.classList.toggle(
       "background-gradient",
-      /^\/$|^\/(?:assign-volunteer|add-event|login|change-password)/.test(pathname)
+      true
+      // /^\/$|^\/(?:assign-volunteer|add-event|login|change-password|schedule)/.test(pathname)
     );
   }, [pathname])
 
@@ -83,8 +84,27 @@ export default function GCNavbar() {
     return "Dashboard";
   }, [pathname]);
 
+  const tabLink = (label: string, href: string, highlightLink?: string) => {
+    const isActive = pathname === href || pathname.startsWith(String(highlightLink));
+    return (
+      <Link className={`p-2 ${isActive ? 'text-emerald-200' : 'text-white'}`} href={href}>
+        {label}
+      </Link>
+    )
+  }
+
+  const subTabLink = (label: string, href: string, highlightLink?: string) => {
+    const isActive = pathname === href || pathname.startsWith(String(highlightLink));
+    return (
+      <Link className={`block px-4 py-2 hover:bg-slate-700 ${isActive ? 'text-emerald-200' : 'text-white'}`} href={href}>
+        {label}
+      </Link>
+    )
+  }
+
   return (
-    <nav className={`${/^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname) ? "bg-opacity-0 mb-4": "bg-opacity-100 mb-8"} flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
+    // <nav className={`${/^\/$|^\/(?:assign-volunteer|add-event|login|schedule)/.test(pathname) ? "bg-opacity-0 mb-4": "bg-opacity-100 mb-8"} flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative`}>
+    <nav className="bg-opacity-0 mb-4 flex justify-between items-center bg-slate-950 px-3 md:px-5 py-3 md:py-5 rounded-ss-md rounded-e-md transition-opacity delay-1000 relative">
       <Link href={"/"}>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center">
@@ -108,17 +128,13 @@ export default function GCNavbar() {
 
       {/* Desktop menu */}
       <div className="hidden md:flex justify-between">
-        <Link className="text-white p-2" href={"/schedule/segment/audio"}>Upcoming</Link>
-        {hasViewAssignmentsPermission && <Link className="text-white p-2" href={"/schedule/role/foh"}>Assignments</Link>}
-        <Link className="text-white p-2" href={"/schedule/calendar"}>Calendar</Link>
-        {!isAdmin ? (
-            <Link className="text-white p-2" href={"/volunteer/all"}>
-              My Schedule
-            </Link>
-          ) : (
+        {tabLink("Upcoming", "/schedule/segment/audio", "/schedule/segment")}
+        {hasViewAssignmentsPermission && tabLink("Assignments", "/schedule/role/foh", "/schedule/role")}
+        {tabLink("Calendar", "/schedule/calendar")}
+        {!isAdmin ? tabLink("My Schedule", "/volunteer/all") : (
             <div className="relative">
               <button 
-                className="text-white p-2 cursor-pointer"
+                className={`${/^\/(admin|volunteer)(\/|$)/.test(pathname) ? 'text-emerald-200' : 'text-white'} p-2 cursor-pointer`}
                 onMouseEnter={() => setShowDropdown(true)}
                 onMouseLeave={() => setShowDropdown(false)}
               >
@@ -134,11 +150,11 @@ export default function GCNavbar() {
                   onMouseEnter={() => setShowDropdown(true)}
                   onMouseLeave={() => setShowDropdown(false)}
                 >
-                  <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/all"}>Volunteers List</Link>
-                  {hasViewTrainingPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/training"}>Training</Link>}
-                  {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/volunteer/observer-tracker"}>Observer Tracker</Link>}
-                  {hasViewAnalyticsPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/analytics"}>Analytics</Link>}
-                  {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-2 hover:bg-slate-700" href={"/admin/announcements"}>Announcements</Link>}
+                  {subTabLink("Volunteers List", "/volunteer/all")}
+                  {hasViewTrainingPermission && subTabLink("Training", "/volunteer/training")}
+                  {hasViewObserverTrackerPermission && subTabLink("Observer Tracker", "/volunteer/observer-tracker")}
+                  {hasViewAnalyticsPermission && subTabLink("Analytics", "/admin/analytics")}
+                  {hasViewAnnouncementsPermission && subTabLink("Announcements", "/admin/announcements")}
                 </div>
               )}
             </div>
@@ -146,7 +162,7 @@ export default function GCNavbar() {
         }
         
         { !isAuthenticated ?
-          <button onClick={() => signIn()} className="text-white p-2">Login</button>
+          <button onClick={() => signIn()} className={`${pathname.startsWith('/login') ? 'text-emerald-200' : 'text-white'} p-2`}>Login</button>
           :
           <div className="flex items-center gap-2">
             <button onClick={() => signOut({redirect: true, callbackUrl: "/login"})} className="text-white p-2">Logout</button>
@@ -176,11 +192,11 @@ export default function GCNavbar() {
           }
         </div>
       )}
-      { !/^\/$|^\/(?:assign-volunteer|add-event|login)/.test(pathname) && <div className="hidden md:block absolute left-0 bottom-0 bg-slate-950 translate-y-full py-1.5 pl-10 pr-44 opacity-90 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
+      {/* { !/^\/$|^\/(?:assign-volunteer|add-event|login|schedule)/.test(pathname) && <div className="hidden md:block absolute left-0 bottom-0 bg-slate-950 translate-y-full py-1.5 pl-10 pr-44 opacity-90 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
         <h1 className="text-lg lg:text-xl capitalize text-white">
           {pageTitle}
         </h1>
-      </div>}
+      </div>} */}
     </nav>
   )
 }
