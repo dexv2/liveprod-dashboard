@@ -299,6 +299,11 @@ export const VIEW_TRAINING = 'VIEW_TRAINING';
 export const VIEW_OBSERVER_TRACKER = 'VIEW_OBSERVER_TRACKER';
 export const VIEW_ANALYTICS = 'VIEW_ANALYTICS';
 export const VIEW_ANNOUNCEMENTS = 'VIEW_ANNOUNCEMENTS';
+// TODO: apply permissions below
+export const DELETE_EVENT = 'DELETE_EVENT';
+export const DELETE_TRAINING = 'DELETE_TRAINING';
+export const DELETE_OBSERVER_TRACKER = 'DELETE_OBSERVER_TRACKER';
+export const DELETE_ANNOUNCEMENTS = 'DELETE_ANNOUNCEMENTS';
 
 export const PERMISSIONS = [
   { label: 'Add Volunteer', value: ADD_VOLUNTEER },
@@ -315,5 +320,22 @@ export const PERMISSIONS = [
   { label: 'View Training', value: VIEW_TRAINING },
   { label: 'View Observer Tracker', value: VIEW_OBSERVER_TRACKER },
   { label: 'View Analytics', value: VIEW_ANALYTICS },
-  { label: 'View Announcements', value: VIEW_ANNOUNCEMENTS }
+  { label: 'View Announcements', value: VIEW_ANNOUNCEMENTS },
+  { label: 'Delete Event', value: DELETE_EVENT },
+  { label: 'Delete Training', value: DELETE_TRAINING },
+  { label: 'Delete Observer Tracker', value: DELETE_OBSERVER_TRACKER },
+  { label: 'Delete Announcements', value: DELETE_ANNOUNCEMENTS }
+];
+
+export const VENUES = [
+  'Main Hall',
+  'MPH',
+  '7F Gym',
+  'GF Annex',
+  '2F Annex',
+  'Choir Room',
+  'Social Hall',
+  'BS Room',
+  'Mezzanine',
+  'Others'
 ];

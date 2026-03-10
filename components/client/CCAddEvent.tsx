@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import GCLoading from '../global/GCLoading';
-import { category } from '@/utils/constants';
+import { category, VENUES } from '@/utils/constants';
 
 interface Event {
   _id?: string;
@@ -123,17 +123,17 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
   const handleSubmit = async () => {
     const eventData = getEventData();
     if (!eventData.date || !eventData.day) {
-      return toast.error("Please select a date for the event.");
+      return toast.error("Please select a date for the event");
     } else if (!eventData.eventName) {
-      return toast.error("Please enter an event name.");
+      return toast.error("Please enter an event name");
     } else if (!eventData.venue) {
-      return toast.error("Please select a venue for the event.");
+      return toast.error("Please select a venue for the event");
     } else if (!eventData.callTime) {
-      return toast.error("Please select a call time for the event.");
+      return toast.error("Please select a call time for the event");
     } else if (!eventData.startTime) {
-      return toast.error("Please select a start time for the event.");
+      return toast.error("Please select a start time for the event");
     } else if (!eventData.endTime) {
-      return toast.error("Please select an end time for the event.");
+      return toast.error("Please select an end time for the event");
     }
     setIsLoading(true);
     await postAddEvent(eventData);
@@ -176,7 +176,7 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
           label="Venue" 
           value={event.venue} 
           onChange={(e) => setEvent({...event, venue: e.target.value})}
-          options={["Main Hall", "MPH", "7F Gym", "GF Annex", "2F Annex", "Others"]}
+          options={VENUES}
         />
         <GCInputTextWithLabel
           required
