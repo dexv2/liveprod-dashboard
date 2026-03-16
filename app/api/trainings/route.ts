@@ -20,12 +20,17 @@ export async function POST(request: Request) {
   try {
     await connectMongoDB();
     const body = await request.json();
-    const { trainingName, date, trainors, volunteers } = body;
+    const { trainingName, date, description, trainors, volunteers, startTime, endTime, venue, trainingType } = body;
 
     // Create the training
     const training = await Training.create({
       trainingName,
+      description,
       date: new Date(date),
+      startTime,
+      endTime,
+      venue,
+      trainingType,
       trainors,
       volunteers
     });
@@ -34,15 +39,7 @@ export async function POST(request: Request) {
     if (volunteers && volunteers.length > 0) {
       await Volunteer.updateMany(
         { _id: { $in: volunteers } },
-        { 
-          $push: { 
-            trainingsAttended: {
-              trainingName,
-              date: new Date(date),
-              trainors
-            }
-          }
-        }
+        { $addToSet: { "trainingsAttended": training._id } }
       );
     }
 
@@ -51,6 +48,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ data: populatedTraining }, { status: 201 });
   } catch (error: any) {
+    console.error("Error creating training:", error);
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }

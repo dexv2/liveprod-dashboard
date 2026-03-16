@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import connectMongoDB from '@/libs/mongodb';
 import Training from '@/models/training';
+import Volunteer from '@/models/volunteer';
 
 export async function GET(_: Request, { params }: { params: { id: string } }) {
   try {
@@ -19,12 +20,21 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     await connectMongoDB();
     const body = await request.json();
+    const { volunteers } = body;
     
     const updatedTraining = await Training.findByIdAndUpdate(
       params.id,
       body,
       { new: true }
     ).populate('volunteers', 'name');
+
+    // Update each volunteer's trainings attended
+    if (volunteers && volunteers.length > 0) {
+      await Volunteer.updateMany(
+        { _id: { $in: volunteers } },
+        { $addToSet: { "trainingsAttended": params.id } }
+      );
+    }
 
     return NextResponse.json({ data: updatedTraining }, { status: 200 });
   } catch (error: any) {
@@ -35,7 +45,14 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 export async function DELETE(_: Request, { params }: { params: { id: string } }) {
   try {
     await connectMongoDB();
-    await Training.findByIdAndDelete(params.id);
+    const training = await Training.findByIdAndDelete(params.id);
+
+    // Update each volunteer's trainings attended
+    await Volunteer.updateMany(
+      { _id: { $in: training.volunteers } },
+      { $pull: { "trainingsAttended": params.id } }
+    );
+
     return NextResponse.json({ message: 'Training deleted successfully' }, { status: 200 });
   } catch (error: any) {
     return NextResponse.json({ message: error.message }, { status: 500 });

@@ -5,7 +5,7 @@ import CCVolunteerEvents from "@/components/client/CCVolunteerEvents";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import GCSelect from "@/components/global/GCSelect";
 import { putUpdateVolunteer } from "@/utils/apis/put";
-import { category, serviceTime, serviceCode, UPDATE_VOLUNTEER_PROFILE } from "@/utils/constants";
+import { category, serviceTime, UPDATE_VOLUNTEER_PROFILE } from "@/utils/constants";
 import { diff } from "@/utils/dates";
 import { newDate } from "@/utils/helpers";
 import { redirect, useRouter } from "next/navigation";
@@ -31,7 +31,6 @@ interface Volunteer {
   roles: string[]
   gender: string
   phone?: string
-  trainings?: Training[]
 }
 
 interface Schedule {
@@ -51,7 +50,6 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
   const [ role, setRole ] = useState<string | undefined>(undefined);
   const [ roles, setRoles ] = useState<string[]>(volunteer.roles);
   const [ gender, setGender ] = useState<string>(volunteer.gender);
-  const [ trainings, setTrainings ] = useState<Training[]>(volunteer.trainings || []);
 
   const hasUpdateVolunteerProfilePermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -68,8 +66,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
     status !== volunteer.status ||
     segment !== volunteer.segment ||
     gender !== volunteer.gender ||
-    JSON.stringify(roles) !== JSON.stringify(volunteer.roles) ||
-    JSON.stringify(trainings) !== JSON.stringify(volunteer.trainings || [])
+    JSON.stringify(roles) !== JSON.stringify(volunteer.roles)
   ), [
     firstName,
     lastName,
@@ -77,14 +74,12 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
     status,
     roles,
     gender,
-    trainings,
     volunteer.firstName,
     volunteer.lastName,
     volunteer.segment,
     volunteer.status,
     volunteer.roles,
-    volunteer.gender,
-    volunteer.trainings
+    volunteer.gender
   ]);
 
   useEffect(() => {
@@ -99,12 +94,11 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
     setLastName(volunteer.lastName)
     setStatus(volunteer.status)
     setSegment(volunteer.segment)
-    setTrainings(volunteer.trainings || [])
   }
 
   const updateVolunteerInfo = async () => {
     try {
-      await putUpdateVolunteer(volunteer._id, { firstName, lastName, segment, status, roles, gender, trainings });
+      await putUpdateVolunteer(volunteer._id, { firstName, lastName, segment, status, roles, gender });
       router.refresh();
     } catch (error) {
       alert('Failed to save volunteer information');
