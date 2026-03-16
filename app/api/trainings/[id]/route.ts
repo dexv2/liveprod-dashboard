@@ -20,7 +20,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
   try {
     await connectMongoDB();
     const body = await request.json();
-    const { volunteers } = body;
+    const { volunteers, removedVolunteers } = body;
     
     const updatedTraining = await Training.findByIdAndUpdate(
       params.id,
@@ -33,6 +33,14 @@ export async function PUT(request: Request, { params }: { params: { id: string }
       await Volunteer.updateMany(
         { _id: { $in: volunteers } },
         { $addToSet: { "trainingsAttended": params.id } }
+      );
+    }
+
+    // Remove training from each removed volunteer's trainings attended
+    if (removedVolunteers && removedVolunteers.length > 0) {
+      await Volunteer.updateMany(
+        { _id: { $in: removedVolunteers } },
+        { $pull: { "trainingsAttended": params.id } }
       );
     }
 

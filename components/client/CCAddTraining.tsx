@@ -46,6 +46,7 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
     volunteers: []
   });
   const [selectedVolunteers, setSelectedVolunteers] = useState<string[]>([]);
+  const [removedVolunteers, setRemovedVolunteers] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const fetchTraining = async (id: string) => {
@@ -100,7 +101,9 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
   const handleVolunteerSelection = (volunteerId: string, isSelected: boolean) => {
     if (isSelected) {
       setSelectedVolunteers([...selectedVolunteers, volunteerId]);
+      setRemovedVolunteers(removedVolunteers.filter(id => id !== volunteerId));
     } else {
+      setRemovedVolunteers([...removedVolunteers, volunteerId]);
       setSelectedVolunteers(selectedVolunteers.filter(id => id !== volunteerId));
     }
   };
@@ -141,7 +144,8 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
       const trainingData = {
         ...training,
         trainors: training.trainors.filter(trainor => trainor.trim() !== ""),
-        volunteers: selectedVolunteers
+        volunteers: selectedVolunteers,
+        removedVolunteers: removedVolunteers
       };
 
       if (!validateRequiredFields(trainingData)) return;
@@ -176,14 +180,12 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
           
           <div className="grid grid-cols-2 gap-4 mb-4">
             <GCInputTextWithLabel
-              required
               label="Start Time"
               type="time"
               value={training.startTime || ""}
               onChange={(e) => setTraining({...training, startTime: e.target.value})}
             />
             <GCInputTextWithLabel
-              required
               label="End Time"
               type="time"
               value={training.endTime || ""}
@@ -193,7 +195,6 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
           
           <div className="grid grid-cols-2 gap-4 mb-4">
             <GCInputTextWithLabel
-              required
               label="Venue"
               value={training.venue || ""}
               onChange={(e) => setTraining({...training, venue: e.target.value})}
