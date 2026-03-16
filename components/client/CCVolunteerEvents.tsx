@@ -1,5 +1,6 @@
 "use client";
 
+import { getAllUpcomingEvents } from '@/utils/apis/get';
 import { useState, useEffect, useCallback } from "react";
 
 interface Event {
@@ -29,8 +30,7 @@ export default function CCVolunteerEvents({ volunteerId }: { volunteerId: string
 
   const fetchVolunteerEvents = useCallback(async () => {
     try {
-      const response = await fetch('/api/events');
-      const result = await response.json();
+      const result = await getAllUpcomingEvents();
       
       const volunteerEvents = (result.data || []).filter((event: Event) => {
         if (!event.assignedVolunteers) return false;
@@ -159,7 +159,7 @@ export default function CCVolunteerEvents({ volunteerId }: { volunteerId: string
           </div>
         </>
       ) : (
-        <p className="text-gray-500 text-center py-8">No events assigned.</p>
+        <p className="text-gray-500 text-center py-8">No upcoming events assigned</p>
       )}
     </div>
   );
