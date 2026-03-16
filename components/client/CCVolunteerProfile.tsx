@@ -261,7 +261,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
           <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
             <div className="flex justify-start py-5 pl-6 bg-slate-800">
               <h2 className="font-semibold text-lg text-white">
-                Events
+                Upcoming Events
               </h2>
             </div>
             <div className="bg-slate-300 h-px" />
