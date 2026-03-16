@@ -14,7 +14,6 @@ const eventSchema = new Schema({
   },
   day: {
     type: String,
-    required: true
   },
   eventName: {
     type: String,
@@ -26,15 +25,12 @@ const eventSchema = new Schema({
   },
   callTime: {
     type: String,
-    required: true
   },
   startTime: {
     type: String,
-    required: true
   },
   endTime: {
     type: String,
-    required: true
   },
   praiseAndWorship: {
     type: String,

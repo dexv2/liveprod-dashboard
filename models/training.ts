@@ -26,11 +26,9 @@ const TrainingSchema: Schema = new Schema({
   },
   startTime: {
     type: String,
-    required: true
   },
   endTime: {
     type: String,
-    required: true
   },
   venue: {
     type: String,

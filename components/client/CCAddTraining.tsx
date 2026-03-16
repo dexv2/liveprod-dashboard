@@ -59,9 +59,10 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
   }
 
   useEffect(() => {
+    if (id === "new") return;
     fetchTraining(id);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [id]);
 
   const hasUpdateTrainingPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -107,13 +108,6 @@ export default function CCAddTraining({ volunteers, id }: { volunteers: Voluntee
   const validateRequiredFields = (trainingData: Training): boolean => {
     if (!trainingData.date) {
       toast.error("Please select a date for the training");
-      return false;
-    } else if (!trainingData.startTime) {
-      console.log("Start time is missing");
-      toast.error("Please select a start time for the training");
-      return false;
-    } else if (!trainingData.endTime) {
-      toast.error("Please select an end time for the training");
       return false;
     } else if (!trainingData.trainingName) {
       toast.error("Please enter a training name");
