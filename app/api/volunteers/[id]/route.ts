@@ -2,6 +2,7 @@ import connectMongoDB from "@/libs/mongodb";
 import Volunteer from "@/models/volunteer";
 import { NextResponse } from "next/server";
 import "@/models/schedule";
+import "@/models/training";
 
 interface RequestData {
   firstName?: string
