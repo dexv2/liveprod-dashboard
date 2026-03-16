@@ -37,8 +37,7 @@ const volunteerSchema = new Schema({
   }],
   schedules: [{
     type: Schema.Types.ObjectId,
-    ref: "Schedule",
-    unique: true
+    ref: "Schedule"
   }],
   active: {
     type: Boolean,
@@ -52,29 +51,9 @@ const volunteerSchema = new Schema({
     type: String,
     required: false,
   },
-  trainings: [{
-    name: {
-      type: String,
-      required: true
-    },
-    date: {
-      type: Date,
-      required: true
-    }
-  }],
   trainingsAttended: [{
-    trainingName: {
-      type: String,
-      required: true
-    },
-    date: {
-      type: Date,
-      required: true
-    },
-    trainors: [{
-      type: String,
-      required: true
-    }]
+    type: Schema.Types.ObjectId,
+    ref: "Training"
   }]
 }, { timestamps: true, strict: true });
 

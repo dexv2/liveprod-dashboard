@@ -17,8 +17,6 @@ interface RequestData {
 
 export async function PUT(request: any, { params }: any) {
   const requestData: RequestData = await request.json();
-  console.log('Received volunteer update data:', requestData);
-  console.log('Trainings data:', requestData.trainings);
 
   try {
     await connectMongoDB();
@@ -26,9 +24,7 @@ export async function PUT(request: any, { params }: any) {
     volunteer.name = `${requestData?.firstName || volunteer.firstName} ${requestData?.lastName || volunteer.lastName}`;
 
     Object.assign(volunteer, requestData);
-    console.log('Volunteer before save:', volunteer.toObject());
     await volunteer.save();
-    console.log('Volunteer saved successfully');
     return NextResponse.json({message: `Volunteer info updated`}, {status: 200});
   } catch (error: any) {
     console.error('Error saving volunteer:', error);
@@ -38,7 +34,7 @@ export async function PUT(request: any, { params }: any) {
 
 export async function GET(request: any, { params }: any) {
   await connectMongoDB();
-  const volunteer = await Volunteer.findById(params.id).populate("schedules", "date role service");
+  const volunteer = await Volunteer.findById(params.id).populate("schedules", "date role service").populate("trainingsAttended", "trainingName date trainors");
   return NextResponse.json({data: volunteer}, {status: 200});
 }
 

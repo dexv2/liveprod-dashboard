@@ -16,8 +16,7 @@ export function toVolunteerDTO(v: any) {
     roles: Array.isArray(v.roles) ? v.roles : [],
     gender: v.gender || undefined,
     phone: v.phone || undefined,
-    trainings: v.trainings || v.trainingsAttended || [],
-    trainingsAttended: v.trainingsAttended || v.trainings || [],
+    trainingsAttended: v.trainingsAttended || [],
     volunteerId: v.volunteerId || undefined,
     schedules: Array.isArray(v.schedules) ? v.schedules.map(toScheduleBriefDTO) : []
   };
