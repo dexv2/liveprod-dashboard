@@ -126,15 +126,10 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
       return toast.error("Please select a date for the event");
     } else if (!eventData.eventName) {
       return toast.error("Please enter an event name");
-    } else if (!eventData.venue) {
-      return toast.error("Please select a venue for the event");
-    } else if (!eventData.callTime) {
-      return toast.error("Please select a call time for the event");
-    } else if (!eventData.startTime) {
-      return toast.error("Please select a start time for the event");
-    } else if (!eventData.endTime) {
-      return toast.error("Please select an end time for the event");
+    } else if (!eventData.status) {
+      return toast.error("Please select a status for the event");
     }
+
     setIsLoading(true);
     await postAddEvent(eventData);
     setIsLoading(false);
