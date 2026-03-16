@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { RiArrowDropDownLine } from 'react-icons/ri';
 import { VIEW_ASSIGNMENTS, VIEW_TRAINING, VIEW_OBSERVER_TRACKER, VIEW_ANNOUNCEMENTS, VIEW_ANALYTICS } from '@/utils/constants';
+import { useDevice } from '@/context/DeviceProvider';
 
 export default function GCNavbar() {
   const pathname = usePathname();
@@ -15,6 +16,7 @@ export default function GCNavbar() {
   const [showDropdown, setShowDropdown] = useState(false);
   const [mounted, setMounted] = useState(false);
   const { data: session } = useSession();
+  const { isTablet } = useDevice();
 
   const isAuthenticated = mounted ? session?.user?.username : false;
   const isAdmin = mounted ? (session?.user as any)?.isAdmin : false;
@@ -108,8 +110,16 @@ export default function GCNavbar() {
       <Link href={"/"}>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center">
-            <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px] md:h-[45px]" alt="logo" />
-            <h1 className="text-white text-sm md:text-lg uppercase font-semibold">Live&nbsp;Prod</h1>
+            <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px]
+             md:h-[45px]" alt="logo" />
+            {isTablet ? (
+              <div className='flex flex-col justify-between'>
+                <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Live&nbsp;Prod</p>
+                <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Volunteer&nbsp;Dashboard</p>
+              </div>
+            ) : (
+              <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Live&nbsp;Prod&nbsp;|&nbsp;Volunteer&nbsp;Dashboard</p>
+            )}
           </div>
           <p className="text-white text-xs md:text-xs italic max-w-md">
             &ldquo;May the God who gives endurance and encouragement give you the same attitude of mind toward each other that Christ Jesus had, so that with one mind and one voice you may glorify the God and Father of our Lord Jesus Christ.&rdquo; - Romans 15:5-6 NIV
