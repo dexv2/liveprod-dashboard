@@ -167,28 +167,24 @@ export default function CCAddEvent({ volunteers, event: propEvent }: { volunteer
           onChange={(e) => setEvent({...event, eventName: e.target.value})}
         />
         <GCSelect 
-          required
           label="Venue" 
           value={event.venue} 
           onChange={(e) => setEvent({...event, venue: e.target.value})}
           options={VENUES}
         />
         <GCInputTextWithLabel
-          required
           label="Call Time"
           type="time"
           value={event.callTime || ""}
           onChange={(e) => setEvent({...event, callTime: e.target.value})}
         />
         <GCInputTextWithLabel
-          required
           label="Start Time"
           type="time"
           value={event.startTime || ""}
           onChange={(e) => setEvent({...event, startTime: e.target.value})}
         />
         <GCInputTextWithLabel
-          required
           label="End Time"
           type="time"
           value={event.endTime || ""}
