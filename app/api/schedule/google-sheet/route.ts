@@ -12,7 +12,6 @@ interface RequestData {
 export async function POST(request: any) {
   const requestData: RequestData = await request.json();
   const { saturday, sunday } = requestData;
-  console.log(saturday, sunday);
   try {
     await connectMongoDB();
     const schedules = await Schedule.aggregate([
@@ -75,8 +74,8 @@ export async function POST(request: any) {
         }
       }
     }
-    bulkRecordVolunteerToSheet(sunday, sundayVolunteers);
-    bulkRecordVolunteerToSheetSNS(saturday, saturdayVolunteers);
+    await bulkRecordVolunteerToSheet(sunday, sundayVolunteers);
+    await bulkRecordVolunteerToSheetSNS(saturday, saturdayVolunteers);
 
     return NextResponse.json({message: `Google sheet schedule updated`}, {status: 201});
   } catch (error: any) {

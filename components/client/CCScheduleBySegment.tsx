@@ -43,9 +43,9 @@ export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }
     return <MCScheduleBySegment schedule={schedule} convertedData={convertedData} />;
   }
 
-  const updateGoogleSheet = () => {
+  const updateGoogleSheet = async () => {
     toast.info("Updating Byron's Google sheet. Please check the sheet for updates...", { autoClose: 5000 });
-    postUpdateGoogleSheet({saturday: schedule?.saturday, sunday: schedule?.sunday});
+    await postUpdateGoogleSheet({saturday: schedule?.saturday, sunday: schedule?.sunday});
   }
 
   return (
