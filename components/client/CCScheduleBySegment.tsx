@@ -1,10 +1,15 @@
 "use client";
 
 import { useDevice } from "@/context/DeviceProvider";
-import { category, saturday, sunday } from "@/utils/constants";
+import { category, saturday, SHOW_GSHEET_BUTTON, sunday } from "@/utils/constants";
 import { formatDateLong } from "@/utils/helpers";
 import CCVolunteerCell from './CCVolunteerCell';
 import MCScheduleBySegment from './mobile/MCScheduleBySegment';
+import Image from 'next/image';
+import { toast } from 'react-toastify';
+import { postUpdateGoogleSheet } from '@/utils/apis/post';
+import { useMemo } from 'react';
+import { useSession } from 'next-auth/react';
 
 interface Schedule {
   saturday: string
@@ -14,7 +19,13 @@ interface Schedule {
 
 export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }) {
   const { isMobile } = useDevice();
-  
+  const { data: session } = useSession();
+
+  const hasUpdateGsheetPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(SHOW_GSHEET_BUTTON);
+  }, [session]);
+
   const convertData = (data: any) => {
     const convertedData: any = {};
     data?.forEach((item: any) => {
@@ -32,6 +43,11 @@ export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }
     return <MCScheduleBySegment schedule={schedule} convertedData={convertedData} />;
   }
 
+  const updateGoogleSheet = () => {
+    toast.info("Updating Byron's Google sheet. Please check the sheet for updates...", { autoClose: 5000 });
+    postUpdateGoogleSheet({saturday: schedule?.saturday, sunday: schedule?.sunday});
+  }
+
   return (
     <div className='w-full rounded-t-xl rounded-b-lg overflow-hidden'>
       <div className="w-full overflow-x-auto">
@@ -39,7 +55,15 @@ export default function CCScheduleBySegment({ schedule }: { schedule: Schedule }
           <thead>
             <tr>
               <th colSpan={7} className="text-white bg-slate-800 border border-slate-800 uppercase py-2">
-                {formatDateLong(schedule.saturday)} & {formatDateLong(schedule.sunday)}
+                <div className='flex justify-between px-2.5'>
+                  <div></div>
+                  <div>{formatDateLong(schedule.saturday)} & {formatDateLong(schedule.sunday)}</div>
+                  { hasUpdateGsheetPermission ?
+                    <button onClick={updateGoogleSheet}>
+                      <Image src="/gsheet-logo.png" width={24} height={24} className="md:w-[24px] md:h-[24px]" alt="logo" />
+                    </button> :  <div></div>
+                  }
+                </div>
               </th>
             </tr>
             <tr className='h-0.5'></tr>

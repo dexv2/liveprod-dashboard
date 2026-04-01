@@ -98,3 +98,15 @@ export const postAddTraining = async (trainingData: any) => {
     console.error('Error creating training:', error);
   }
 }
+
+export const postUpdateGoogleSheet = async (scheduleData: any) => {
+  try {
+    await fetch('/api/schedule/google-sheet', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(scheduleData)
+    });
+  } catch (error) {
+    console.error('Error updating Google Sheet:', error);
+  }
+}
