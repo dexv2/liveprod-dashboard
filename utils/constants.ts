@@ -109,6 +109,24 @@ export const category: { [key: string]: string[] } = {
     role.AUDIO_VOLUNTEER_1,
     role.AUDIO_VOLUNTEER_2
   ],
+  SNS_GSHEET_ROLES: [
+    role.FOH,
+    role.FOH_ASSISTANT,
+    role.FOH_TRAINEE,
+    role.FOH_ASSISTANT_TRAINEE,
+    role.FOH_OBSERVER,
+    role.MONITOR_MIX,
+    role.RF_TECH,
+    role.MONITOR_MIX_TRAINEE,
+    role.MONITOR_MIX_OBSERVER,
+    role.BROADCAST_MIX,
+    role.BROADCAST_MIX_ASSISTANT,
+    role.BROADCAST_MIX_TRAINEE,
+    role.BROADCAST_MIX_ASSISTANT_TRAINEE,
+    role.BROADCAST_MIX_OBSERVER,
+    role.AUDIO_VOLUNTEER_1,
+    role.AUDIO_VOLUNTEER_2
+  ],
   TIERS: [
     "independent",
     "observer",
@@ -299,11 +317,11 @@ export const VIEW_TRAINING = 'VIEW_TRAINING';
 export const VIEW_OBSERVER_TRACKER = 'VIEW_OBSERVER_TRACKER';
 export const VIEW_ANALYTICS = 'VIEW_ANALYTICS';
 export const VIEW_ANNOUNCEMENTS = 'VIEW_ANNOUNCEMENTS';
-// TODO: apply permissions below
 export const DELETE_EVENT = 'DELETE_EVENT';
 export const DELETE_TRAINING = 'DELETE_TRAINING';
 export const DELETE_OBSERVER_TRACKER = 'DELETE_OBSERVER_TRACKER';
 export const DELETE_ANNOUNCEMENTS = 'DELETE_ANNOUNCEMENTS';
+export const SHOW_GSHEET_BUTTON = 'SHOW_GSHEET_BUTTON';
 
 export const PERMISSIONS = [
   { label: 'Add Volunteer', value: ADD_VOLUNTEER },
@@ -324,7 +342,8 @@ export const PERMISSIONS = [
   { label: 'Delete Event', value: DELETE_EVENT },
   { label: 'Delete Training', value: DELETE_TRAINING },
   { label: 'Delete Observer Tracker', value: DELETE_OBSERVER_TRACKER },
-  { label: 'Delete Announcements', value: DELETE_ANNOUNCEMENTS }
+  { label: 'Delete Announcements', value: DELETE_ANNOUNCEMENTS },
+  { label: 'Show GSheet Update Button', value: SHOW_GSHEET_BUTTON }
 ];
 
 export const VENUES = [
