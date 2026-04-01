@@ -127,7 +127,21 @@ export default function CCAssignVolunteer(
 
   const removeAssignee = async () => {
     setIsLoading(true);
-    await putScheduleRemoveAssignee(schedule._id);
+    if (availability === Availability.AM) {
+      for (const scheduleId of schedulesGrouped.am) {
+        putScheduleRemoveAssignee(scheduleId);
+      }
+    } else if (availability === Availability.PM) {
+      for (const scheduleId of schedulesGrouped.pm) {
+        putScheduleRemoveAssignee(scheduleId);
+      }
+    } else if (availability === Availability.WholeDay) {
+      for (const scheduleId of schedulesGrouped.am.concat(schedulesGrouped.pm)) {
+        putScheduleRemoveAssignee(scheduleId);
+      }
+    } else {
+      await putScheduleRemoveAssignee(schedule._id);
+    }
     closeModal();
   }
 
