@@ -1,7 +1,6 @@
 import { category } from "@/utils/constants";
 import { redirect } from "next/navigation";
 import { getSchedulesByRole } from "@/utils/apis/get";
-import { checkAuth } from '@/utils/helpersServer';
 import CCScheduleByRoleData from '../client/CCScheduleByRoleData';
 
 export default async function SCSchedulesByRole({role}: {role: string}) {

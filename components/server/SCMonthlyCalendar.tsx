@@ -1,5 +1,4 @@
 import { getSchedulesByRole } from "@/utils/apis/get";
-import { getAllVolunteersPopulated } from "@/utils/apis/get";
 import CCEnhancedMonthlyCalendar from "../client/CCEnhancedMonthlyCalendar";
 import { CalendarEvent } from "@/utils/calendarUtils";
 import GCalEvent from "@/models/gcalEvent";

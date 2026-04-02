@@ -1,6 +1,6 @@
 "use client";
 
-import { category, saturday, sunday } from "@/utils/constants";
+import { sunday } from "@/utils/constants";
 import { Fragment } from "react";
 import RoleDropdown from "@/components/client/CCRoleDropdown";
 
