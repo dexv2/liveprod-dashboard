@@ -26,9 +26,17 @@ export async function GET(request: any, { params }: any) {
     {
       $lookup: {
         from: "volunteers",
-        localField: "volunteer",
-        foreignField: "_id",
+        let: { volunteerId: "$volunteer" },
+        pipeline: [
+          { $match: { $expr: { $eq: ["$_id", "$$volunteerId"] } } },
+          { $project: { firstName: 1, name: 1, _id: 0 } }
+        ],
         as: "volunteer"
+      }
+    },
+    {
+      $addFields: {
+        volunteer: { $arrayElemAt: ["$volunteer", 0] }
       }
     },
     {
