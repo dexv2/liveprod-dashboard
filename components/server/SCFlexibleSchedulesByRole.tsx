@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { Fragment } from "react";
 import { getSchedulesByRole } from "@/utils/apis/get";
 import CCFlexibleScheduleByRole from "../client/CCFlexibleScheduleByRole";
-import { scheduleConfigManager, ServiceTime } from "@/utils/scheduleConfig";
+import { scheduleConfigManager } from "@/utils/scheduleConfig";
 import CCVolunteerCell from '../client/CCVolunteerCell';
 
 export default async function SCFlexibleSchedulesByRole({role}: {role: string}) {

@@ -3,7 +3,7 @@
 import { useState, useMemo } from "react";
 import { Calendar, View, Views, momentLocalizer, Event } from "react-big-calendar";
 import moment from "moment";
-import { CalendarEvent, LiveProductionEvent, formatSchedulesToEvents, createLiveProductionEvents, getEventsForMonth, getRoleStatistics, getVolunteerStatistics } from "@/utils/calendarUtils";
+import { CalendarEvent, formatSchedulesToEvents, createLiveProductionEvents, getEventsForMonth, getRoleStatistics, getVolunteerStatistics } from "@/utils/calendarUtils";
 import { newDate } from "@/utils/helpers";
 import CCEventDetailsModal from "./CCEventDetailsModal";
 
