@@ -11,6 +11,7 @@ declare module "next-auth" {
       username: string
       permissions: string[]
       isAdmin: boolean
+      superAdmin
     } & DefaultSession["user"]
   }
 }

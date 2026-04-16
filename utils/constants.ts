@@ -341,8 +341,8 @@ export const PERMISSIONS = [
   { label: 'View Announcements', value: VIEW_ANNOUNCEMENTS },
   { label: 'Delete Event', value: DELETE_EVENT },
   { label: 'Delete Training', value: DELETE_TRAINING },
-  { label: 'Delete Observer Tracker', value: DELETE_OBSERVER_TRACKER },
-  { label: 'Delete Announcements', value: DELETE_ANNOUNCEMENTS },
+  // { label: 'Delete Observer Tracker', value: DELETE_OBSERVER_TRACKER },
+  // { label: 'Delete Announcements', value: DELETE_ANNOUNCEMENTS },
   { label: 'Show GSheet Update Button', value: SHOW_GSHEET_BUTTON }
 ];
 

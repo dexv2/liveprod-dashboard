@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from "react";
 import GCInputTextWithLabel from "@/components/global/GCInputTextWithLabel";
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
-import { VIEW_TRAINING, UPDATE_TRAINING } from '@/utils/constants';
+import { VIEW_TRAINING, UPDATE_TRAINING, DELETE_TRAINING } from '@/utils/constants';
 import GCSelect from '../global/GCSelect';
 import { IoMdCloseCircle } from 'react-icons/io';
 import { deleteTrainingData } from '@/utils/apis/delete';
@@ -49,6 +49,11 @@ export default function CCTrainingManager() {
   const hasUpdateTrainingPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(UPDATE_TRAINING);
+  }, [session]);
+
+  const hasDeleteTrainingPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(DELETE_TRAINING);
   }, [session]);
 
   useEffect(() => {
@@ -117,12 +122,12 @@ export default function CCTrainingManager() {
               <div className="space-y-4">
                 {trainings.map((training) => (
                   <div key={training._id} className="border border-gray-300 rounded-2xl p-4 relative">
-                    <div className='absolute top-1 right-1 cursor-pointer text-slate-700 hover:text-rose-600'>
+                    { hasDeleteTrainingPermission && <div className='absolute top-1 right-1 cursor-pointer text-slate-700 hover:text-rose-600'>
                       <IoMdCloseCircle
                         size={24}
                         onClick={() => deleteTraining(training?._id)}
                       />
-                    </div>
+                    </div>}
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <div>
                         <h4 className="font-semibold text-lg">{training.trainingName}</h4>
