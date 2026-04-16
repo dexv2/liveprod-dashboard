@@ -129,7 +129,7 @@ export default function GCNavbar() {
         {!isAdmin ? tabLink("My Schedule", "/volunteer/all") : (
             <div className="relative">
               <button 
-                className={`${/^\/(admin|volunteer)(\/|$)/.test(pathname) ? 'text-emerald-200' : 'text-white'} p-2 cursor-pointer`}
+                className={`${/^\/(admin|volunteer|super-admin)(\/|$)/.test(pathname) ? 'text-emerald-200' : 'text-white'} p-2 cursor-pointer`}
                 onMouseEnter={() => setShowDropdown(true)}
                 onMouseLeave={() => setShowDropdown(false)}
               >
