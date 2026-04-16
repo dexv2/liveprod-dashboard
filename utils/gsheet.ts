@@ -236,7 +236,7 @@ export async function recordVolunteerToSheetSNS(date: string, service: string, r
 
     // ------------------- Verify if the last 2 roles in Byron's sheet is "Audio Volunteer" -------------------
     const rolesCol = columnIndexToLetter(firstRoleColIndex);
-    const lastRoleIndex = firstActualScheduleRow + category.ROLES.length - 1;
+    const lastRoleIndex = firstActualScheduleRow + category.SNS_GSHEET_ROLES.length - 1;
     const secondLastRoleIndex = lastRoleIndex - 1;
     const last2RoleRange = `${sheetName}!${rolesCol}${lastRoleIndex}:${rolesCol}${secondLastRoleIndex}`;
     const last2RoleCell = await sheets.spreadsheets.values.get({
@@ -448,7 +448,7 @@ export async function bulkRecordVolunteerToSheetSNS(date: string, volunteers: st
 
     // ------------------- Verify if the last 2 roles in Byron's sheet is "Audio Volunteer" -------------------
     const rolesCol = columnIndexToLetter(firstRoleColIndex);
-    const lastRoleIndex = firstActualScheduleRow + category.ROLES.length - 1;
+    const lastRoleIndex = firstActualScheduleRow + category.SNS_GSHEET_ROLES.length - 1;
     const secondLastRoleIndex = lastRoleIndex - 1;
     const last2RoleRange = `${sheetName}!${rolesCol}${lastRoleIndex}:${rolesCol}${secondLastRoleIndex}`;
     const last2RoleCell = await sheets.spreadsheets.values.get({
@@ -461,6 +461,7 @@ export async function bulkRecordVolunteerToSheetSNS(date: string, volunteers: st
     let isValid = true;
     for (let i = 0; i < last2Roles.length; i++) {
       const lastRoles = JSON.stringify(last2Roles[i]);
+      console.log('Last roles:', lastRoles);
       // The actual checking of last 2 roles
       isValid = lastRoles.includes('Audio Volunteer');
     }
