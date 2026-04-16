@@ -208,3 +208,19 @@ export const getTrainingById = async (id: string) => {
     console.log("Error loading training", error);
   }
 }
+
+export const getAllAdmins = async () => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/admin`, {
+      cache: "no-store"
+    });
+
+    if (!res.ok) {
+      throw new Error("Failed to get all admins");
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.log("Error loading all admins", error);
+  }
+}

@@ -103,3 +103,19 @@ export const putUpdateTraining = async (id: string, body: any) => {
   }
 }
 
+export const putUpdateAdmin = async (id: string, body: any) => {
+  try {
+    const res = await fetch(`${SOURCE_URL}/api/admin/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-type": "application/json"
+      },
+      body: JSON.stringify(body)
+    });
+
+    return await res.json();
+  } catch (error) {
+    throw error;
+  }
+}
+

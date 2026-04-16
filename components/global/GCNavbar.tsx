@@ -20,6 +20,7 @@ export default function GCNavbar() {
 
   const isAuthenticated = mounted ? session?.user?.username : false;
   const isAdmin = mounted ? (session?.user as any)?.isAdmin : false;
+  const isSuperAdmin = mounted ? (session?.user as any)?.superAdmin : false;
 
   const hasViewAssignmentsPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -69,22 +70,6 @@ export default function GCNavbar() {
       // /^\/$|^\/(?:assign-volunteer|add-event|login|change-password|schedule)/.test(pathname)
     );
   }, [pathname])
-
-  const pageTitle = useMemo(() => {
-    if (pathname.startsWith("/schedule/segment/")) return "Upcoming Schedule";
-    if (pathname.startsWith("/schedule/role/")) return "Masterlist";
-    if (pathname.startsWith("/schedule/assign-volunteer")) return "Masterlist";
-    if (pathname.startsWith("/schedule/calendar")) return "Live Production Calendar";
-    if (pathname.startsWith("/login")) return "Login Page";
-    if (pathname.startsWith("/change-password")) return "Change Password";
-    if (pathname.startsWith("/volunteer/all")) return "Volunteers List";
-    if (pathname.startsWith("/volunteer/profile")) return "Volunteer Profile";
-    if (pathname.startsWith("/volunteer/add")) return "Add Volunteer";
-    if (pathname.startsWith("/volunteer/training")) return "Training";
-    if (pathname.startsWith("/volunteer/observer-tracker")) return "Observer Tracker";
-    if (pathname.startsWith("/admin/analytics")) return "Analytics";
-    return "Dashboard";
-  }, [pathname]);
 
   const tabLink = (label: string, href: string, highlightLink?: string) => {
     const isActive = pathname === href || pathname.startsWith(String(highlightLink));
@@ -165,6 +150,7 @@ export default function GCNavbar() {
                   {hasViewObserverTrackerPermission && subTabLink("Observer Tracker", "/volunteer/observer-tracker")}
                   {hasViewAnalyticsPermission && subTabLink("Analytics", "/admin/analytics")}
                   {hasViewAnnouncementsPermission && subTabLink("Announcements", "/admin/announcements")}
+                  {isSuperAdmin && subTabLink("Super Admin", "/super-admin")}
                 </div>
               )}
             </div>
@@ -192,6 +178,7 @@ export default function GCNavbar() {
           {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/observer-tracker"} onClick={() => setShowDropdown(false)}>Observer Tracker</Link>}
           {hasViewAnalyticsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/analytics"} onClick={() => setShowDropdown(false)}>Analytics</Link>}
           {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/announcements"} onClick={() => setShowDropdown(false)}>Announcements</Link>}
+          {isSuperAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/super-admin"} onClick={() => setShowDropdown(false)}>Super Admin</Link>}
           { !isAuthenticated ?
             <button onClick={() => { signIn(); setShowDropdown(false); }} className="block w-full text-left text-white px-4 py-3 hover:bg-slate-700">Login</button>
             :
@@ -202,11 +189,6 @@ export default function GCNavbar() {
           }
         </div>
       )}
-      {/* { !/^\/$|^\/(?:assign-volunteer|add-event|login|schedule)/.test(pathname) && <div className="hidden md:block absolute left-0 bottom-0 bg-slate-950 translate-y-full py-1.5 pl-10 pr-44 opacity-90 rounded-es-md rounded-ee-md [clip-path:polygon(100%_0,_76%_92%,_75%_94%,_74%_96%,_0_100%,_0_0)] border-t border-t-white">
-        <h1 className="text-lg lg:text-xl capitalize text-white">
-          {pageTitle}
-        </h1>
-      </div>} */}
     </nav>
   )
 }

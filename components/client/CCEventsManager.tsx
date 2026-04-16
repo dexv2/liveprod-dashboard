@@ -8,7 +8,7 @@ import GCArrowNext from '../global/GCArrowNext';
 import { useDevice } from '../../context/DeviceProvider';
 import { formatTimeTo12Hour } from '@/utils/helpers';
 import { useSession } from 'next-auth/react';
-import { UPDATE_EVENT } from '@/utils/constants';
+import { DELETE_EVENT, UPDATE_EVENT } from '@/utils/constants';
 import { RiDeleteBinLine } from 'react-icons/ri';
 import { GrEdit } from 'react-icons/gr';
 import { deleteEventData } from '@/utils/apis/delete';
@@ -91,6 +91,11 @@ export default function CCEventsManager() {
   const hasUpdateEventsPermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
     return permissions.includes(UPDATE_EVENT);
+  }, [session]);
+
+  const hasDeleteEventsPermission = useMemo(() => {
+    const permissions = session?.user.permissions ?? [];
+    return permissions.includes(DELETE_EVENT);
   }, [session]);
 
   const totalPages = Math.ceil(totalEvents / eventsPerPage);
@@ -326,12 +331,12 @@ export default function CCEventsManager() {
                   <td key={event?._id || `empty-${index}`} className="bg-slate-200 border border-slate-300 p-2 text-center w-32">
                     { !event?._id ? '' : 
                       <div className='flex gap-1 justify-center'>
-                        <button 
+                        {hasDeleteEventsPermission && <button 
                           onClick={() => deleteEvent(event?._id as string, event?.eventName || 'this', )}
                           className="border border-rose-600 text-rose-600 px-4 py-1 rounded text-xs"
                         >
                           <RiDeleteBinLine size={15} />
-                        </button>
+                        </button>}
                         <button 
                           onClick={() => editEvent(event?._id || 'new')}
                           className="bg-sky-600 text-white px-4 py-1 rounded text-xs hover:bg-sky-700"
