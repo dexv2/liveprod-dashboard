@@ -172,9 +172,9 @@ export default function CCAssignVolunteer(
     setAvailability(value)
   }
 
-  if (isLoading) return <GCLoading />
   return (
     <Fragment>
+      { isLoading && <GCLoading /> }
       <div className="w-full px-3 pt-3 pb-3">
         <div className="flex justify-center text-small gap-1 pb-3 text-slate-600">
           <CAvailability
