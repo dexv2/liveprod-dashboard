@@ -1,5 +1,6 @@
 import CCAssignVolunteer from "@/components/client/CCAssignVolunteer";
 import { getAllVolunteersPopulated, getScheduleById, getFilteredSchedules } from '@/utils/apis/get';
+import { category } from '@/utils/constants';
 import { eq } from "@/utils/dates";
 
 export default async function SCAssignVolunteer({ id }: { id: string }) {
@@ -28,7 +29,7 @@ export default async function SCAssignVolunteer({ id }: { id: string }) {
       _id: volunteer._id,
       name: volunteer.name,
       roles: volunteer.roles,
-      available: true,
+      available: !category.UNAVAILABLE_STATUS.includes(volunteer.status),
       message: "",
       prevSchedId: "",
       role: ""
