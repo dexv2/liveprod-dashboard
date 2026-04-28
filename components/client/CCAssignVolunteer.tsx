@@ -155,7 +155,7 @@ export default function CCAssignVolunteer(
   const validateAssigneeSchedule = (volunteer: Volunteer) => {
     if (volunteer.available) {
       setScheduleToVolunteer(volunteer);
-    } else if(volunteer.role === "Assigned Volunteer") {
+    } else if(volunteer.role === "Assigned Volunteer" || !volunteer.available) {
       return;
     } else {
       const override = confirm(volunteer.message);
@@ -241,7 +241,7 @@ export default function CCAssignVolunteer(
                 <div
                   key={volunteer._id}
                   onClick={() => validateAssigneeSchedule(volunteer)}
-                  className={`flex justify-between px-2 py-1.5 cursor-pointer hover:bg-slate-200 ${volunteer.available ? "text-slate-700" : "text-rose-600"}`}
+                  className={`flex justify-between px-2 py-1.5 hover:bg-slate-200 ${volunteer.available ? "text-slate-70 cursor-pointer" : "text-slate-400 cursor-not-allowed"}`}
                 >
                   <div className="flex justify-start gap-2">
                     <IoPersonCircleOutline size={24} />
