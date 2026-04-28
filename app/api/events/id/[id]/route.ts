@@ -36,15 +36,15 @@ export async function PUT(request: NextRequest, { params }: any) {
     await event.save();
     
     // Sync to Google Calendar if event is confirmed
-    if (event.status === 'confirmed' && event.startTime && event.endTime) {
+    if (event.status === 'confirmed') {
       try {
         if (event.googleCalendarEventId) {
           // Update existing Google Calendar event
           await updateGCalEvent(event.googleCalendarEventId, {
             eventName: event.eventName,
             date: event.date.toISOString().split('T')[0],
-            startTime: event.startTime,
-            endTime: event.endTime,
+            startTime: event.startTime || '00:00',
+            endTime: event.endTime || '23:59',
             venue: event.venue || '',
             otherDetails: event.otherDetails || ''
           });
@@ -53,8 +53,8 @@ export async function PUT(request: NextRequest, { params }: any) {
           const googleEventId = await createGCalEvent({
             eventName: event.eventName,
             date: event.date.toISOString().split('T')[0],
-            startTime: event.startTime,
-            endTime: event.endTime,
+            startTime: event.startTime || '00:00',
+            endTime: event.endTime || '23:59',
             venue: event.venue || '',
             otherDetails: event.otherDetails || ''
           });

@@ -34,13 +34,13 @@ export async function POST(request: NextRequest) {
     await event.save();
     
     // Sync to Google Calendar if event is confirmed and has required fields
-    if (eventData.status === 'confirmed' && eventData.startTime && eventData.endTime && eventData.venue) {
+    if (eventData.status === 'confirmed' && eventData.venue) {
       try {
         const googleEventId = await createGCalEvent({
           eventName: eventData.eventName,
           date: eventData.date,
-          startTime: eventData.startTime,
-          endTime: eventData.endTime,
+          startTime: eventData.startTime || '00:00',
+          endTime: eventData.endTime || '23:59',
           venue: eventData.venue,
           otherDetails: eventData.otherDetails
         });
