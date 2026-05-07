@@ -182,7 +182,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </h2>
             </div>
             <div className="bg-slate-300 h-px" />
-            <div className="px-5 pb-5 pt-12">
+            <div className="p-5">
               <div className="flex justify-start gap-3">
                 <IoPersonCircleSharp size={100} />
                 <div className="flex flex-col px-2 pb-2 pt-4 justify-start">
@@ -254,7 +254,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </h2>
             </div>
             <div className="bg-slate-300 h-px" />
-            <div className="px-5 pb-5 pt-14">
+            <div className="p-5">
               <CCCalendarSchedule events={schedule} length={length} />
             </div>
           </div>
@@ -265,7 +265,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </h2>
             </div>
             <div className="bg-slate-300 h-px" />
-            <div className="px-5 pb-5 pt-12">
+            <div className="p-5">
               <CCVolunteerEvents volunteerId={volunteer._id} />
             </div>
           </div>
@@ -276,7 +276,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </h2>
             </div>
             <div className="bg-slate-300 h-px" />
-            <div className="px-5 pb-5 pt-12">
+            <div className="p-5">
               <div className="flex flex-col gap-4">
                 {(volunteer as any).trainingsAttended?.map((training: any, index: number) => (
                   <div key={index} className="border border-gray-200 rounded p-4">

@@ -47,7 +47,7 @@ function CustomToolbar(toolbar: ToolbarProps) {
     <div className="rbc-toolbar flex flex-col gap-3 mb-4">
       <span className="rbc-btn-group">
         <button type="button" onClick={() => toolbar.onView('agenda')}>Today</button>
-        <button type="button" onClick={() => toolbar.onView('week')}>Week</button>
+        {/* <button type="button" onClick={() => toolbar.onView('week')}>Week</button> */}
         <button type="button" onClick={() => toolbar.onView('month')}>Month</button>
       </span>
       {showNavigation && (
