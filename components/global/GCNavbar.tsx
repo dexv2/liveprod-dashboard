@@ -99,11 +99,11 @@ export default function GCNavbar() {
              md:h-[45px]" alt="logo" />
             {isTablet ? (
               <div className='flex flex-col justify-between'>
-                <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Live&nbsp;Prod</p>
-                <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Volunteer&nbsp;Dashboard</p>
+                {/* <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Live&nbsp;Prod</p> */}
+                <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Volunteer&nbsp;Schedule</p>
               </div>
             ) : (
-              <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Live&nbsp;Prod&nbsp;|&nbsp;Volunteer&nbsp;Dashboard</p>
+              <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Volunteer&nbsp;Schedule</p>
             )}
           </div>
           <p className="text-white text-xs md:text-xs italic max-w-md">
