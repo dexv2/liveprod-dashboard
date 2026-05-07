@@ -13,6 +13,8 @@ import { useEffect, useMemo, useState } from "react";
 import { GoDotFill } from "react-icons/go";
 import { IoCloseCircle, IoPersonCircleSharp, IoSaveSharp } from "react-icons/io5";
 import { useSession } from 'next-auth/react';
+import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
+import { useDevice } from '@/context/DeviceProvider';
 
 interface Training {
   name: string
@@ -40,9 +42,18 @@ interface Schedule {
   service: string
 }
 
+function ArrowDropdown({hidden}: { hidden: boolean }): JSX.Element {
+  return hidden ? (
+    <IoIosArrowForward className='text-white transition-transform duration-200 delay-150' size={24} />
+  ) : (
+    <IoIosArrowDown className='text-white transition-transform duration-200 delay-150' size={24} />
+  )
+}
+
 export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer }) {
   const router = useRouter();
   const { data: session } = useSession();
+  const { isMobile } = useDevice();
   const [ firstName, setFirstName ] = useState<string>(volunteer.firstName);
   const [ lastName, setLastName ] = useState<string>(volunteer.lastName);
   const [ segment, setSegment ] = useState<string>(volunteer.segment);
@@ -50,6 +61,10 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
   const [ role, setRole ] = useState<string | undefined>(undefined);
   const [ roles, setRoles ] = useState<string[]>(volunteer.roles);
   const [ gender, setGender ] = useState<string>(volunteer.gender);
+  const [ isBasicInfoHidden, setIsBasicInfoHidden ] = useState<boolean>(isMobile);
+  const [ isScheduleHidden, setIsScheduleHidden ] = useState<boolean>(false);
+  const [ isEventsHidden, setIsEventsHidden ] = useState<boolean>(false);
+  const [ isTrainingsHidden, setIsTrainingsHidden ] = useState<boolean>(false);
 
   const hasUpdateVolunteerProfilePermission = useMemo(() => {
     const permissions = session?.user.permissions ?? [];
@@ -105,6 +120,11 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
     }
   }
 
+  const toggleDetails = (toggle: () => void) => {
+    if (!isMobile) return;
+    toggle();
+  }
+
   try {
     const from = (date: string, service: string): Date => {
       return new Date(`${new Date(date).toLocaleDateString("en-US", {timeZone: "Asia/Manila"})} ${serviceTime[service]}`);
@@ -140,7 +160,6 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
       return "text-slate-700"
     }
 
-
     return (
       <div className="px-4 md:px-16 lg:px-32 text-slate-700">
         {isAdmin && (
@@ -175,16 +194,20 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
           </div>
         </div>
         <div className="flex flex-col gap-7">
-          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
-            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+          <div className="bg-white w-full rounded-xl border border-slate-100 shadow-md overflow-hidden">
+            <div
+              className={`${isMobile && 'cursor-pointer'} flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}
+              onClick={() => toggleDetails(() => setIsBasicInfoHidden(!isBasicInfoHidden))}
+            >
               <h2 className="font-semibold text-lg text-white">
                 Basic Info
               </h2>
+              {isMobile && <ArrowDropdown hidden={isBasicInfoHidden} />}
             </div>
             <div className="bg-slate-300 h-px" />
-            <div className="p-5">
-              <div className="flex justify-start gap-3">
-                <IoPersonCircleSharp size={100} />
+            <div className={`${isMobile ? 'px-4 py-2' : 'p-5'}`}>
+              <div className="flex justify-start items-center gap-3">
+                <IoPersonCircleSharp size={isMobile ? 50 : 75} />
                 <div className="flex flex-col px-2 pb-2 pt-4 justify-start">
                   <h2 className="font-semibold text-lg capitalize">
                     {`${volunteer.firstName} ${volunteer.lastName}`}
@@ -200,8 +223,8 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
                   </div>
                 </div>
               </div>
-              <div className="px-3 pt-8 pb-5 text-sm">
-                <div className="flex flex-col gap-6">
+              <div className={`px-3 text-sm overflow-hidden transition-all duration-300 delay-150 ${isBasicInfoHidden ? 'max-h-0 opacity-0 pb-0' : 'max-h-[1000px] opacity-100'}`}>
+                <div className="flex flex-col gap-6 pt-5">
                   <div className="flex flex-col lg:flex-row justify-between gap-3 lg:gap-5">
                     <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setFirstName(e.target.value)} label="first name" value={firstName} />
                     <GCInputTextWithLabel disabled={!hasUpdateVolunteerProfilePermission} onChange={(e) => setLastName(e.target.value)} label="last name" value={lastName} />
@@ -247,60 +270,78 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </div>
             </div>
           </div>
-          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
-            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+          <div className="bg-white w-full rounded-xl border border-slate-100 shadow-md overflow-hidden">
+            <div
+              className={`${isMobile && 'cursor-pointer'} flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}
+              onClick={() => toggleDetails(() => setIsScheduleHidden(!isScheduleHidden))}
+            >
               <h2 className="font-semibold text-lg text-white">
                 Schedule
               </h2>
+              {isMobile && <ArrowDropdown hidden={isScheduleHidden} />}
             </div>
-            <div className="bg-slate-300 h-px" />
-            <div className="p-5">
-              <CCCalendarSchedule events={schedule} length={length} />
+            <div className={`overflow-hidden transition-all duration-300 delay-150 ${isScheduleHidden ? 'max-h-0 opacity-0 pb-0' : 'max-h-[1000px] opacity-100'}`}>
+              <div className="bg-slate-300 h-px" />
+              <div className='p-5'>
+                <CCCalendarSchedule events={schedule} length={length} />
+              </div>
             </div>
           </div>
-          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
-            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+          <div className="bg-white w-full rounded-xl border border-slate-100 shadow-md overflow-hidden">
+            <div
+              className={`${isMobile && 'cursor-pointer'} flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}
+              onClick={() => toggleDetails(() => setIsEventsHidden(!isEventsHidden))}
+            >
               <h2 className="font-semibold text-lg text-white">
                 Upcoming Events
               </h2>
+              {isMobile && <ArrowDropdown hidden={isEventsHidden} />}
             </div>
-            <div className="bg-slate-300 h-px" />
-            <div className="p-5">
-              <CCVolunteerEvents volunteerId={volunteer._id} />
+            <div className={`overflow-hidden transition-all duration-300 delay-150 ${isEventsHidden ? 'max-h-0 opacity-0 pb-0' : 'max-h-[1000px] opacity-100'}`}>
+              <div className="bg-slate-300 h-px" />
+              <div className="p-5">
+                <CCVolunteerEvents volunteerId={volunteer._id} />
+              </div>
             </div>
           </div>
-          <div className="bg-white w-full rounded-lg border border-slate-100 shadow-md overflow-hidden">
-            <div className="flex justify-start py-5 pl-6 bg-slate-800">
+          <div className="bg-white w-full rounded-xl border border-slate-100 shadow-md overflow-hidden">
+            <div
+              className={`${isMobile && 'cursor-pointer'} flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}
+              onClick={() => toggleDetails(() => setIsTrainingsHidden(!isTrainingsHidden))}
+            >
               <h2 className="font-semibold text-lg text-white">
                 Trainings Attended
               </h2>
+              {isMobile && <ArrowDropdown hidden={isTrainingsHidden} />}
             </div>
-            <div className="bg-slate-300 h-px" />
-            <div className="p-5">
-              <div className="flex flex-col gap-4">
-                {(volunteer as any).trainingsAttended?.map((training: any, index: number) => (
-                  <div key={index} className="border border-gray-200 rounded p-4">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <h4 className="font-semibold">{training.trainingName}</h4>
-                        <p className="text-sm text-gray-600">
-                          {new Date(training.date).toLocaleDateString()}
-                        </p>
-                      </div>
-                      <div>
-                        <h5 className="font-medium mb-1">Trainers:</h5>
-                        <ul className="text-sm text-gray-600">
-                          {training.trainors?.map((trainor: string, i: number) => (
-                            <li key={i}>• {trainor}</li>
-                          ))}
-                        </ul>
+            <div className={`overflow-hidden transition-all duration-300 delay-150 ${isTrainingsHidden ? 'max-h-0 opacity-0 pb-0' : 'max-h-[1000px] opacity-100'}`}>
+              <div className="bg-slate-300 h-px" />
+              <div className="p-5">
+                <div className="flex flex-col gap-4">
+                  {(volunteer as any).trainingsAttended?.map((training: any, index: number) => (
+                    <div key={index} className="border border-gray-200 rounded p-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div>
+                          <h4 className="font-semibold">{training.trainingName}</h4>
+                          <p className="text-sm text-gray-600">
+                            {new Date(training.date).toLocaleDateString()}
+                          </p>
+                        </div>
+                        <div>
+                          <h5 className="font-medium mb-1">Trainers:</h5>
+                          <ul className="text-sm text-gray-600">
+                            {training.trainors?.map((trainor: string, i: number) => (
+                              <li key={i}>• {trainor}</li>
+                            ))}
+                          </ul>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )) || []}
-                {(!((volunteer as any).trainingsAttended) || (volunteer as any).trainingsAttended.length === 0) && (
-                  <p className="text-gray-500 text-center py-8">No training records found.</p>
-                )}
+                  )) || []}
+                  {(!((volunteer as any).trainingsAttended) || (volunteer as any).trainingsAttended.length === 0) && (
+                    <p className="text-gray-500 text-center py-8">No training records found.</p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
