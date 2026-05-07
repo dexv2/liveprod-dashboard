@@ -35,7 +35,16 @@ export async function PUT(request: any, { params }: any) {
 
 export async function GET(request: any, { params }: any) {
   await connectMongoDB();
-  const volunteer = await Volunteer.findById(params.id).populate("schedules", "date role service").populate("trainingsAttended", "trainingName date trainors");
+  const volunteer = await Volunteer.findById(params.id)
+    .populate({
+      path: "schedules",
+      select: "date role service",
+      options: { sort: { date: 1 } }
+    })
+    .populate({
+      path: "trainingsAttended",
+      select: "trainingName date trainors",
+    });
   return NextResponse.json({data: volunteer}, {status: 200});
 }
 
