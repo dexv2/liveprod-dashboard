@@ -1,14 +1,22 @@
 import { SOURCE_URL } from "./source";
 
 export const putScheduleAssign = async (scheduleId: string, volunteerId: string) => {
-  await fetch(`${SOURCE_URL}/api/schedule/assign/${scheduleId}/${volunteerId}`, {
-    method: "PUT"
+  await fetch(`${SOURCE_URL}/api/schedule/assign`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({ scheduleId, volunteerId })
   });
 }
 
 export const putScheduleRemoveAssignee = async (scheduleId: string) => {
-  await fetch(`${SOURCE_URL}/api/schedule/assign/${scheduleId}`, {
-    method: "PUT"
+  await fetch(`${SOURCE_URL}/api/schedule/de-assign`, {
+    method: "PUT",
+    headers: {
+      "Content-type": "application/json"
+    },
+    body: JSON.stringify({ scheduleId })
   });
 }
 
