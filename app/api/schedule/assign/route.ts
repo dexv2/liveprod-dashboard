@@ -5,8 +5,14 @@ import { category } from '@/utils/constants';
 import { recordVolunteerToSheet, recordVolunteerToSheetSNS } from '@/utils/gsheet';
 import { NextResponse } from "next/server";
 
-export async function PUT(request: any, { params }: any) {
-  const { scheduleId, volunteerId } = params;
+interface RequestData {
+  scheduleId: string
+  volunteerId: string
+}
+
+export async function PUT(request: any) {
+  const requestData: RequestData = await request.json();
+  const { scheduleId, volunteerId } = requestData;
   await connectMongoDB();
   try {
     const schedule = await Schedule.findByIdAndUpdate(scheduleId, { volunteer: volunteerId });
