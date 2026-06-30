@@ -19,10 +19,10 @@ export async function PUT(request: any) {
 
     if (schedule?.date && category.SUNDAY_SERVICES.includes(schedule.service)) {
       // Record to Sunday services Google Sheet schedule
-      recordVolunteerToSheet(schedule.date, schedule.service, schedule.role, '');
+      await recordVolunteerToSheet(schedule.date, schedule.service, schedule.role, '');
     } else if (schedule?.date && category.SATURDAY_SERVICES.includes(schedule.service)) {
       // Record to SNS Google Sheet schedule
-      recordVolunteerToSheetSNS(schedule.date, schedule.service, schedule.role, '');
+      await recordVolunteerToSheetSNS(schedule.date, schedule.service, schedule.role, '');
     }
 
     return NextResponse.json({message: "Assignee removed from schedule succesfully!"}, {status: 200});
