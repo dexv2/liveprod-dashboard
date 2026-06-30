@@ -21,10 +21,10 @@ export async function PUT(request: any) {
     const volunteer = await Volunteer.findByIdAndUpdate(volunteerId, { $push: { "schedules": scheduleId }});
     if (schedule?.date && volunteer?.name && category.SUNDAY_SERVICES.includes(schedule.service)) {
       // Record to Sunday services Google Sheet schedule
-      recordVolunteerToSheet(schedule.date, schedule.service, schedule.role, volunteer.name);
+      await recordVolunteerToSheet(schedule.date, schedule.service, schedule.role, volunteer.name);
     } else if (schedule?.date && volunteer?.name && category.SATURDAY_SERVICES.includes(schedule.service)) {
       // Record to SNS Google Sheet schedule
-      recordVolunteerToSheetSNS(schedule.date, schedule.service, schedule.role, volunteer.name);
+      await recordVolunteerToSheetSNS(schedule.date, schedule.service, schedule.role, volunteer.name);
     }
 
     // remove the schedule from previous volunteer if it exists
