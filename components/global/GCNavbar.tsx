@@ -95,8 +95,7 @@ export default function GCNavbar() {
       <Link href={"/"}>
         <div className="flex flex-col gap-1">
           <div className="flex gap-1 items-center">
-            <Image src="/ccf-logo.png" width={35} height={35} className="md:w-[45px]
-             md:h-[45px]" alt="logo" />
+            <Image src="/fader.png" width={24} height={24} className="md:w-[30px] md:h-[30px] w-[20px] h-[20px] m-1 md:m-1.5" alt="logo" />
             {isTablet ? (
               <div className='flex flex-col justify-between'>
                 {/* <p className="text-white text-sm md:text-lg uppercase font-semibold leading-none">Live&nbsp;Prod</p> */}

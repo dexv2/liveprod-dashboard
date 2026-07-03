@@ -10,7 +10,7 @@ import ToastProvider from '@/context/ToastProvider';
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Live Prod Dashboard",
+  title: "Volunteer Dashboard",
   description: "This is the scheduling dashboard for the live production team.",
 };
 
