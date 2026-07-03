@@ -115,6 +115,10 @@ export default function CpCalendarSchedule({ events, length }: { events: any, le
       return moment(event.start).isSameOrAfter(today);
     });
 
+    futureEvents.sort((a: any, b: any) => {
+      return moment(a.start).diff(moment(b.start));
+    });
+
     const groupedEvents = futureEvents.reduce((acc: any, event: any) => {
       const dateKey = moment(event.start).format('YYYY-MM-DD');
       if (!acc[dateKey]) {
@@ -145,7 +149,7 @@ export default function CpCalendarSchedule({ events, length }: { events: any, le
         <p className="text-center text-gray-600 mb-4">
           Your schedules as of today, {moment().format('MMMM D, YYYY')}
         </p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className={`${sortedDates.length > 1 ? 'auto-cols-[80%]' : 'auto-cols-[100%]'} grid grid-flow-col sm:auto-cols-[50%] lg:auto-cols-[33.33%] xl:auto-cols-[20%] gap-4 overflow-x-auto`}>
           {sortedDates.length > 0 ? (
             sortedDates.map((dateKey) => (
               <div key={dateKey} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
