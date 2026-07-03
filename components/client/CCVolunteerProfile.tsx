@@ -61,7 +61,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
   const [ role, setRole ] = useState<string | undefined>(undefined);
   const [ roles, setRoles ] = useState<string[]>(volunteer.roles);
   const [ gender, setGender ] = useState<string>(volunteer.gender);
-  const [ isBasicInfoHidden, setIsBasicInfoHidden ] = useState<boolean>(isMobile);
+  const [ isBasicInfoHidden, setIsBasicInfoHidden ] = useState<boolean>(true);
   const [ isScheduleHidden, setIsScheduleHidden ] = useState<boolean>(false);
   const [ isEventsHidden, setIsEventsHidden ] = useState<boolean>(false);
   const [ isTrainingsHidden, setIsTrainingsHidden ] = useState<boolean>(false);
@@ -196,13 +196,13 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
         <div className="flex flex-col gap-7">
           <div className="bg-white w-full rounded-xl border border-slate-100 shadow-md overflow-hidden">
             <div
-              className={`${isMobile && 'cursor-pointer'} flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}
-              onClick={() => toggleDetails(() => setIsBasicInfoHidden(!isBasicInfoHidden))}
+              className={`cursor-pointer flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}
+              onClick={() => setIsBasicInfoHidden(!isBasicInfoHidden)}
             >
               <h2 className="font-semibold text-lg text-white">
                 Basic Info
               </h2>
-              {isMobile && <ArrowDropdown hidden={isBasicInfoHidden} />}
+              <ArrowDropdown hidden={isBasicInfoHidden} />
             </div>
             <div className="bg-slate-300 h-px" />
             <div className={`${isMobile ? 'px-4 py-2' : 'p-5'}`}>
