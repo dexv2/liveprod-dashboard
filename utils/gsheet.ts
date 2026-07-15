@@ -1,5 +1,5 @@
 import { google } from 'googleapis';
-import { getMonth, getMonthAndDay, getMonthAndDayShort, getMonthShort } from './helpers';
+import { getMonth, getMonthAndDay } from './helpers';
 import { category } from './constants';
 
 function getGoogleAuth() {
@@ -164,8 +164,8 @@ export async function recordVolunteerToSheet(date: string, service: string, role
 }
 
 export async function recordVolunteerToSheetSNS(date: string, service: string, role: string, volunteerName: string) {
-  const sheetName = getMonthShort(date).toUpperCase();
-  const serviceSchedule = getMonthAndDayShort(date).toUpperCase();
+  const sheetName = getMonth(date).toUpperCase();
+  const serviceSchedule = getMonthAndDay(date).toUpperCase();
   const AUDIO = "AUDIO"
   const auth = getGoogleAuth();
   const sheets = google.sheets({ version: "v4", auth });
@@ -378,8 +378,8 @@ export async function bulkRecordVolunteerToSheet(date: string, volunteers: strin
 }
 
 export async function bulkRecordVolunteerToSheetSNS(date: string, volunteers: string[][]) {
-  const sheetName = getMonthShort(date).toUpperCase();
-  const serviceSchedule = getMonthAndDayShort(date).toUpperCase();
+  const sheetName = getMonth(date).toUpperCase();
+  const serviceSchedule = getMonthAndDay(date).toUpperCase();
   const AUDIO = "AUDIO"
   const auth = getGoogleAuth();
   const sheets = google.sheets({ version: "v4", auth });
