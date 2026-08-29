@@ -5,12 +5,14 @@ import Schedule from "@/models/schedule";
 import Volunteer from "@/models/volunteer";
 import { category } from "@/utils/constants";
 import { recordVolunteerToSheet, recordVolunteerToSheetSNS } from "@/utils/gsheet";
+import { notifyAssignmentSafely } from "@/services/notifications/notificationService";
 
 type EventRole = typeof EVENT_ASSIGNMENT_ROLES[number];
 type VolunteerMap = Partial<Record<EventRole, unknown>>;
 
 export const assignmentServiceDependencies: any = {
   Assignment, Event, Schedule, Volunteer, recordVolunteerToSheet, recordVolunteerToSheetSNS,
+  notifyAssignmentSafely,
   createAssignmentDocument: async (payload: Record<string, unknown>, source: any) => {
     const assignment = new Assignment(payload);
     assignment.$locals.assignmentSource = source;
@@ -87,6 +89,7 @@ async function authoritativeScheduleState(scheduleId: string) {
 
 export async function reconcileScheduleAssignment(scheduleId: string, actorId: string) {
   const slotKey = scheduleSlotKey(scheduleId);
+  const createdAssignmentIds: string[] = [];
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const { schedule, volunteerId } = await authoritativeScheduleState(scheduleId);
     await assignmentServiceDependencies.Volunteer.updateMany(
@@ -111,10 +114,11 @@ export async function reconcileScheduleAssignment(scheduleId: string, actorId: s
         throw new AssignmentInputError("Assigned volunteer not found", 404);
       }
       try {
-        await createAssignment({
+        const created = await createAssignment({
           sourceType: "SCHEDULE", schedule: schedule._id, volunteer: volunteerId,
           role: schedule.role, scheduledBy: actorId, slotKey, sourceDocument: schedule
         });
+        createdAssignmentIds.push(created._id.toString());
       } catch (error) {
         if (!isDuplicateKey(error)) throw error;
       }
@@ -125,6 +129,9 @@ export async function reconcileScheduleAssignment(scheduleId: string, actorId: s
       const finalActive = await assignmentServiceDependencies.Assignment.findOne({ activeSlotKey: slotKey });
       if ((!volunteerId && !finalActive) || (volunteerId &&
         finalActive?.volunteer?.toString() === volunteerId && finalActive?.role === latest.schedule.role)) {
+        for (const assignmentId of createdAssignmentIds) {
+          await assignmentServiceDependencies.notifyAssignmentSafely(assignmentId);
+        }
         return latest.schedule;
       }
     }
@@ -216,6 +223,7 @@ function eventAssignmentSnapshot(event: any) {
 }
 
 export async function reconcileEventAssignments(eventId: string, actorId: string) {
+  const createdAssignmentIds: string[] = [];
   for (let attempt = 0; attempt < 5; attempt += 1) {
     const event = await assignmentServiceDependencies.Event.findById(eventId);
     if (!event) {
@@ -232,17 +240,23 @@ export async function reconcileEventAssignments(eventId: string, actorId: string
       if (active && !matches) await cancelActiveSlot(slotKey, actorId);
       if (volunteerId && !matches) {
         try {
-          await createAssignment({
+          const created = await createAssignment({
             sourceType: "EVENT", event: event._id, volunteer: volunteerId,
             role, scheduledBy: actorId, slotKey, sourceDocument: event
           });
+          createdAssignmentIds.push(created._id.toString());
         } catch (error) {
           if (!isDuplicateKey(error)) throw error;
         }
       }
     }
     const latest = await assignmentServiceDependencies.Event.findById(eventId);
-    if (latest && `${latest.status}|${eventAssignmentSnapshot(latest)}` === snapshot) return latest;
+    if (latest && `${latest.status}|${eventAssignmentSnapshot(latest)}` === snapshot) {
+      for (const assignmentId of createdAssignmentIds) {
+        await assignmentServiceDependencies.notifyAssignmentSafely(assignmentId);
+      }
+      return latest;
+    }
   }
   throw new AssignmentInputError("Event assignments changed concurrently; retry required", 409);
 }

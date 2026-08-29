@@ -76,7 +76,24 @@ const assignmentSchema = new Schema({
   responseHistory: {
     type: [responseHistorySchema],
     default: []
-  }
+  },
+  notificationSentAt: Date,
+  lastNotificationAt: Date,
+  notificationAttempts: { type: Number, default: 0, min: 0 },
+  lastNotificationStatus: {
+    type: String,
+    enum: ["SENT", "FAILED", "SKIPPED_NO_LINK", "SKIPPED_DISABLED"]
+  },
+  lastNotificationErrorCode: String,
+  telegramMessageId: String,
+  notificationDeliveryState: {
+    type: String,
+    enum: ["NONE", "PROCESSING", "SENT", "FAILED", "SKIPPED"],
+    default: "NONE"
+  },
+  notificationClaimedAt: Date,
+  notificationAttemptId: String,
+  notificationKey: String
 }, { timestamps: true, strict: true });
 
 assignmentSchema.pre("validate", function(next) {
@@ -153,6 +170,7 @@ assignmentSchema.index({ slotKey: 1, createdAt: -1 });
 assignmentSchema.index({ schedule: 1, status: 1 });
 assignmentSchema.index({ event: 1, role: 1, status: 1 });
 assignmentSchema.index({ volunteer: 1, status: 1, scheduledAt: -1 });
+assignmentSchema.index({ notificationDeliveryState: 1, notificationClaimedAt: 1 });
 
 const Assignment = mongoose.models.Assignment || mongoose.model("Assignment", assignmentSchema);
 

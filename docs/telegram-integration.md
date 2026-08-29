@@ -23,7 +23,35 @@ Manual UX verification:
 
 This manual check is optional when real Telegram credentials are unavailable.
 
-Assignment notifications and assignment response callbacks are not implemented in this pass.
+## Assignment notifications
+
+New Schedule and Event assignment lifecycles automatically attempt one Telegram message after the authoritative Schedule/Event and Assignment lifecycle have converged. The message is generated from server-side Schedule/Event data and contains no internal IDs or response buttons. Successful delivery does not change the Assignment response status; a new Assignment remains `PENDING`.
+
+Delivery behavior:
+
+- Linked Volunteer with notifications enabled: Telegram delivery is attempted.
+- No current Telegram link: the Assignment records `SKIPPED_NO_LINK` and remains valid.
+- Notifications disabled: the Assignment records `SKIPPED_DISABLED` and remains valid.
+- Telegram failure: the Assignment records a normalized `FAILED` code and remains valid.
+- An Admin with the appropriate Schedule/Event permission may intentionally retry using `POST /api/assignments/<assignmentId>/notify`.
+
+Automatic delivery uses `ASSIGNMENT_CREATED:<assignmentId>:<version>` and a persisted `PROCESSING` claim. A successfully notified Assignment/version is not automatically resent. Telegram does not accept an application idempotency key, so if Telegram accepts a message but the subsequent metadata write fails, delivery outcome is uncertain. Automatic retry remains suppressed; after a ten-minute safety window, an administrator may decide to retry manually. This minimizes duplicate messages but cannot provide strict exactly-once delivery.
+
+Each distinct Assignment lifecycle currently sends its own message. A Volunteer assigned to multiple AM/PM or whole-day slots may receive multiple messages; bundling is deferred.
+
+Accept / Decline / Request Change buttons are not implemented yet.
+
+Manual live test procedure:
+
+1. Link a test Volunteer to Telegram.
+2. Assign the Volunteer to a Schedule and confirm the message arrives.
+3. Confirm the Assignment remains `PENDING`.
+4. Repeat the same assignment request and confirm no duplicate automatic message.
+5. Reassign the slot to another linked Volunteer and confirm only the new Volunteer receives the new-assignment message.
+6. Disable Telegram notifications, create another assignment, and confirm no message is sent.
+7. Use the authenticated manual notify route and verify the sanitized delivery result.
+
+This live procedure is optional when real Telegram credentials are unavailable.
 
 ## Environment variables
 
@@ -75,16 +103,16 @@ webhook error without printing credentials.
 
 - Requests must include the matching `X-Telegram-Bot-Api-Secret-Token` header.
 - `/start` receives a neutral online response.
-- `/start <parameter>` receives a linking-disabled response. The parameter is not
-  stored, echoed, or logged.
+- `/start <token>` performs private-chat Volunteer linking using a short-lived,
+  single-use opaque token. The token is not stored in plaintext, echoed, or logged.
 - Callback queries are acknowledged with a neutral disabled response.
 - Unknown valid updates are acknowledged and ignored.
 - Malformed supported updates are acknowledged and ignored to prevent retry storms.
 - Failed transient processing releases the update claim so Telegram can retry.
 
 The webhook is authenticated by the Telegram webhook secret, not by the app's
-Admin session. Future account-link token issuance must add rate limiting and its
-own identity validation.
+Admin session. Account-link issuance has separate Admin authorization, database-backed
+issuance limits, and token identity validation.
 
 For local testing, Telegram still needs a publicly reachable HTTPS URL. Use a
 trusted tunnel and set `APP_BASE_URL` to that temporary HTTPS origin before running

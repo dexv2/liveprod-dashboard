@@ -18,7 +18,7 @@ const actorId = id().toString();
 
 function makeHarness() {
   const state = {
-    schedules: new Map(), volunteers: new Map(), events: new Map(), assignments: [], sheets: [],
+    schedules: new Map(), volunteers: new Map(), events: new Map(), assignments: [], sheets: [], notifications: [],
     failVolunteerUpdateMany: 0, failVolunteerUpdateOne: 0
   };
   const cloneEvent = event => event && ({
@@ -117,7 +117,11 @@ function makeHarness() {
       return doc;
     },
     async recordVolunteerToSheet(...args) { state.sheets.push(args); },
-    async recordVolunteerToSheetSNS(...args) { state.sheets.push(args); }
+    async recordVolunteerToSheetSNS(...args) { state.sheets.push(args); },
+    async notifyAssignmentSafely(assignmentId) {
+      state.notifications.push(assignmentId);
+      return { status: "SENT" };
+    }
   };
   Object.assign(assignmentServiceDependencies, deps);
 
@@ -153,6 +157,7 @@ test("service assigns an empty Schedule and is idempotent", async () => {
   assert.equal(schedule.volunteer.toString(), a._id.toString());
   assert.deepEqual(a.schedules.map(String), [schedule._id.toString()]);
   assert.equal(h.activeFor(`schedule:${schedule._id}`).length, 1);
+  assert.equal(h.state.notifications.length, 1);
 });
 
 test("service reassigns A to B and preserves cancelled history", async () => {
@@ -166,6 +171,7 @@ test("service reassigns A to B and preserves cancelled history", async () => {
   assert.deepEqual(b.schedules.map(String), [schedule._id.toString()]);
   assert.equal(h.activeFor(`schedule:${schedule._id}`)[0].volunteer.toString(), b._id.toString());
   assert.equal(h.state.assignments.filter(item => item.status === "CANCELLED").length, 1);
+  assert.equal(h.state.notifications.length, 2);
 });
 
 test("service deassigns A and cancels lifecycle", async () => {
@@ -237,8 +243,11 @@ test("Event role transitions A to B to N/A to TBC", async () => {
   const b = h.addVolunteer("B");
   const event = h.addEvent({ foh: a._id.toString() });
   await reconcileEventAssignments(event._id.toString(), actorId);
+  await reconcileEventAssignments(event._id.toString(), actorId);
+  assert.equal(h.state.notifications.length, 1);
   event.assignedVolunteers.foh = b._id.toString();
   await reconcileEventAssignments(event._id.toString(), actorId);
+  assert.equal(h.state.notifications.length, 2);
   assert.equal(h.activeFor(`event:${event._id}:foh`)[0].volunteer.toString(), b._id.toString());
   event.assignedVolunteers.foh = "N/A";
   await reconcileEventAssignments(event._id.toString(), actorId);
