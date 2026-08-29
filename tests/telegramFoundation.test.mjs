@@ -63,6 +63,9 @@ function harness() {
     async linkVolunteerFromTelegram() {
       throw new Error("Telegram linking must be explicitly mocked by linking tests");
     },
+    async respondToAssignmentAction() {
+      throw new Error("Assignment response must be explicitly mocked by response tests");
+    },
     logger: {
       info(...values) { logs.push(["info", ...values]); },
       warn(...values) { logs.push(["warn", ...values]); },

@@ -8,6 +8,10 @@ import {
   NotificationProviderError,
   sendTelegramNotification
 } from "@/services/notifications/providers/telegramProvider";
+import {
+  invalidateAssignmentActionAttempt,
+  issueAssignmentActionTokens
+} from "@/services/telegram/telegramAssignmentActionService";
 
 export type AssignmentNotificationStatus =
   | "SENT" | "FAILED" | "SKIPPED_NO_LINK" | "SKIPPED_DISABLED" | "PROCESSING";
@@ -28,6 +32,8 @@ export const notificationServiceDependencies: any = {
   Schedule,
   Volunteer,
   sendTelegramNotification,
+  issueAssignmentActionTokens,
+  invalidateAssignmentActionAttempt,
   now: () => new Date(),
   randomUUID,
   logger: console
@@ -160,9 +166,16 @@ export async function notifyAssignment(assignmentId: string, options: { manual?:
   }
 
   try {
+    const actionTokens = await notificationServiceDependencies.issueAssignmentActionTokens({
+        assignment,
+        volunteer,
+        source,
+        notificationAttemptId: attemptId
+      }).catch(() => { throw new NotificationProviderError("TELEGRAM_API_ERROR"); });
     const delivery = await notificationServiceDependencies.sendTelegramNotification(
       volunteer.telegram.chatId,
-      buildAssignmentMessage(assignment, source)
+      buildAssignmentMessage(assignment, source),
+      actionTokens.buttons
     );
     try {
       await notificationServiceDependencies.Assignment.updateOne(
@@ -187,6 +200,13 @@ export async function notifyAssignment(assignmentId: string, options: { manual?:
     }
     return { status: "SENT" as AssignmentNotificationStatus, messageId: delivery.messageId };
   } catch (error) {
+    try {
+      await notificationServiceDependencies.invalidateAssignmentActionAttempt(attemptId);
+    } catch {
+      notificationServiceDependencies.logger.error("Assignment response token cleanup failed", {
+        assignmentId: assignment._id.toString(), attemptId, provider: "TELEGRAM"
+      });
+    }
     const code = error instanceof NotificationProviderError ? error.code : "TELEGRAM_API_ERROR";
     try {
       await notificationServiceDependencies.Assignment.updateOne(

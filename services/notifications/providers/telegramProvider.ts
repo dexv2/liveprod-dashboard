@@ -4,6 +4,11 @@ export interface TelegramDeliveryResult {
   messageId: string;
 }
 
+export interface NotificationActionButton {
+  text: string;
+  callbackData: string;
+}
+
 export class NotificationProviderError extends Error {
   code: "TELEGRAM_FORBIDDEN" | "TELEGRAM_CHAT_NOT_FOUND" | "TELEGRAM_TIMEOUT" | "TELEGRAM_API_ERROR";
   constructor(code: NotificationProviderError["code"]) {
@@ -23,9 +28,17 @@ function normalizedCode(error: unknown): NotificationProviderError["code"] {
   return "TELEGRAM_API_ERROR";
 }
 
-export async function sendTelegramNotification(chatId: string, message: string): Promise<TelegramDeliveryResult> {
+export async function sendTelegramNotification(
+  chatId: string,
+  message: string,
+  buttons: NotificationActionButton[] = []
+): Promise<TelegramDeliveryResult> {
   try {
-    const result = await telegramProviderDependencies.createTelegramApi().sendMessage(chatId, message);
+    const result = await telegramProviderDependencies.createTelegramApi().sendMessage(chatId, message, {
+      ...(buttons.length > 0 ? {
+        replyMarkup: { inline_keyboard: buttons.map((button) => [{ text: button.text, callback_data: button.callbackData }]) }
+      } : {})
+    });
     const messageId = result?.message_id;
     if (typeof messageId !== "number" && typeof messageId !== "string") {
       throw new NotificationProviderError("TELEGRAM_API_ERROR");

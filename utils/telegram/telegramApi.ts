@@ -25,6 +25,14 @@ export interface TelegramApiOptions {
   timeoutMs?: number;
 }
 
+export interface TelegramInlineKeyboardMarkup {
+  inline_keyboard: Array<Array<{ text: string; callback_data: string }>>;
+}
+
+export interface TelegramMessageOptions {
+  replyMarkup?: TelegramInlineKeyboardMarkup;
+}
+
 function safeDescription(value: unknown, token: string) {
   if (typeof value !== "string") return "Telegram API request failed";
   return value.replaceAll(token, "[REDACTED]").replace(/https?:\/\/\S+/gi, "[URL_REDACTED]").slice(0, 300);
@@ -77,13 +85,20 @@ export function createTelegramApi(options: TelegramApiOptions = {}) {
   }
 
   return {
-    sendMessage: (chatId: string, text: string) => call("sendMessage", { chat_id: chatId, text }),
+    sendMessage: (chatId: string, text: string, options: TelegramMessageOptions = {}) => call("sendMessage", {
+      chat_id: chatId,
+      text,
+      ...(options.replyMarkup ? { reply_markup: options.replyMarkup } : {})
+    }),
     answerCallbackQuery: (callbackQueryId: string, text?: string) => call("answerCallbackQuery", {
       callback_query_id: callbackQueryId,
       ...(text ? { text } : {})
     }),
-    editMessageText: (chatId: string, messageId: string, text: string) => call("editMessageText", {
-      chat_id: chatId, message_id: messageId, text
+    editMessageText: (chatId: string, messageId: string, text: string, options: TelegramMessageOptions = {}) => call("editMessageText", {
+      chat_id: chatId,
+      message_id: messageId,
+      text,
+      ...(options.replyMarkup ? { reply_markup: options.replyMarkup } : {})
     }),
     getMe: () => call<any>("getMe"),
     getWebhookInfo: () => call<any>("getWebhookInfo")

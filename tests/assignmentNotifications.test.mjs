@@ -87,6 +87,7 @@ function harness(options = {}) {
     assignedVolunteers: { [options.role || "foh"]: volunteerId }
   };
   const sends = [];
+  const invalidatedAttempts = [];
   let failSentMetadata = false;
   let providerError;
   const Assignment = {
@@ -113,15 +114,26 @@ function harness(options = {}) {
     Volunteer: { async findById() { return volunteer; } },
     now: () => new Date("2026-08-29T12:00:00Z"),
     randomUUID: () => `attempt-${assignment.notificationAttempts + 1}`,
-    async sendTelegramNotification(chatId, message) {
-      sends.push({ chatId, message });
+    async issueAssignmentActionTokens({ notificationAttemptId }) {
+      return {
+        attemptId: notificationAttemptId,
+        buttons: [
+          { text: "✅ Accept", callbackData: "a:" + "A".repeat(32) },
+          { text: "❌ Decline", callbackData: "a:" + "B".repeat(32) },
+          { text: "🔄 Request Change", callbackData: "a:" + "C".repeat(32) }
+        ]
+      };
+    },
+    async invalidateAssignmentActionAttempt(attemptId) { invalidatedAttempts.push(attemptId); },
+    async sendTelegramNotification(chatId, message, buttons) {
+      sends.push({ chatId, message, buttons });
       if (providerError) throw providerError;
       return { messageId: String(700 + sends.length) };
     },
     logger: { info() {}, warn() {}, error() {} }
   });
   return {
-    assignment, volunteer, schedule, event, sends,
+    assignment, volunteer, schedule, event, sends, invalidatedAttempts,
     failMetadataOnce() { failSentMetadata = true; },
     failProvider(error = new NotificationProviderError("TELEGRAM_FORBIDDEN")) { providerError = error; }
   };
@@ -135,12 +147,14 @@ test("linked Schedule assignment sends once, stores SENT metadata, and remains P
   assert.equal(retry.duplicate, true);
   assert.equal(h.sends.length, 1);
   assert.equal(h.sends[0].chatId, "current-chat");
+  assert.deepEqual(h.sends[0].buttons.map(button => button.text), ["✅ Accept", "❌ Decline", "🔄 Request Change"]);
   assert.match(h.sends[0].message, /Date:.*September 6, 2026/);
   assert.match(h.sends[0].message, /Service: AM/);
   assert.equal(h.assignment.status, "PENDING");
   assert.equal(h.assignment.lastNotificationStatus, "SENT");
   assert.equal(h.assignment.telegramMessageId, "701");
   assert.equal(h.assignment.notificationAttempts, 1);
+  assert.deepEqual(h.invalidatedAttempts, []);
 });
 
 test("unlinked and disabled Volunteers are skipped without Telegram calls", async () => {
@@ -166,6 +180,7 @@ test("Telegram failure stores only normalized FAILED metadata and preserves assi
   assert.equal(h.assignment.lastNotificationStatus, "FAILED");
   assert.equal(h.assignment.lastNotificationErrorCode, "TELEGRAM_FORBIDDEN");
   assert.equal(h.assignment.notificationAttempts, 1);
+  assert.deepEqual(h.invalidatedAttempts, ["attempt-1"]);
 });
 
 test("send success followed by metadata failure leaves a non-resending PROCESSING claim", async () => {
@@ -230,6 +245,23 @@ test("Telegram provider normalizes errors without leaking token-bearing text", a
     sendTelegramNotification("unlogged-chat", "generated message"),
     error => error.code === "TELEGRAM_FORBIDDEN" && !error.message.includes(token)
   );
+});
+
+test("Telegram provider maps response actions to an inline keyboard", async () => {
+  let captured;
+  telegramProviderDependencies.createTelegramApi = () => ({
+    async sendMessage(chatId, message, options) {
+      captured = { chatId, message, options };
+      return { message_id: 812 };
+    }
+  });
+  await sendTelegramNotification("server-selected-chat", "server-generated message", [
+    { text: "✅ Accept", callbackData: `a:${"A".repeat(32)}` }
+  ]);
+  assert.deepEqual(captured.options.replyMarkup.inline_keyboard, [[{
+    text: "✅ Accept",
+    callback_data: `a:${"A".repeat(32)}`
+  }]]);
 });
 
 test("manual route accepts no browser recipient or message and requires server auth", async () => {

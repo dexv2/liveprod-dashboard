@@ -270,6 +270,9 @@ test("webhook /start delegates normalized private identity without logging the t
       async deleteOne() { return { deletedCount: 1 }; }
     },
     async linkVolunteerFromTelegram(input) { calls.push(input); },
+    async respondToAssignmentAction() {
+      throw new Error("Assignment response must not run during linking tests");
+    },
     createTelegramApi() {
       return { async sendMessage(chatId, text) { calls.push({ chatId, text }); } };
     },

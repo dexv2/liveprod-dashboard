@@ -25,7 +25,7 @@ This manual check is optional when real Telegram credentials are unavailable.
 
 ## Assignment notifications
 
-New Schedule and Event assignment lifecycles automatically attempt one Telegram message after the authoritative Schedule/Event and Assignment lifecycle have converged. The message is generated from server-side Schedule/Event data and contains no internal IDs or response buttons. Successful delivery does not change the Assignment response status; a new Assignment remains `PENDING`.
+New Schedule and Event assignment lifecycles automatically attempt one Telegram message after the authoritative Schedule/Event and Assignment lifecycle have converged. The message is generated from server-side Schedule/Event data, contains no internal IDs, and offers **Accept**, **Decline**, and **Request Change** buttons. Successful delivery does not itself change the Assignment response status; a new Assignment remains `PENDING` until a valid response wins.
 
 Delivery behavior:
 
@@ -39,7 +39,21 @@ Automatic delivery uses `ASSIGNMENT_CREATED:<assignmentId>:<version>` and a pers
 
 Each distinct Assignment lifecycle currently sends its own message. A Volunteer assigned to multiple AM/PM or whole-day slots may receive multiple messages; bundling is deferred.
 
-Accept / Decline / Request Change buttons are not implemented yet.
+## Assignment responses
+
+Each notification gets a fresh set of three 192-bit opaque action tokens. Only SHA-256 hashes are stored. Every token is bound to the exact Assignment, Assignment version, Volunteer, current Volunteer `linkVersion`, and one action. Callback data uses the compact `a:<opaque-token>` form and never embeds application or Telegram identity IDs.
+
+The webhook requires its existing Telegram secret and durable update claim, then independently checks the callback sender against the Volunteer’s current Telegram user ID and `linkVersion`. It also checks Assignment ownership, `PENDING` status, optimistic version, authoritative Schedule/Event ownership, and source date. Responses are accepted through the Schedule/Event calendar date in Asia/Manila; older buttons cannot modify historical assignments.
+
+The first valid response atomically increments the Assignment version and maps:
+
+- Accept → `CONFIRMED`
+- Decline → `DECLINED`
+- Request Change → `CHANGE_REQUESTED`
+
+The response history records the Volunteer ObjectId as actor, `VOLUNTEER` actor type, and `TELEGRAM` channel. Request Change does not collect a free-text reason in v1.1. Competing or repeated buttons cannot replace the first final response. Relinking, unlinking, reassignment, cancellation, version changes, expiration, and passed source dates make old buttons unusable.
+
+After success, sibling tokens are invalidated and Telegram message buttons are removed while the assignment details remain. A Telegram message-edit failure never rolls back the Assignment transition. Manual notification retries invalidate the previous unused token set and issue a fresh set; a failed message send retires its token set. No scheduler Telegram notification is implemented yet.
 
 Manual live test procedure:
 
@@ -50,6 +64,12 @@ Manual live test procedure:
 5. Reassign the slot to another linked Volunteer and confirm only the new Volunteer receives the new-assignment message.
 6. Disable Telegram notifications, create another assignment, and confirm no message is sent.
 7. Use the authenticated manual notify route and verify the sanitized delivery result.
+8. Confirm a new assignment message displays all three response buttons.
+9. Press **Accept** and verify the message displays Confirmed and the Assignment is `CONFIRMED`.
+10. Press the old button again and verify the response is harmless.
+11. Create separate test lifecycles and verify **Decline** produces `DECLINED` and **Request Change** produces `CHANGE_REQUESTED`.
+12. Reassign a Volunteer and confirm the old message button is rejected.
+13. Relink the Volunteer and confirm the former Telegram identity cannot use an old button.
 
 This live procedure is optional when real Telegram credentials are unavailable.
 
@@ -105,7 +125,7 @@ webhook error without printing credentials.
 - `/start` receives a neutral online response.
 - `/start <token>` performs private-chat Volunteer linking using a short-lived,
   single-use opaque token. The token is not stored in plaintext, echoed, or logged.
-- Callback queries are acknowledged with a neutral disabled response.
+- Assignment callback queries validate an opaque action token and current Telegram identity before performing an optimistic, atomic Assignment transition. Unsupported callback prefixes receive a neutral response.
 - Unknown valid updates are acknowledged and ignored.
 - Malformed supported updates are acknowledged and ignored to prevent retry storms.
 - Failed transient processing releases the update claim so Telegram can retry.

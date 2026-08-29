@@ -2,6 +2,7 @@ import connectMongoDB from "@/libs/mongodb";
 import TelegramUpdateModel from "@/models/telegramUpdate";
 import { createTelegramApi, TelegramApiError } from "@/utils/telegram/telegramApi";
 import { linkVolunteerFromTelegram, TelegramLinkError } from "@/services/telegram/telegramLinkService";
+import { respondToAssignmentAction } from "@/services/telegram/telegramAssignmentActionService";
 import type { ParsedTelegramUpdate } from "@/utils/telegram/telegramTypes";
 import {
   parseTelegramUpdate,
@@ -19,6 +20,7 @@ export const telegramWebhookDependencies: any = {
   TelegramUpdateModel,
   createTelegramApi,
   linkVolunteerFromTelegram,
+  respondToAssignmentAction,
   logger: console
 };
 
@@ -89,7 +91,40 @@ export async function handleTelegramUpdate(parsed: ParsedTelegramUpdate) {
   }
   if (parsed.type === "callback_query" && parsed.update.callbackQuery) {
     const api = telegramWebhookDependencies.createTelegramApi();
-    await api.answerCallbackQuery(parsed.update.callbackQuery.id, CALLBACK_DISABLED_MESSAGE);
+    const callback = parsed.update.callbackQuery;
+    const match = callback.data?.match(/^a:([A-Za-z0-9_-]{32})$/);
+    if (!match) {
+      await api.answerCallbackQuery(callback.id, CALLBACK_DISABLED_MESSAGE);
+      return;
+    }
+    const result = await telegramWebhookDependencies.respondToAssignmentAction({
+      token: match[1],
+      telegramUserId: callback.from.id
+    });
+    await api.answerCallbackQuery(callback.id, result.acknowledgement);
+    if (result.outcome === "SUCCESS" && result.messageStatus && callback.message?.text) {
+      try {
+        await api.editMessageText(
+          callback.message.chat.id,
+          callback.message.messageId,
+          `${callback.message.text}\n\n${result.messageStatus}`,
+          { replyMarkup: { inline_keyboard: [] } }
+        );
+      } catch (error) {
+        if (error instanceof TelegramApiError) {
+          telegramWebhookDependencies.logger.error("Telegram assignment message update failed", {
+            updateId: parsed.update.updateId,
+            method: error.method,
+            httpStatus: error.httpStatus,
+            telegramErrorCode: error.telegramErrorCode
+          });
+        } else {
+          telegramWebhookDependencies.logger.error("Telegram assignment message update failed", {
+            updateId: parsed.update.updateId
+          });
+        }
+      }
+    }
   }
 }
 
