@@ -149,6 +149,7 @@ export default function GCNavbar() {
                   {hasViewObserverTrackerPermission && subTabLink("Observer Tracker", "/volunteer/observer-tracker")}
                   {hasViewAnalyticsPermission && subTabLink("Analytics", "/admin/analytics")}
                   {hasViewAnnouncementsPermission && subTabLink("Announcements", "/admin/announcements")}
+                  {subTabLink("My Responses", "/admin/responses")}
                   {isSuperAdmin && subTabLink("Super Admin", "/super-admin")}
                 </div>
               )}
@@ -177,6 +178,7 @@ export default function GCNavbar() {
           {hasViewObserverTrackerPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/volunteer/observer-tracker"} onClick={() => setShowDropdown(false)}>Observer Tracker</Link>}
           {hasViewAnalyticsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/analytics"} onClick={() => setShowDropdown(false)}>Analytics</Link>}
           {hasViewAnnouncementsPermission && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/announcements"} onClick={() => setShowDropdown(false)}>Announcements</Link>}
+          {isAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/admin/responses"} onClick={() => setShowDropdown(false)}>My Responses</Link>}
           {isSuperAdmin && <Link className="block text-white px-4 py-3 hover:bg-slate-700 border-b border-slate-600" href={"/super-admin"} onClick={() => setShowDropdown(false)}>Super Admin</Link>}
           { !isAuthenticated ?
             <button onClick={() => { signIn(); setShowDropdown(false); }} className="block w-full text-left text-white px-4 py-3 hover:bg-slate-700">Login</button>

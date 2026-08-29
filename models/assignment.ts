@@ -171,6 +171,7 @@ assignmentSchema.index({ schedule: 1, status: 1 });
 assignmentSchema.index({ event: 1, role: 1, status: 1 });
 assignmentSchema.index({ volunteer: 1, status: 1, scheduledAt: -1 });
 assignmentSchema.index({ notificationDeliveryState: 1, notificationClaimedAt: 1 });
+assignmentSchema.index({ scheduledBy: 1, status: 1, scheduledAt: -1 });
 
 const Assignment = mongoose.models.Assignment || mongoose.model("Assignment", assignmentSchema);
 
