@@ -60,6 +60,9 @@ function harness() {
         async answerCallbackQuery(id, text) { callbackAnswers.push({ id, text }); return true; }
       };
     },
+    async linkVolunteerFromTelegram() {
+      throw new Error("Telegram linking must be explicitly mocked by linking tests");
+    },
     logger: {
       info(...values) { logs.push(["info", ...values]); },
       warn(...values) { logs.push(["warn", ...values]); },
@@ -105,7 +108,7 @@ test("/start parameter is neither echoed nor logged", async () => {
   const h = harness();
   const opaqueParameter = "TOP-SECRET-LINK-PARAMETER";
   await h.invoke(messageUpdate(4, `/start   ${opaqueParameter}`));
-  assert.equal(h.sentMessages[0].text, TELEGRAM_FOUNDATION_MESSAGES.START_LINKING_DISABLED_MESSAGE);
+  assert.equal(h.sentMessages[0].text, TELEGRAM_FOUNDATION_MESSAGES.START_LINK_FAILED_MESSAGE);
   assert.equal(JSON.stringify(h.sentMessages).includes(opaqueParameter), false);
   assert.equal(JSON.stringify(h.logs).includes(opaqueParameter), false);
 });

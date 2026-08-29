@@ -3,7 +3,27 @@
 This integration uses Telegram HTTPS webhooks. It does not use long polling or a
 persistent process. MongoDB retains update IDs for 14 days to deduplicate retries.
 
-Volunteer linking and assignment response callbacks are not implemented in this pass.
+## Volunteer account linking
+
+An administrator with the Update Volunteer Profile permission can generate a connection link from a Volunteer profile. Links contain a 192-bit opaque token, expire after 20 minutes, and are single-use. Only the SHA-256 token hash is stored. Generating a replacement invalidates prior unused links.
+
+Linking is accepted only from a private Telegram chat. Telegram numeric user and chat IDs—not usernames—form the identity. A Telegram user already owned by another Volunteer cannot be transferred. An Admin-generated reconnect link may replace the Telegram identity on the intended Volunteer and increments its `linkVersion`.
+
+Issuance is limited to five links for the same Volunteer/Admin pair per ten minutes. The token state is recoverable: a failed Volunteer update leaves the token in `PROCESSING`, and the same Telegram user/chat can retry without incrementing `linkVersion` twice.
+
+Manual UX verification:
+
+1. Open a Volunteer profile and select **Connect Telegram**.
+2. Open the generated Telegram deep link and press **Start**.
+3. Confirm the bot reports that the account is connected.
+4. Return to the profile and verify polling changes the status to **Connected**.
+5. Generate a reconnect link and, where a test account is available, connect a different Telegram account.
+6. Confirm the previous identity is no longer authoritative.
+7. Select **Disconnect** and confirm the profile returns to **Not connected**.
+
+This manual check is optional when real Telegram credentials are unavailable.
+
+Assignment notifications and assignment response callbacks are not implemented in this pass.
 
 ## Environment variables
 

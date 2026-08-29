@@ -1,6 +1,7 @@
 import connectMongoDB from "@/libs/mongodb";
 import TelegramUpdateModel from "@/models/telegramUpdate";
 import { createTelegramApi, TelegramApiError } from "@/utils/telegram/telegramApi";
+import { linkVolunteerFromTelegram, TelegramLinkError } from "@/services/telegram/telegramLinkService";
 import type { ParsedTelegramUpdate } from "@/utils/telegram/telegramTypes";
 import {
   parseTelegramUpdate,
@@ -9,13 +10,15 @@ import {
 } from "@/utils/telegram/telegramValidation";
 
 const START_ONLINE_MESSAGE = "CCF Live Production bot is online.";
-const START_LINKING_DISABLED_MESSAGE = "Connection request received. Account linking is not enabled yet.";
+const START_LINKED_MESSAGE = "Your Telegram account is now connected to CCF Live Production.";
+const START_LINK_FAILED_MESSAGE = "This connection link is invalid or no longer available. Please request a new link from an administrator.";
 const CALLBACK_DISABLED_MESSAGE = "This action is not enabled yet.";
 
 export const telegramWebhookDependencies: any = {
   connectMongoDB,
   TelegramUpdateModel,
   createTelegramApi,
+  linkVolunteerFromTelegram,
   logger: console
 };
 
@@ -46,7 +49,9 @@ function logProcessingError(error: unknown, updateId?: string, updateType?: stri
 function parseStartCommand(text?: string) {
   if (!text) return null;
   const match = text.match(/^\/start(?:@\w+)?(?:\s+(\S[\s\S]*))?\s*$/i);
-  return match ? { hasParameter: Boolean(match[1]) } : null;
+  if (!match) return null;
+  const parameter = match[1]?.trim();
+  return { parameter: parameter && /^[A-Za-z0-9_-]{32}$/.test(parameter) ? parameter : undefined, hasParameter: Boolean(parameter) };
 }
 
 export async function handleTelegramUpdate(parsed: ParsedTelegramUpdate) {
@@ -54,10 +59,31 @@ export async function handleTelegramUpdate(parsed: ParsedTelegramUpdate) {
     const start = parseStartCommand(parsed.update.message.text);
     if (start) {
       const api = telegramWebhookDependencies.createTelegramApi();
-      await api.sendMessage(
-        parsed.update.message.chat.id,
-        start.hasParameter ? START_LINKING_DISABLED_MESSAGE : START_ONLINE_MESSAGE
-      );
+      if (!start.hasParameter) {
+        await api.sendMessage(parsed.update.message.chat.id, START_ONLINE_MESSAGE);
+        return;
+      }
+      if (!start.parameter || !parsed.update.message.from) {
+        await api.sendMessage(parsed.update.message.chat.id, START_LINK_FAILED_MESSAGE);
+        return;
+      }
+      try {
+        await telegramWebhookDependencies.linkVolunteerFromTelegram({
+          token: start.parameter,
+          telegramUserId: parsed.update.message.from.id,
+          telegramChatId: parsed.update.message.chat.id,
+          chatType: parsed.update.message.chat.type
+        });
+        await api.sendMessage(parsed.update.message.chat.id, START_LINKED_MESSAGE);
+      } catch (error) {
+        if (!(error instanceof TelegramLinkError)) throw error;
+        const message = error.code === "PRIVATE_CHAT_REQUIRED"
+          ? error.message
+          : error.code === "TELEGRAM_ACCOUNT_COLLISION"
+            ? error.message
+            : START_LINK_FAILED_MESSAGE;
+        await api.sendMessage(parsed.update.message.chat.id, message);
+      }
     }
     return;
   }
@@ -138,6 +164,7 @@ export async function processTelegramWebhook(input: {
 
 export const TELEGRAM_FOUNDATION_MESSAGES = {
   START_ONLINE_MESSAGE,
-  START_LINKING_DISABLED_MESSAGE,
+  START_LINKED_MESSAGE,
+  START_LINK_FAILED_MESSAGE,
   CALLBACK_DISABLED_MESSAGE
 };

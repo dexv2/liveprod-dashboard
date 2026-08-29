@@ -15,6 +15,7 @@ import { IoCloseCircle, IoPersonCircleSharp, IoSaveSharp } from "react-icons/io5
 import { useSession } from 'next-auth/react';
 import { IoIosArrowDown, IoIosArrowForward } from 'react-icons/io';
 import { useDevice } from '@/context/DeviceProvider';
+import CCTelegramLink from "@/components/client/CCTelegramLink";
 
 interface Training {
   name: string
@@ -33,6 +34,11 @@ interface Volunteer {
   roles: string[]
   gender: string
   phone?: string
+  telegram?: {
+    connected?: boolean
+    linkedAt?: string
+    notificationsEnabled?: boolean
+  }
 }
 
 interface Schedule {
@@ -270,6 +276,16 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </div>
             </div>
           </div>
+          {isAdmin && hasUpdateVolunteerProfilePermission && (
+            <CCTelegramLink
+              volunteerId={volunteer._id}
+              initialStatus={{
+                connected: Boolean(volunteer.telegram?.connected),
+                linkedAt: volunteer.telegram?.linkedAt,
+                notificationsEnabled: Boolean(volunteer.telegram?.notificationsEnabled)
+              }}
+            />
+          )}
           <div className="bg-white w-full rounded-xl border border-slate-100 shadow-md overflow-hidden">
             <div
               className={`${isMobile && 'cursor-pointer'} flex justify-between items-center py-5 px-6 bg-slate-800 transition-colors duration-200 ease-out`}

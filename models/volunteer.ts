@@ -54,10 +54,21 @@ const volunteerSchema = new Schema({
   trainingsAttended: [{
     type: Schema.Types.ObjectId,
     ref: "Training"
-  }]
+  }],
+  telegram: {
+    userId: { type: String },
+    chatId: { type: String },
+    linkedAt: { type: Date },
+    notificationsEnabled: { type: Boolean, default: false },
+    linkVersion: { type: Number, default: 0, min: 0 }
+  }
 }, { timestamps: true, strict: true });
 
 volunteerSchema.index({ schedules: 1 });
+volunteerSchema.index(
+  { "telegram.userId": 1 },
+  { unique: true, partialFilterExpression: { "telegram.userId": { $type: "string" } } }
+);
 
 const Volunteer = mongoose.models.Volunteer || mongoose.model("Volunteer", volunteerSchema);
 

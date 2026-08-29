@@ -35,7 +35,7 @@ export async function PUT(request: any, { params }: any) {
 
 export async function GET(request: any, { params }: any) {
   await connectMongoDB();
-  const volunteer = await Volunteer.findById(params.id)
+  const volunteerDocument = await Volunteer.findById(params.id)
     .populate({
       path: "schedules",
       select: "date role service",
@@ -45,6 +45,8 @@ export async function GET(request: any, { params }: any) {
       path: "trainingsAttended",
       select: "trainingName date trainors",
     });
+  const volunteer = volunteerDocument?.toObject();
+  if (volunteer?.telegram) delete volunteer.telegram;
   return NextResponse.json({data: volunteer}, {status: 200});
 }
 

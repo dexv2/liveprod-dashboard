@@ -5,11 +5,13 @@ import { NextResponse } from "next/server";
 export async function GET(request: Request, { params }: { params: { volunteerId: string } }) {
   try {
     await connectMongoDB();
-    const volunteer = await Volunteer.findOne({ volunteerId: params.volunteerId });
+    const volunteerDocument = await Volunteer.findOne({ volunteerId: params.volunteerId });
     
-    if (!volunteer) {
+    if (!volunteerDocument) {
       return NextResponse.json({ error: "Volunteer not found" }, { status: 404 });
     }
+    const volunteer = volunteerDocument.toObject();
+    if (volunteer.telegram) delete volunteer.telegram;
     
     return NextResponse.json({ data: volunteer });
   } catch (error: any) {
