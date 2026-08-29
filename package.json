@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/announcementExpiration.test.mjs"
+    "test": "node --experimental-strip-types --experimental-loader ./tests/alias-loader.mjs --test tests/*.test.mjs"
   },
   "dependencies": {
     "axios": "^1.11.0",

@@ -57,6 +57,8 @@ const volunteerSchema = new Schema({
   }]
 }, { timestamps: true, strict: true });
 
+volunteerSchema.index({ schedules: 1 });
+
 const Volunteer = mongoose.models.Volunteer || mongoose.model("Volunteer", volunteerSchema);
 
 export default Volunteer;

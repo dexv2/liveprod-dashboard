@@ -1,7 +1,10 @@
 import connectMongoDB from "@/libs/mongodb";
+import { auth } from "@/auth";
 import Event from "@/models/event";
 import { NextRequest, NextResponse } from "next/server";
 import { createGCalEvent, deleteGCalEvent, updateGCalEvent } from "@/utils/gcal";
+import { AssignmentInputError, deleteEvent, reconcileEventAssignments, validateEventAssignments } from "@/services/assignments/assignmentService";
+import { AssignmentAuthenticationError, requireAssignmentAdmin } from "@/utils/assignmentAuth";
 
 export async function GET(request: NextRequest, { params }: any) {
   try {
@@ -21,11 +24,17 @@ export async function GET(request: NextRequest, { params }: any) {
 export async function PUT(request: NextRequest, { params }: any) {
   try {
     const updateData = await request.json();
+    delete updateData.scheduledBy;
+    delete updateData.adminId;
     await connectMongoDB();
+    const scheduledBy = await requireAssignmentAdmin(await auth());
     
     const event = await Event.findById(params.id);
     if (!event) {
       return NextResponse.json({ message: "Event not found" }, { status: 404 });
+    }
+    if (Object.prototype.hasOwnProperty.call(updateData, "assignedVolunteers")) {
+      updateData.assignedVolunteers = await validateEventAssignments(updateData.assignedVolunteers);
     }
     
     // Update all provided fields
@@ -34,6 +43,8 @@ export async function PUT(request: NextRequest, { params }: any) {
     });
     
     await event.save();
+
+    await reconcileEventAssignments(event._id.toString(), scheduledBy);
     
     // Sync to Google Calendar if event is confirmed
     if (event.status === 'confirmed') {
@@ -70,6 +81,12 @@ export async function PUT(request: NextRequest, { params }: any) {
     
     return NextResponse.json({ message: "Event updated successfully" }, { status: 200 });
   } catch (error: any) {
+    if (error instanceof AssignmentAuthenticationError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
+    if (error instanceof AssignmentInputError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
     return NextResponse.json({ message: error.message }, { status: 500 });
   }
 }
@@ -77,12 +94,29 @@ export async function PUT(request: NextRequest, { params }: any) {
 export async function DELETE(request: any, { params }: any) {
   try {
     await connectMongoDB();
-    const event = await Event.findByIdAndDelete(params.id);
-    if (event?.googleCalendarEventId) {
-      await deleteGCalEvent(event.googleCalendarEventId);
+    const cancelledBy = await requireAssignmentAdmin(await auth());
+    const { eventName, googleCalendarEventId: calendarEventId } = await deleteEvent(params.id, cancelledBy);
+    let calendarCleanupPending = false;
+    if (calendarEventId) {
+      try {
+        await deleteGCalEvent(calendarEventId);
+      } catch (calendarError) {
+        calendarCleanupPending = true;
+        console.error(`Google Calendar cleanup failed for ${calendarEventId}:`, calendarError);
+      }
     }
-    return NextResponse.json({message: `${event?.eventName} event deleted!`, success: true}, {status: 200});
+    return NextResponse.json({
+      message: `${eventName} event deleted!`,
+      success: true,
+      ...(calendarCleanupPending ? { calendarCleanupPending: true } : {})
+    }, {status: 200});
   } catch (error: any) {
+    if (error instanceof AssignmentAuthenticationError) {
+      return NextResponse.json({ message: error.message, success: false }, { status: error.status });
+    }
+    if (error instanceof AssignmentInputError) {
+      return NextResponse.json({ message: error.message, success: false }, { status: error.status });
+    }
     return NextResponse.json({message: error.message, success: false}, {status: 500});
   }
 }

@@ -11,6 +11,13 @@ interface RequestData {
 
 export async function POST(request: any) {
   const requestData: RequestData = await request.json();
+  if (requestData.volunteer) {
+    return NextResponse.json(
+      { message: "Create the Schedule first, then use the assignment endpoint" },
+      { status: 400 }
+    );
+  }
+  delete requestData.volunteer;
   requestData.date = new Date(requestData.date).toLocaleDateString("en-US", {timeZone: "Asia/Manila"});
   await connectMongoDB();
   try {

@@ -1,8 +1,7 @@
 import connectMongoDB from "@/libs/mongodb";
-import Schedule from "@/models/schedule";
-import Volunteer from "@/models/volunteer";
-import { category } from '@/utils/constants';
-import { recordVolunteerToSheet, recordVolunteerToSheetSNS } from '@/utils/gsheet';
+import { auth } from "@/auth";
+import { AssignmentInputError, deassignScheduleVolunteer } from "@/services/assignments/assignmentService";
+import { AssignmentAuthenticationError, requireAssignmentAdmin } from "@/utils/assignmentAuth";
 import { NextResponse } from "next/server";
 
 interface RequestData {
@@ -10,23 +9,20 @@ interface RequestData {
 }
 
 export async function PUT(request: any) {
-  const requestData: RequestData = await request.json();
-  const { scheduleId } = requestData;
-  await connectMongoDB();
   try {
-    const schedule = await Schedule.findByIdAndUpdate(scheduleId, { $unset: { volunteer: "" }});
-    await Volunteer.findByIdAndUpdate(schedule.volunteer, { $pullAll: { "schedules": [scheduleId] }});
-
-    if (schedule?.date && category.SUNDAY_SERVICES.includes(schedule.service)) {
-      // Record to Sunday services Google Sheet schedule
-      await recordVolunteerToSheet(schedule.date, schedule.service, schedule.role, '');
-    } else if (schedule?.date && category.SATURDAY_SERVICES.includes(schedule.service)) {
-      // Record to SNS Google Sheet schedule
-      await recordVolunteerToSheetSNS(schedule.date, schedule.service, schedule.role, '');
-    }
-
+    const requestData: RequestData = await request.json();
+    const { scheduleId } = requestData;
+    await connectMongoDB();
+    const cancelledBy = await requireAssignmentAdmin(await auth());
+    await deassignScheduleVolunteer({ scheduleId, cancelledBy });
     return NextResponse.json({message: "Assignee removed from schedule succesfully!"}, {status: 200});
   } catch (error: any) {
+    if (error instanceof AssignmentAuthenticationError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
+    if (error instanceof AssignmentInputError) {
+      return NextResponse.json({ message: error.message }, { status: error.status });
+    }
     return NextResponse.json({message: error.message}, {status: 500});
   }
 }
