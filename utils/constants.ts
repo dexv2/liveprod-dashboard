@@ -257,7 +257,9 @@ export const roleFilter = [
     href: "/schedule/role/assistant",
     roles: [
       role.FOH_ASSISTANT,
-      role.BROADCAST_MIX_ASSISTANT
+      role.BROADCAST_MIX_ASSISTANT,
+      role.FOH_ASSISTANT_TRAINEE,
+      role.BROADCAST_MIX_ASSISTANT_TRAINEE
     ]
   },
   {
