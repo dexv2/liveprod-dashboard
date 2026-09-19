@@ -276,7 +276,7 @@ export default function CCVolunteerProfile({ volunteer }: { volunteer: Volunteer
               </div>
             </div>
           </div>
-          {isAdmin && hasUpdateVolunteerProfilePermission && (
+          {isAdmin && (session?.user.superAdmin || hasUpdateVolunteerProfilePermission) && (
             <CCTelegramLink
               volunteerId={volunteer._id}
               initialStatus={{
